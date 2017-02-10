@@ -1,5 +1,5 @@
 package org.usfirst.frc.team3070.robot;
- 
+
 public class Auto extends Robot implements Pronstants {
 // Things done during Autonomous
 	public void skeleton() {
