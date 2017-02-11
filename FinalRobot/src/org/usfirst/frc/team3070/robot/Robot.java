@@ -2,7 +2,6 @@ package org.usfirst.frc.team3070.robot;
 
 import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.Joystick;
-
 import edu.wpi.first.wpilibj.IterativeRobot;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,7 +19,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 	Climb climber;
 	CANTalon talFR, talFL, talBR, talBL, talC1, talC2;
 	Joystick joystick;
-	Sensors sensors;
+	public static double startHeading;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -40,7 +39,6 @@ public class Robot extends IterativeRobot implements Pronstants {
 		drive = new Drive();
 		auto = new Auto();
 		climber = new Climb();
-		sensors = new Sensors();
 	}
 
 	/**
@@ -56,7 +54,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 	 */
 	@Override
 	public void autonomousInit() {
-
+		startHeading = Sensors.imu.getHeading();
 	}
 
 	/**

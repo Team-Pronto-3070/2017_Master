@@ -1,9 +1,11 @@
 package org.usfirst.frc.team3070.robot;
 
 public class Auto extends Robot implements Pronstants {
+		
 // Things done during Autonomous
 	public void skeleton() {
 		//skeleton Autonomous Code
+		Sensors.calculateHeading(startHeading);
 		talFR.set(AUTO_DRIVE_SPEED);
 		talFL.set(AUTO_DRIVE_SPEED);
 		talBR.set(-AUTO_DRIVE_SPEED);
