@@ -1,15 +1,20 @@
 package org.usfirst.frc.team3070.robot;
 
-public class Auto extends Robot implements Pronstants {
-		
+public class Auto {
+	private Drive drive;
+	public Auto(Drive drive)
+	{
+		this.drive = drive;
+	}
 // Things done during Autonomous
-	public void skeleton() {
+	public void stuff() {
 		//skeleton Autonomous Code
+		double startHeading = 0;
 		Sensors.calculateHeading(startHeading);
-		talFR.set(AUTO_DRIVE_SPEED);
-		talFL.set(AUTO_DRIVE_SPEED);
-		talBR.set(-AUTO_DRIVE_SPEED);
-		talBL.set(AUTO_DRIVE_SPEED);
+	}
+	
+	public void autoGeneric() {
+		
 	}
 	
 	public void autoL() {
