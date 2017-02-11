@@ -1,6 +1,8 @@
 package org.usfirst.frc.team3070.robot;
+import edu.wpi.first.wpilibj.Timer;
 
 public class Auto extends Robot implements Pronstants {
+	static Timer timer;
 		
 // Things done during Autonomous
 	public void skeleton() {
@@ -16,8 +18,33 @@ public class Auto extends Robot implements Pronstants {
 		//autonomous code for the left side (driver POV)
 	}
 	
-	public void autoC() {
+	public static void autoC() {
 		//autonomous code for the center
+		timer = new Timer();
+		timer.start();
+	    timer.reset();
+	    double i = timer.get();
+	    double p = Sensors.calculateHeading(0);
+		//Goes to the left to unload
+		if(i < 8){
+			talFR.set(AUTO_DRIVE_SPEED/2);
+			talFL.set(AUTO_DRIVE_SPEED/2);
+			talBR.set(AUTO_DRIVE_SPEED/2);
+			talBL.set(AUTO_DRIVE_SPEED/2);
+		}
+		if(i > 8){
+			talFR.set(0);
+			talFL.set(0);
+			talBR.set(0);
+			talBL.set(0);
+			do{
+				talFR.set(AUTO_DRIVE_SPEED/2);
+				talFL.set(-AUTO_DRIVE_SPEED/2);
+				talBR.set(AUTO_DRIVE_SPEED/2);
+				talBL.set(-AUTO_DRIVE_SPEED/2);
+			}while(p < 90);
+			
+		}
 	}
 	
 	public void autoR() {
