@@ -4,8 +4,8 @@ import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.Joystick;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Robot extends IterativeRobot {
+public class Robot extends IterativeRobot implements Pronstants {
 //	final String defaultAuto = "Default";
 //	final String customAuto = "My Auto";
 //	String autoSelected;
@@ -33,12 +33,12 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		//initializes robot
 		//variable init
-		talFR = new CANTalon(0);
-		talFL = new CANTalon(1);
-		talBR = new CANTalon(2);
-		talBL = new CANTalon(3);
-		talC1 = new CANTalon(4);
-		talC2 = new CANTalon(5);
+		talFR = new CANTalon(TALON_FRONT_RIGHT_PORT);
+		talFL = new CANTalon(TALON_FRONT_lEFT_PORT);
+		talBR = new CANTalon(TALON_BACK_RIGHT_PORT);
+		talBL = new CANTalon(TALON_BACK_LEFT_PORT);
+		talC1 = new CANTalon(TALON_CLIMBER_1_PORT);
+		talC2 = new CANTalon(TALON_CLIMBER_2_PORT);
 		joystick = new Joystick(0);
 		//class init
 		drive = new Drive();

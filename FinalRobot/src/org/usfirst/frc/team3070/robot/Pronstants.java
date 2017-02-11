@@ -5,4 +5,10 @@ public interface Pronstants {
 	static final double AUTO_DRIVE_SPEED = 0.5;
 	static final double AUTO_CLIMB_SPEED = 0.5;
 	static final double DEAD_ZONE = 0.1;
+	static final int TALON_FRONT_RIGHT_PORT = 0;
+	static final int TALON_FRONT_lEFT_PORT = 1;
+	static final int TALON_BACK_RIGHT_PORT = 2;
+	static final int TALON_BACK_LEFT_PORT = 3;
+	static final int TALON_CLIMBER_1_PORT = 4;
+	static final int TALON_CLIMBER_2_PORT = 5;
 }
