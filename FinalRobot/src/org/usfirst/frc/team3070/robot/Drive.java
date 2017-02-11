@@ -2,17 +2,19 @@ package org.usfirst.frc.team3070.robot;
 
 public class Drive extends Robot implements Pronstants {
 	public void joystickDrive() {
-		if (joystick.getRawAxis(5) > DEAD_ZONE || joystick.getRawAxis(5) < -DEAD_ZONE) {
-			talFR.set(joystick.getRawAxis(5));
-			talBR.set(-joystick.getRawAxis(5));
+		double joyR = joystick.getRawAxis(5);
+		double joyL = joystick.getRawAxis(1);
+		if (joyR > DEAD_ZONE || joyR < -DEAD_ZONE) {
+			talFR.set(joyR);
+			talBR.set(-joyR);
 		}
 		else {
 			talFR.set(0);
 			talBR.set(0);
 		}
-		if (joystick.getRawAxis(1) > DEAD_ZONE || joystick.getRawAxis(1) < -DEAD_ZONE) {
-			talFL.set(joystick.getRawAxis(1));
-			talBL.set(joystick.getRawAxis(1));
+		if (joyL > DEAD_ZONE || joyL < -DEAD_ZONE) {
+			talFL.set(joyL);
+			talBL.set(joyL);
 		}
 		else {
 			talFL.set(0);
