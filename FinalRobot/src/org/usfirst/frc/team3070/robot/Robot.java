@@ -15,10 +15,6 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * directory.
  */
 public class Robot extends IterativeRobot implements Pronstants {
-//	final String defaultAuto = "Default";
-//	final String customAuto = "My Auto";
-//	String autoSelected;
-//	SendableChooser<String> chooser = new SendableChooser<>();
 	Drive drive;
 	Auto auto;
 	Climb climber;
@@ -31,7 +27,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 	 */
 	@Override
 	public void robotInit() {
-		//initializes robot
+		//Initializes robot
 		//variable init
 		talFR = new CANTalon(TALON_FRONT_RIGHT_PORT);
 		talFL = new CANTalon(TALON_FRONT_lEFT_PORT);
@@ -40,15 +36,11 @@ public class Robot extends IterativeRobot implements Pronstants {
 		talC1 = new CANTalon(TALON_CLIMBER_1_PORT);
 		talC2 = new CANTalon(TALON_CLIMBER_2_PORT);
 		joystick = new Joystick(0);
-		//class init
+		//Initializes Pronto Classes
 		drive = new Drive();
 		auto = new Auto();
 		climber = new Climb();
 		sensors = new Sensors();
-		
-//		chooser.addDefault("Default Auto", defaultAuto);
-//		chooser.addObject("My Auto", customAuto);
-//		SmartDashboard.putData("Auto choices", chooser);
 	}
 
 	/**
@@ -64,10 +56,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 	 */
 	@Override
 	public void autonomousInit() {
-/*		autoSelected = chooser.getSelected();
-		// autoSelected = SmartDashboard.getString("Auto Selector",
-		// defaultAuto);
-		System.out.println("Auto selected: " + autoSelected); */
+
 	}
 
 	/**
@@ -77,6 +66,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 	public void autonomousPeriodic() {
 		//what happens during autonomous (stays during autonomous)
 		auto.skeleton();
+		//TODO Placeholder for vision
 		//sensors.visionAuto();
 		
 //		switch (autoSelected) {
@@ -96,7 +86,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 	@Override
 	public void teleopPeriodic() {
 		//teleop programs
-		climber.thingDoer();
+		climber.checkClimbInput(joystick.getRawButton(1), joystick.getRawButton(2));
 		drive.joystickDrive();
 		//sensors.visionTeleop();
 	}
