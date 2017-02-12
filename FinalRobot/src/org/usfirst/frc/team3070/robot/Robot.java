@@ -35,7 +35,6 @@ public class Robot extends IterativeRobot implements Pronstants {
 		talC1 = new CANTalon(TALON_CLIMBER_1_PORT);
 		talC2 = new CANTalon(TALON_CLIMBER_2_PORT);
 		joystick = new Joystick(0);
-		talFR.setFeedbackDevice();
 		//Initializes Pronto Classes
 		drive = new Drive();
 		auto = new Auto();
@@ -56,6 +55,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 	@Override
 	public void autonomousInit() {
 		startHeading = Sensors.imu.getHeading();
+		auto.autoL();
 	}
 
 	/**
@@ -64,8 +64,8 @@ public class Robot extends IterativeRobot implements Pronstants {
 	@Override
 	public void autonomousPeriodic() {
 		//what happens during autonomous (stays during autonomous)
-		auto.skeleton();
-		Auto.autoC();
+		//auto.skeleton();
+		auto.autoC();
 		//TODO Placeholder for vision
 		//sensors.visionAuto();
 		
