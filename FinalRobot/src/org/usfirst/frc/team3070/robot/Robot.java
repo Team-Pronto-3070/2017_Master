@@ -17,9 +17,9 @@ public class Robot extends IterativeRobot implements Pronstants {
 	Drive drive;
 	Auto auto;
 	Climb climber;
-	static CANTalon talFR, talFL, talBR, talBL, talC1, talC2;
+	CANTalon talFR, talFL, talBR, talBL, talC1, talC2;
 	Joystick joystick;
-	public static double startHeading;
+	double startHeading = 0;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -28,17 +28,14 @@ public class Robot extends IterativeRobot implements Pronstants {
 	public void robotInit() {
 		//Initializes robot
 		//variable init
-		talFR = new CANTalon(TALON_FRONT_RIGHT_PORT);
-		talFL = new CANTalon(TALON_FRONT_lEFT_PORT);
-		talBR = new CANTalon(TALON_BACK_RIGHT_PORT);
-		talBL = new CANTalon(TALON_BACK_LEFT_PORT);
-		talC1 = new CANTalon(TALON_CLIMBER_1_PORT);
-		talC2 = new CANTalon(TALON_CLIMBER_2_PORT);
+
 		joystick = new Joystick(0);
 		//Initializes Pronto Classes
 		drive = new Drive();
-		auto = new Auto();
+		auto = new Auto(drive);
 		climber = new Climb();
+		//Sets encoders to the feedback device for Talons
+		//TODO see which talons have encoders
 	}
 
 	/**
@@ -55,7 +52,6 @@ public class Robot extends IterativeRobot implements Pronstants {
 	@Override
 	public void autonomousInit() {
 		startHeading = Sensors.imu.getHeading();
-		auto.autoL();
 	}
 
 	/**
@@ -64,8 +60,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 	@Override
 	public void autonomousPeriodic() {
 		//what happens during autonomous (stays during autonomous)
-		//auto.skeleton();
-		auto.autoC();
+		auto.autoGeneric();
 		//TODO Placeholder for vision
 		//sensors.visionAuto();
 		
@@ -87,7 +82,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 	public void teleopPeriodic() {
 		//teleop programs
 		climber.checkClimbInput(joystick.getRawButton(1), joystick.getRawButton(2));
-		drive.joystickDrive();
+		drive.joystickDrive(joystick.getRawAxis(5), joystick.getRawAxis(1));
 		//sensors.visionTeleop();
 	}
 

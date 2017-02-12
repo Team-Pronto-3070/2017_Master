@@ -1,13 +1,17 @@
 package org.usfirst.frc.team3070.robot;
 import edu.wpi.first.wpilibj.Timer;
 
-public class Auto extends Robot implements Pronstants {
+public class Auto {
 	static Timer timer;
-		
+	private Drive drive;
+	public Auto(Drive drive)
+	{
+		this.drive = drive;
+	}
 // Things done during Autonomous
 	public void skeleton() {
 		//skeleton Autonomous Code
-		
+		double startHeading = 0;
 		talFR.set(AUTO_DRIVE_SPEED);
 		talFL.set(AUTO_DRIVE_SPEED);
 		talBR.set(-AUTO_DRIVE_SPEED);
