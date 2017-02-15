@@ -33,7 +33,7 @@ public class Drive {
 		//defines the variables for the speed of left and right sides of the robot
 		double speedR, speedL;
 		//checks if the right joystick is in the deadzone
-		if (joyR > Pronstants.DEAD_ZONE || joyR < -Pronstants.DEAD_ZONE) {
+		if (Math.abs(joyR) > Pronstants.DEAD_ZONE) {
 			//If it isn't, set the speed of the right side to the joystick value
 			speedR = joyR;
 		}
@@ -42,7 +42,7 @@ public class Drive {
 			speedR = 0;
 		}
 		//checks if the left joystick is in the deadzone
-		if (joyL > Pronstants.DEAD_ZONE || joyL < -Pronstants.DEAD_ZONE) {
+		if (Math.abs(joyL) > Pronstants.DEAD_ZONE) {
 			//If it isn't, set the speed of the right side to the joystick value
 			speedL = joyL;
 		}
