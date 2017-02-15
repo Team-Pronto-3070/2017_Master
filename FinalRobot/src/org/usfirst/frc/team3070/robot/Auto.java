@@ -7,14 +7,9 @@ public class Auto {
 		this.drive = drive;
 	}
 // Things done during Autonomous
-	public void stuff() {
-		//skeleton Autonomous Code
-		double startHeading = 0;
-		Sensors.calculateHeading(startHeading);
-	}
-	
 	public void autoGeneric() {
-		
+		//generic autonomous code
+		drive.drive(Pronstants.AUTO_DRIVE_SPEED, Pronstants.AUTO_DRIVE_SPEED);
 	}
 	
 	public void autoL() {
