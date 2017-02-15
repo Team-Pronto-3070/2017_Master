@@ -4,8 +4,8 @@ import org.usfirst.frc.team3070.robot.Pronstants;
 import edu.wpi.first.wpilibj.AnalogGyro;
 
 public class Drive {
-	static CANTalon talFR, talFL, talBR, talBL;
-	static AnalogGyro gyro;
+	private static CANTalon talFR, talFL, talBR, talBL;
+	private static BNO055 gyro;
 	public Drive()
 	{
 		//defines the talon variables
@@ -76,6 +76,9 @@ public class Drive {
 		//resets the encoder values to 0
 		talFR.setEncPosition(0);
 		talFL.setEncPosition(0);
+	}
+	public void gyroReset() {
+		
 	}
 	public void turnRight(double angle, double speed) {
 		//turns the robot right until it aligns with an angle on the gyro
