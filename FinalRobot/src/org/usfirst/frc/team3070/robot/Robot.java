@@ -2,7 +2,6 @@ package org.usfirst.frc.team3070.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import org.usfirst.frc.team3070.robot.Pronstants;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -52,6 +51,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 	public void autonomousInit() {
 		startHeading = Sensors.imu.getHeading();
 		Sensors.calculateHeading(startHeading);
+		drive.resetDistanceTraveled();
 	}
 
 	/**

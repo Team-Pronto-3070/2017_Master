@@ -2,6 +2,7 @@ package org.usfirst.frc.team3070.robot;
 
 public class Auto {
 	private Drive drive;
+	double gyroValue = 0.1;
 	public Auto(Drive drive)
 	{
 		this.drive = drive;
@@ -14,6 +15,7 @@ public class Auto {
 	
 	public void autoL1() {
 		//autonomous code for the left side to left gearloading station (driver POV)
+		
 	}
 	
 	public void autoL2() {
@@ -30,5 +32,6 @@ public class Auto {
 	
 	public void autoR2() {
 		//autonomous code for the right side to the center gearloading station (driver POV)
+		
 	}
 }
