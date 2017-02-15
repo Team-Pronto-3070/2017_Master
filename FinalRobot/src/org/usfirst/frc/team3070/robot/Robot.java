@@ -1,8 +1,8 @@
 package org.usfirst.frc.team3070.robot;
 
-import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import org.usfirst.frc.team3070.robot.Pronstants;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -13,13 +13,12 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Robot extends IterativeRobot implements Pronstants {
+public class Robot extends IterativeRobot {
 	Drive drive;
 	Auto auto;
 	Climb climber;
-	CANTalon talFR, talFL, talBR, talBL, talC1, talC2;
 	Joystick joystick;
-	double startHeading = 0;
+	double startHeading;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -52,6 +51,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 	@Override
 	public void autonomousInit() {
 		startHeading = Sensors.imu.getHeading();
+		Sensors.calculateHeading(startHeading);
 	}
 
 	/**
