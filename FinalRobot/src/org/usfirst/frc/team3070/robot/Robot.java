@@ -13,7 +13,7 @@ import org.usfirst.frc.team3070.robot.Pronstants;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Robot extends IterativeRobot {
+public class Robot extends IterativeRobot implements Pronstants {
 	Drive drive;
 	Auto auto;
 	Climb climber;
@@ -28,7 +28,7 @@ public class Robot extends IterativeRobot {
 		//Initializes robot
 		//variable init
 
-		joystick = new Joystick(0);
+		joystick = new Joystick(JOYSTICK_PORT);
 		//Initializes Pronto Classes
 		drive = new Drive();
 		auto = new Auto(drive);

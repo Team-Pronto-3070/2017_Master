@@ -14,4 +14,5 @@ public interface Pronstants {
 	static final int TALON_CLIMBER_1_PORT = 4;
 	static final int TALON_CLIMBER_2_PORT = 5;
 	static final double TICK_COEFFICIENT = 162.97;
+	static final int JOYSTICK_PORT = 0;
 }
