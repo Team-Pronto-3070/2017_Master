@@ -12,15 +12,23 @@ public class Auto {
 		drive.drive(Pronstants.AUTO_DRIVE_SPEED, Pronstants.AUTO_DRIVE_SPEED);
 	}
 	
-	public void autoL() {
-		//autonomous code for the left side (driver POV)
+	public void autoL1() {
+		//autonomous code for the left side to left gearloading station (driver POV)
+	}
+	
+	public void autoL2() {
+		//autonomous code for the left side to the center gearloading station (driver POV)
 	}
 	
 	public void autoC() {
-		//autonomous code for the center
+		//autonomous code for the center to the center gearloading station
 	}
 	
-	public void autoR() {
-		//autonomous code for the right side (driver POV)
+	public void autoR1() {
+		//autonomous code for the right side to the right gearloading station (driver POV)
+	}
+	
+	public void autoR2() {
+		//autonomous code for the right side to the center gearloading station (driver POV)
 	}
 }
