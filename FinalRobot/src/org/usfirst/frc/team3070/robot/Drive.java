@@ -1,16 +1,15 @@
 package org.usfirst.frc.team3070.robot;
+
 import com.ctre.CANTalon;
 import org.usfirst.frc.team3070.robot.Pronstants;
-import edu.wpi.first.wpilibj.AnalogGyro;
 
-public class Drive {
+public class Drive extends ProntoGyro {
 	private static CANTalon talFR, talFL, talBR, talBL;
-	private static BNO055 gyro;
 	public Drive()
 	{
 		//defines the talon variables
 		talFR = new CANTalon(Pronstants.TALON_FRONT_RIGHT_PORT);
-		talFL = new CANTalon(Pronstants.TALON_FRONT_lEFT_PORT);
+		talFL = new CANTalon(Pronstants.TALON_FRONT_LEFT_PORT);
 		talBR = new CANTalon(Pronstants.TALON_BACK_RIGHT_PORT);
 		talBL = new CANTalon(Pronstants.TALON_BACK_LEFT_PORT);
 		//sets a voltage ramp rate on the talons
@@ -77,15 +76,10 @@ public class Drive {
 		talFR.setEncPosition(0);
 		talFL.setEncPosition(0);
 	}
-	public void gyroReset() {
-		
-	}
 	public void turnRight(double angle, double speed) {
 		//turns the robot right until it aligns with an angle on the gyro
-		//resets the gyro
-		gyro.reset();
 		//checks if the gyro is aligned with the desired angle
-		if (gyro.getAngle() < angle) {  //consider implementing some compensation for the robot taking a bit to stop 
+		if (ProntoGyro.calculateHeading() < angle) {  //consider implementing some compensation for the robot taking a bit to stop 
 			//If it isn't, turn right
 			drive(-speed, speed);
 		}
@@ -94,10 +88,9 @@ public class Drive {
 	}
 	public void turnLeft(double angle, double speed) {  
 		//turns the robot right until it aligns with an angle on the gyro
-		//resets the gyro
-		gyro.reset();
+		//TODO implement some compensation for the robot taking a bit to stop 
 		//checks if the gyro is aligned with the desired angle
-		if (Math.abs(gyro.getAngle()) < angle) {  //consider implementing some compensation for the robot taking a bit to stop 
+		if (Math.abs(ProntoGyro.calculateHeading()) < angle) { 
 			//If it isn't, turn left
 			drive(speed, -speed);
 		}
