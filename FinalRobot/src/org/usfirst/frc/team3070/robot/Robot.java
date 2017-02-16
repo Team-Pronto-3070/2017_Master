@@ -17,6 +17,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 	Auto auto;
 	Climb climber;
 	Joystick joystick;
+	Shooter shoot;
 	static double startHeading;
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -32,6 +33,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 		drive = new Drive();
 		auto = new Auto(drive);
 		climber = new Climb();
+		shoot = new Shooter();
 		//Sets encoders to the feedback device for Talons
 		//TODO see which talons have encoders
 	}
@@ -81,6 +83,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 	public void teleopPeriodic() {
 		//teleop programs
 		climber.checkClimbInput(joystick.getRawButton(1), joystick.getRawButton(2));
+		shoot.checkShootInput(joystick.getRawButton(3), joystick.getRawButton(4));
 		drive.joystickDrive(joystick.getRawAxis(5), joystick.getRawAxis(1));
 		//sensors.visionTeleop();
 	}
