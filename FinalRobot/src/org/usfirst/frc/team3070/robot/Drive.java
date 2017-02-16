@@ -79,32 +79,31 @@ public class Drive {
 		talFR.setEncPosition(0);
 		talFL.setEncPosition(0);
 	}
-	public void turnRight(double angle, double speed) {
-		//turns the robot right until it aligns with an angle on the gyro
-		//checks if the gyro is aligned with the desired angle
-		if (ProntoGyro.calculateHeading() < angle) {  //consider implementing some compensation for the robot taking a bit to stop 
-			//If it isn't, turn right
-			drive(-speed, speed);
-		}
-		//If it is, stop turning
-		drive(0,0);
-	}
-	public void turnLeft(double angle, double speed) {  
-		//turns the robot right until it aligns with an angle on the gyro
-		//TODO implement some compensation for the robot taking a bit to stop 
-		//checks if the gyro is aligned with the desired angle
-		if (Math.abs(ProntoGyro.calculateHeading()) < angle) { 
-			//If it isn't, turn left
+	public boolean turn(double angle, double speed) {  
+		//turns the robot until it aligns with an angle on the gyro
+		//TODO test on robot and see if should use time instead
+		//checks if the gyro angle is less than the desired angle
+		if (ProntoGyro.calculateHeading() < angle) { 
+			//If it is, turn left
 			drive(speed, -speed);
 		}
-		//If it is, stop turning
-		drive(0,0);
+		//checks if the gyro angle is greater than the desired angle
+		else if (ProntoGyro.calculateHeading() > angle) {
+			//if it is, turn right
+			drive(-speed, speed);
+		}
+		else {
+			//if the gyro angle is aligned with the desired angle, tell the source that called the method that turning is not done
+			return true;
+		}
+		//otherwise, tell the source that called the function that turning is done
+		return false;
 	}
 	public void driveRobotStraight() {
 		if (ProntoGyro.calculateHeading() > startHeading + 5) {
 			drive(Pronstants.AUTO_DRIVE_SPEED + 0.1, Pronstants.AUTO_DRIVE_SPEED);
 		}
-		if (ProntoGyro.calculateHeading() > (startHeading - 5)) {
+		else if (ProntoGyro.calculateHeading() > (startHeading - 5)) {
 			drive (Pronstants.AUTO_DRIVE_SPEED, Pronstants.AUTO_DRIVE_SPEED + 0.1);
 		}
 		else {
