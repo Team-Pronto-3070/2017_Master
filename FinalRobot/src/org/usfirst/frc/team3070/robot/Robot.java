@@ -17,7 +17,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 	Auto auto;
 	Climb climber;
 	Joystick joystick;
-	double startHeading;
+	static double startHeading;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -49,8 +49,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 	 */
 	@Override
 	public void autonomousInit() {
-		startHeading = Sensors.imu.getHeading();
-		Sensors.calculateHeading(startHeading);
+		drive.setStraightValue();
 		drive.resetDistanceTraveled();
 	}
 
@@ -60,7 +59,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 	@Override
 	public void autonomousPeriodic() {
 		//what happens during autonomous (stays during autonomous)
-		auto.autoGeneric();
+		auto.autoSkeleton();
 		//TODO Placeholder for vision
 		//sensors.visionAuto();
 		

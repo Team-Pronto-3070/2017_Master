@@ -3,8 +3,9 @@ package org.usfirst.frc.team3070.robot;
 import com.ctre.CANTalon;
 import org.usfirst.frc.team3070.robot.Pronstants;
 
-public class Drive extends ProntoGyro {
+public class Drive {
 	private static CANTalon talFR, talFL, talBR, talBL;
+	double startHeading;
 	public Drive()
 	{
 		//defines the talon variables
@@ -64,10 +65,12 @@ public class Drive extends ProntoGyro {
 	{
 		//gets the distance traveled from the encoders
 		//creates a string with 2 doubles
-		double ar[] = new double[2];
-		//creates a double for each encoder value
+		double ar[] = new double[3];
+		//creates a double for each encoder value converted into feet
 		ar[0] = talFR.getEncPosition() / Pronstants.TICK_COEFFICIENT;
 		ar[1] = talFL.getEncPosition() / Pronstants.TICK_COEFFICIENT;
+		//creates a double for the average of the two encoder values (in feet)
+		ar[2] = (ar[1] - ar[2]) / 2;
 		//returns the encoder values
 		return ar;
 	}
@@ -96,5 +99,19 @@ public class Drive extends ProntoGyro {
 		}
 		//If it is, stop turning
 		drive(0,0);
+	}
+	public void driveRobotStraight() {
+		if (ProntoGyro.calculateHeading() > startHeading + 5) {
+			drive(Pronstants.AUTO_DRIVE_SPEED + 0.1, Pronstants.AUTO_DRIVE_SPEED);
+		}
+		if (ProntoGyro.calculateHeading() > (startHeading - 5)) {
+			drive (Pronstants.AUTO_DRIVE_SPEED, Pronstants.AUTO_DRIVE_SPEED + 0.1);
+		}
+		else {
+			drive(Pronstants.AUTO_DRIVE_SPEED, Pronstants.AUTO_DRIVE_SPEED);
+		}
+	}
+	public void setStraightValue() {
+		startHeading = ProntoGyro.calculateHeading();
 	}
 }
