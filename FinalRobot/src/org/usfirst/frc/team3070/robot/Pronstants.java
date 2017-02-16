@@ -4,7 +4,7 @@ public interface Pronstants {
 	//The modifier of the negative acceleration the robot undergoes at the end of a movement.
 	static final double RAMP_RATE = 0.5;
 	//The speed at which the robot travels in autonomous.
-	static final double AUTO_DRIVE_SPEED = 0.5;
+	static final double AUTO_DRIVE_SPEED = 0.1;
 	//The speed at which the robot climbs the rope.
 	static final double AUTO_CLIMB_SPEED = 0.5;
 	//The value which the robot doesn't move if the controller value is under.

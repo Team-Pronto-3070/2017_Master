@@ -1,7 +1,7 @@
 package org.usfirst.frc.team3070.robot;
 
 public class Auto {
-	private Drive drive;
+	private Drive drive = new Drive();
 	double gyroValue = 0.1;
 	double[] rotations = drive.getDistanceTraveled();
 	boolean turn1;
@@ -17,7 +17,11 @@ public class Auto {
 			//if not, drive straight forward and first turn has not happened yet
 			drive.driveRobotStraight();
 			turn1 = false;
+		}else if (rotations[2] > 5) {
+			
 		}
+			/*
+		
 		//checks if the robot has gone 5 feet
 		if (rotations[2] >= 5 && turn1 == false && drive.turn(45, Pronstants.AUTO_DRIVE_SPEED) == false) {
 			//if it has, turn it (Placeholder) degrees and the first turn has now happened
@@ -28,7 +32,7 @@ public class Auto {
 		if (turn1) {
 			//if so, start vision here
 			//TODO: finish vision and implement here
-		}
+		}*/
 	}
 	
 	public void autoL1() {

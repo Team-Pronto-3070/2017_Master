@@ -6,8 +6,11 @@ import org.usfirst.frc.team3070.robot.Pronstants;
 public class Drive {
 	private static CANTalon talFR, talFL, talBR, talBL;
 	double startHeading;
+	private ProntoGyro gyro;
 	public Drive()
 	{
+		
+		gyro = new ProntoGyro();
 		//defines the talon variables
 		talFR = new CANTalon(Pronstants.TALON_FRONT_RIGHT_PORT);
 		talFL = new CANTalon(Pronstants.TALON_FRONT_LEFT_PORT);
@@ -83,12 +86,12 @@ public class Drive {
 		//turns the robot until it aligns with an angle on the gyro
 		//TODO test on robot and see if should use time instead
 		//checks if the gyro angle is less than the desired angle
-		if (ProntoGyro.calculateHeading() < angle) { 
+		if (gyro.calculateHeading() < angle) { 
 			//If it is, turn left
 			drive(speed, -speed);
 		}
 		//checks if the gyro angle is greater than the desired angle
-		else if (ProntoGyro.calculateHeading() > angle) {
+		else if (gyro.calculateHeading() > angle) {
 			//if it is, turn right
 			drive(-speed, speed);
 		}
@@ -100,10 +103,10 @@ public class Drive {
 		return false;
 	}
 	public void driveRobotStraight() {
-		if (ProntoGyro.calculateHeading() > startHeading + 5) {
+		if (gyro.calculateHeading() > startHeading + 5) {
 			drive(Pronstants.AUTO_DRIVE_SPEED + 0.1, Pronstants.AUTO_DRIVE_SPEED);
 		}
-		else if (ProntoGyro.calculateHeading() > (startHeading - 5)) {
+		else if (gyro.calculateHeading() > (startHeading - 5)) {
 			drive (Pronstants.AUTO_DRIVE_SPEED, Pronstants.AUTO_DRIVE_SPEED + 0.1);
 		}
 		else {
@@ -111,6 +114,6 @@ public class Drive {
 		}
 	}
 	public void setStraightValue() {
-		startHeading = ProntoGyro.calculateHeading();
+		startHeading = gyro.calculateHeading();
 	}
 }
