@@ -19,9 +19,9 @@ public class Auto {
 			turn1 = false;
 		}
 		//checks if the robot has gone 5 feet
-		if (rotations[2] >= 5 && turn1 == false) {
+		if (rotations[2] >= 5 && turn1 == false && drive.turn(45, Pronstants.AUTO_DRIVE_SPEED) == false) {
 			//if it has, turn it (Placeholder) degrees and the first turn has now happened
-			drive.turnRight(45, Pronstants.AUTO_DRIVE_SPEED);
+			drive.turn(45, Pronstants.AUTO_DRIVE_SPEED);
 			turn1 = true;
 		}
 		//checks if the first turn has happened
