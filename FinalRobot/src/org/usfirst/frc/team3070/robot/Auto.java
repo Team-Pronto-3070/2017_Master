@@ -3,19 +3,36 @@ package org.usfirst.frc.team3070.robot;
 public class Auto {
 	private Drive drive;
 	double gyroValue = 0.1;
+	double[] rotations = drive.getDistanceTraveled();
+	boolean turn1;
 	public Auto(Drive drive)
 	{
 		this.drive = drive;
 	}
 // Things done during Autonomous
-	public void autoGeneric() {
+	public void autoSkeleton() {
 		//generic autonomous code
-		drive.drive(Pronstants.AUTO_DRIVE_SPEED, Pronstants.AUTO_DRIVE_SPEED);
+		//checks if the robot has not gone 5 feet
+		if (rotations[2] < 5) {
+			//if not, drive straight forward and first turn has not happened yet
+			drive.driveRobotStraight();
+			turn1 = false;
+		}
+		//checks if the robot has gone 5 feet
+		if (rotations[2] >= 5 && turn1 == false) {
+			//if it has, turn it (Placeholder) degrees and the first turn has now happened
+			drive.turnRight(45, Pronstants.AUTO_DRIVE_SPEED);
+			turn1 = true;
+		}
+		//checks if the first turn has happened
+		if (turn1) {
+			//if so, start vision here
+			//TODO: finish vision and implement here
+		}
 	}
 	
 	public void autoL1() {
 		//autonomous code for the left side to left gearloading station (driver POV)
-		
 	}
 	
 	public void autoL2() {
