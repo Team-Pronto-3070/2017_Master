@@ -13,7 +13,7 @@ public class ProntoGyro {
 	public double calculateHeading() {
 		double angle = (imu.getHeading()-angleOffset) % 360;
 		if (angle > 180) {
-			angle = 360-angle;
+			angle = angle-360;
 		}
 		return angle;
 	}

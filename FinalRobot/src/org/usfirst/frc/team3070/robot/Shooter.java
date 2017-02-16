@@ -9,7 +9,7 @@ public class Shooter {
 	public Shooter()
 	{
 		//defines the talon variables
-		talS = new CANTalon(Pronstants.TALON_CLIMBER_1_PORT);
+		talS = new CANTalon(Pronstants.TALON_SHOOTER_PORT);
 		//sets a voltage ramp rate on the talons
 		talS.setVoltageRampRate(Pronstants.RAMP_RATE);
 		//sets a current limit on the talons
