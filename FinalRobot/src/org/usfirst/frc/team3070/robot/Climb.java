@@ -23,7 +23,7 @@ public class Climb {
 		//defines limit switch
 		limitSwitch = new AnalogTrigger(Pronstants.LIMIT_SWITCH_PORT);
 	}
-	public void climbPrimary(boolean button1, boolean button2) {
+	public void checkClimbInput(boolean button1, boolean button2) {
 		//maps climber to joystick buttons
 		//checks if button1 is pressed and button2 is not
 		if (button1 && !button2) {

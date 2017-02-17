@@ -26,8 +26,9 @@ public class Auto {
 		}
 		//checks if the first turn has happened
 		else if (drive.turn(45, Pronstants.AUTO_DRIVE_SPEED) == true) {
-		//if so, start vision here
-		//TODO: finish vision and implement here
+			drive.drive(0, 0);
+			//if so, start vision here
+			//TODO: finish vision and implement here
 		}
 	}
 	

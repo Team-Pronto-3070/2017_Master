@@ -85,13 +85,14 @@ public class Drive {
 	public boolean turn(double angle, double speed) {  
 		//turns the robot until it aligns with an angle on the gyro
 		//TODO test on robot and see if should use time instead
+		double currentHeading = gyro.calculateHeading();
 		//checks if the gyro angle is less than the desired angle
-		if (gyro.calculateHeading() < angle) { 
+		if (currentHeading < angle) { 
 			//If it is, turn left
 			drive(speed, -speed);
 		}
 		//checks if the gyro angle is greater than the desired angle
-		else if (gyro.calculateHeading() > angle) {
+		else if (currentHeading > angle) {
 			//if it is, turn right
 			drive(-speed, speed);
 		}
@@ -103,10 +104,11 @@ public class Drive {
 		return false;
 	}
 	public void driveRobotStraight() {
-		if (gyro.calculateHeading() > startHeading + 5) {
+		double currentHeading = gyro.calculateHeading();
+		if (currentHeading > startHeading + 5) {
 			drive(Pronstants.AUTO_DRIVE_SPEED + 0.1, Pronstants.AUTO_DRIVE_SPEED);
 		}
-		else if (gyro.calculateHeading() > (startHeading - 5)) {
+		else if (currentHeading > (startHeading - 5)) {
 			drive (Pronstants.AUTO_DRIVE_SPEED, Pronstants.AUTO_DRIVE_SPEED + 0.1);
 		}
 		else {
