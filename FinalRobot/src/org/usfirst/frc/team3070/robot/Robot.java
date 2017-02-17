@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3070.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.IterativeRobot;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -53,6 +54,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 	public void autonomousInit() {
 		drive.setStraightValue();
 		drive.resetDistanceTraveled();
+		SmartDashboard.putString("DB/String 0", "Test thing");
 	}
 
 	/**
