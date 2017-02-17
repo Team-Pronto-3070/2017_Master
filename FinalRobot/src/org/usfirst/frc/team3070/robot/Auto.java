@@ -1,16 +1,24 @@
 package org.usfirst.frc.team3070.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class Auto {
 	private Drive drive = new Drive();
 	double gyroValue = 0.1;
 	boolean turn1;
 	double rotations[] = drive.getDistanceTraveled();
+	int counter = 0;
 	public Auto(Drive drive)
 	{
 		this.drive = drive;
 	}
 // Things done during Autonomous
 	public void autoSkeleton() {
+//		counter ++;
+//		SmartDashboard.putString("DB/String 1", String.format("counter = %d", counter));
+//		double dashData = SmartDashboard.getNumber("DB/Slider 0", 0.0);
+//		SmartDashboard.putString("DB/String 2", String.format("dashData = %f", dashData));
+//		return;
 		//generic autonomous code
 		//creates a variable for the array "getDistanceTraveled" (see drive)
 		double[] rotations = drive.getDistanceTraveled();
