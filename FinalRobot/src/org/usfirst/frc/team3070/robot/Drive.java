@@ -73,7 +73,7 @@ public class Drive {
 		ar[0] = talFR.getEncPosition() / Pronstants.TICK_COEFFICIENT;
 		ar[1] = talFL.getEncPosition() / Pronstants.TICK_COEFFICIENT;
 		//creates a double for the average of the two encoder values (in feet)
-		ar[2] = (ar[1] - ar[2]) / 2;
+		ar[2] = (ar[1] + ar[0]) / 2;
 		//returns the encoder values
 		return ar;
 	}

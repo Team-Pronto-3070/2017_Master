@@ -8,7 +8,7 @@ public interface Pronstants {
 	//The speed at which the robot climbs the rope.
 	static final double AUTO_CLIMB_SPEED = 0.5;
 	//The speed at which the robot shoots the balls.
-		static final double AUTO_SHOOT_SPEED = 0.5;
+	static final double AUTO_SHOOT_SPEED = 1;
 	//The value which the robot doesn't move if the controller value is under.
 	static final double DEAD_ZONE = 0.1;
 	//The value which limits the amp usage of the drive talons.
@@ -26,7 +26,8 @@ public interface Pronstants {
 	static final int TALON_CLIMBER_1_PORT = 4;
 	static final int TALON_CLIMBER_2_PORT = 5;
 	static final int TALON_SHOOTER_PORT = 6;
-	static final int JOYSTICK_PORT = 0; 
+	static final int LIMIT_SWITCH_PORT = 7;
+	static final int JOYSTICK_PORT = 0;
 	//Conversion from encoder values to feet, which is 162.97 ticks per foot.
 	static final double TICK_COEFFICIENT = 162.97;
 }
