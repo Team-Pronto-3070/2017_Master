@@ -3,6 +3,11 @@ package org.usfirst.frc.team3070.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.vision.VisionThread;
+import gripvis.vision;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 /**
@@ -12,14 +17,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Robot extends IterativeRobot implements Pronstants {
+public class Robot extends IterativeRobot {
 	//Defines classes
 	Drive drive;
 	Auto auto;
 	Climb climber;
-	Joystick joystick;
+	Joystick joyL, joyR;
 	Shooter shoot;
 	ProntoGyro gyro;
+	public VisionThread visionThread;
+	public static vision grip;
+	public static double startHeading;
+	public static int startEnc1;
+	public static int startEnc2;
+	public static double adjSpeed;
+	public double[] distanceTraveled = drive.getDistanceTraveled();
 	
 	//creates booleans for buttons on the SmartDash
 	double value;
@@ -32,13 +44,19 @@ public class Robot extends IterativeRobot implements Pronstants {
 	public void robotInit() {
 		//Initializes robot
 		//Initializes FRC WPILIB Classes
-		joystick = new Joystick(JOYSTICK_PORT);
+		joyL = new Joystick(Pronstants.LEFT_JOYSTICK_PORT);
+		joyR = new Joystick(Pronstants.RIGHT_JOYSTICK_PORT);
 		//Initializes Pronto Classes
 		drive = new Drive();
 		auto = new Auto(drive);
 		climber = new Climb();
 		shoot = new Shooter();
 		gyro = new ProntoGyro();
+
+		grip = new vision();
+		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+		camera.setResolution(Pronstants.IMG_WIDTH, Pronstants.IMG_HEIGHT);
+		startHeading = gyro.calculateHeading();
 	}
 
 	/**
@@ -72,6 +90,11 @@ public class Robot extends IterativeRobot implements Pronstants {
 		else if (autoCode >= 0.9 && autoCode >= 1.1) {
 			auto.dummy2();
 		}
+		SmartDashboard.putString("DB/String 0", "heading = " + (gyro.calculateHeading()));
+		SmartDashboard.putString("DB/String 1", "enc1 =" + distanceTraveled[0]);
+		SmartDashboard.putString("DB/String 2", "enc2 = " + distanceTraveled[1]);
+		climber.printClimblimVoltage();
+		climber.checkClimbImput2(joyL.getRawButton(2));
 //		switch (autoSelected) {
 //		case customAuto:
 //			// Put custom auto code here
@@ -89,9 +112,9 @@ public class Robot extends IterativeRobot implements Pronstants {
 	@Override
 	public void teleopPeriodic() {
 		//teleop programs  (names are pretty self-explanatory)
-		climber.checkClimbInput(joystick.getRawButton(1), joystick.getRawButton(2));
-		shoot.checkShootInput(joystick.getRawButton(3), joystick.getRawButton(4));
-		drive.joystickDrive(joystick.getRawAxis(5), joystick.getRawAxis(1));
+		climber.checkClimbImput2(joyL.getRawButton(2));
+		shoot.checkShootInput(joyL.getRawButton(1), joyR.getRawButton(1));
+		drive.joystickDrive(joyR.getRawAxis(0), joyL.getRawAxis(0));
 	}
 
 	/**
