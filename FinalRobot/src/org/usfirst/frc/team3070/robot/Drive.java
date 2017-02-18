@@ -9,7 +9,6 @@ public class Drive {
 	private ProntoGyro gyro;
 	public Drive()
 	{
-		
 		gyro = new ProntoGyro();
 		//defines the talon variables
 		talFR = new CANTalon(Pronstants.TALON_FRONT_RIGHT_PORT);
@@ -67,14 +66,13 @@ public class Drive {
 	public double[] getDistanceTraveled()
 	{
 		//gets the distance traveled from the encoders
-		//creates a string with 2 doubles
+		//creates an array with 3 doubles
 		double ar[] = new double[3];
 		//creates a double for each encoder value converted into feet
 		ar[0] = talFR.getEncPosition() / Pronstants.TICK_COEFFICIENT;
 		ar[1] = talFL.getEncPosition() / Pronstants.TICK_COEFFICIENT;
 		//creates a double for the average of the two encoder values (in feet)
 		ar[2] = (ar[1] + ar[0]) / 2;
-		//returns the encoder values
 		return ar;
 	}
 	public void resetDistanceTraveled() {
@@ -105,10 +103,10 @@ public class Drive {
 	}
 	public void driveRobotStraight() {
 		double currentHeading = gyro.calculateHeading();
-		if (currentHeading > startHeading + 5) {
+		if (currentHeading > startHeading + 2) {
 			drive(Pronstants.AUTO_DRIVE_SPEED + 0.1, Pronstants.AUTO_DRIVE_SPEED);
 		}
-		else if (currentHeading > (startHeading - 5)) {
+		else if (currentHeading > (startHeading - 2)) {
 			drive (Pronstants.AUTO_DRIVE_SPEED, Pronstants.AUTO_DRIVE_SPEED + 0.1);
 		}
 		else {

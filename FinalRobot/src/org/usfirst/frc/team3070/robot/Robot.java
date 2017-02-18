@@ -1,10 +1,9 @@
 package org.usfirst.frc.team3070.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -14,12 +13,17 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * directory.
  */
 public class Robot extends IterativeRobot implements Pronstants {
+	//Defines classes
 	Drive drive;
 	Auto auto;
 	Climb climber;
 	Joystick joystick;
 	Shooter shoot;
-	static double startHeading;
+	ProntoGyro gyro;
+	
+	//creates booleans for buttons on the SmartDash
+	double value;
+	double autoCode = SmartDashboard.getNumber("DB/Slider 0", value);
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -27,16 +31,14 @@ public class Robot extends IterativeRobot implements Pronstants {
 	@Override
 	public void robotInit() {
 		//Initializes robot
-		//variable init
-
+		//Initializes FRC WPILIB Classes
 		joystick = new Joystick(JOYSTICK_PORT);
 		//Initializes Pronto Classes
 		drive = new Drive();
 		auto = new Auto(drive);
 		climber = new Climb();
 		shoot = new Shooter();
-		//Sets encoders to the feedback device for Talons
-		//TODO see which talons have encoders
+		gyro = new ProntoGyro();
 	}
 
 	/**
@@ -54,7 +56,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 	public void autonomousInit() {
 		drive.setStraightValue();
 		drive.resetDistanceTraveled();
-		SmartDashboard.putString("DB/String 0", "Test thing");
+		gyro.reset();
 	}
 
 	/**
@@ -63,10 +65,13 @@ public class Robot extends IterativeRobot implements Pronstants {
 	@Override
 	public void autonomousPeriodic() {
 		//what happens during autonomous (stays during autonomous)
-		auto.autoSkeleton();
-		//TODO Placeholder for vision
-		//sensors.visionAuto();
-		
+		//tells the code which autonomous program to run based on buttons from the SmartDash
+		if (autoCode >= 0.4 && autoCode <= 0.6) {
+			auto.dummy1();
+		}
+		else if (autoCode >= 0.9 && autoCode >= 1.1) {
+			auto.dummy2();
+		}
 //		switch (autoSelected) {
 //		case customAuto:
 //			// Put custom auto code here
@@ -83,11 +88,10 @@ public class Robot extends IterativeRobot implements Pronstants {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		//teleop programs
+		//teleop programs  (names are pretty self-explanatory)
 		climber.checkClimbInput(joystick.getRawButton(1), joystick.getRawButton(2));
 		shoot.checkShootInput(joystick.getRawButton(3), joystick.getRawButton(4));
 		drive.joystickDrive(joystick.getRawAxis(5), joystick.getRawAxis(1));
-		//sensors.visionTeleop();
 	}
 
 	/**
