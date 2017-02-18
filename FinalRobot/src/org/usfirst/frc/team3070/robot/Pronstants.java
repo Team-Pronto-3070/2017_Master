@@ -25,8 +25,9 @@ public interface Pronstants {
 	static final int TALON_BACK_LEFT_PORT = 3;
 	static final int TALON_CLIMBER_1_PORT = 4;
 	static final int TALON_CLIMBER_2_PORT = 5;
-	static final int TALON_SHOOTER_PORT = 6;
-	static final int LIMIT_SWITCH_PORT = 7;
+	static final int TALON_SHOOTER_1_PORT = 6;
+	static final int TALON_SHOOTER_2_PORT = 7;
+	static final int LIMIT_SWITCH_PORT = 8;
 	static final int LEFT_JOYSTICK_PORT = 0;
 	static final int RIGHT_JOYSTICK_PORT = 1;
 	//Conversion from encoder values to feet, which is 162.97 ticks per foot.
