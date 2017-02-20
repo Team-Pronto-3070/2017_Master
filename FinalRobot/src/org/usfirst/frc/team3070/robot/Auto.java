@@ -50,21 +50,28 @@ public class Auto {
 		// POV)
 		// creates a variable for the array "getDistanceTraveled" (see drive)
 		double[] rotations = drive.getDistanceTraveled();
+		boolean robotShoot;
 		// checks if the robot has not gone 5 feet
 		if (rotations[2] < 5) {
 			// if not, drive straight forward
 			drive.driveRobotStraight();
+			robotShoot = false;
 		}
 		// checks if the robot has gone 5 feet and if the first turn has not finished yet
 		else if (drive.turn(60, Pronstants.AUTO_DRIVE_SPEED) == false) {
 			// if so, turn it (Placeholder) degrees and reset the distance traveled
 			drive.turn(60, Pronstants.AUTO_DRIVE_SPEED);
 			drive.resetDistanceTraveled();
+			robotShoot = false;
 		}
 		// checks if the first turn has finished
 		else if (drive.turn(60, Pronstants.AUTO_DRIVE_SPEED) == true) {
 			drive.drive(0, 0);
+			robotShoot = true;
 			// TODO: finish vision and implement here
+		}
+		if (robotShoot = true) {
+			shooter.autoShoot();
 		}
 	}
 

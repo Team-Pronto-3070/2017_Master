@@ -3,7 +3,6 @@ package org.usfirst.frc.team3070.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.vision.VisionThread;
 import gripvis.vision;
 import edu.wpi.cscore.UsbCamera;
@@ -32,10 +31,10 @@ public class Robot extends IterativeRobot {
 	public static int startEnc2;
 	public static double adjSpeed;
 	//public double[] distanceTraveled = drive.getDistanceTraveled();
-	
 	//creates booleans for buttons on the SmartDash
 	double value;
 	double autoCode = SmartDashboard.getNumber("DB/Slider 0", value);
+	public boolean button1 = false;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -72,7 +71,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		drive.setStraightValue();
 		drive.resetDistanceTraveled();
 		gyro.reset();
 	}
@@ -115,9 +113,26 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		//teleop programs  (names are pretty self-explanatory)
+		//creates a boolean for a button
 		climber.checkClimbInput2(joyL.getRawButton(8), joyL.getRawButton(9));
 //		shoot.checkShootInput(joyL.getRawButton(1), joyR.getRawButton(1));
-		drive.joystickDrive(joyR.getRawAxis(1), joyL.getRawAxis(1));
+		//checks if the control switcher button is pressed
+		if (joyR.getRawButton(Pronstants.CONTROL_SWITCH_BUTTON)) {
+			//if so, set the boolean for that button to true
+			button1 = true;
+		}
+		else if (joyL.getRawButton(Pronstants.CONTROL_SWITCH_BUTTON)) {
+			button1 = false;
+		}
+		//checks if the boolean for the control switcher button is true
+		if (button1) {
+			//if so, switch the controls
+			drive.driveSwitch(joyR.getRawAxis(1), joyL.getRawAxis(1));
+		}
+		else {
+			//if not, keep the controls the same
+			drive.joystickDrive(joyR.getRawAxis(1), joyL.getRawAxis(1));
+		}
 //		climber.printClimblimVoltage();
 	}
 
@@ -129,4 +144,3 @@ public class Robot extends IterativeRobot {
 		//unimportant
 	}
 }
-
