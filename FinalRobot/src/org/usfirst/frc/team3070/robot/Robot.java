@@ -31,7 +31,7 @@ public class Robot extends IterativeRobot {
 	public static int startEnc1;
 	public static int startEnc2;
 	public static double adjSpeed;
-	public double[] distanceTraveled = drive.getDistanceTraveled();
+	//public double[] distanceTraveled = drive.getDistanceTraveled();
 	
 	//creates booleans for buttons on the SmartDash
 	double value;
@@ -84,17 +84,20 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		//what happens during autonomous (stays during autonomous)
 		//tells the code which autonomous program to run based on buttons from the SmartDash
-		if (autoCode >= 0.4 && autoCode <= 0.6) {
-			auto.dummy1();
-		}
-		else if (autoCode >= 0.9 && autoCode >= 1.1) {
-			auto.dummy2();
-		}
+//		if (autoCode >= 0.4 && autoCode <= 0.6) {
+//			auto.dummy1();
+//		}
+//		else if (autoCode >= 0.9 && autoCode >= 1.1) {
+//			auto.dummy2();
+//		}
+//		else {
+			auto.dummy3();
+//		}
 		SmartDashboard.putString("DB/String 0", "heading = " + (gyro.calculateHeading()));
-		SmartDashboard.putString("DB/String 1", "enc1 =" + distanceTraveled[0]);
-		SmartDashboard.putString("DB/String 2", "enc2 = " + distanceTraveled[1]);
-		climber.printClimblimVoltage();
-		climber.checkClimbImput2(joyL.getRawButton(2));
+//		SmartDashboard.putString("DB/String 1", "enc1 =" + distanceTraveled[0]);
+//		SmartDashboard.putString("DB/String 2", "enc2 = " + distanceTraveled[1]);
+
+
 //		switch (autoSelected) {
 //		case customAuto:
 //			// Put custom auto code here
@@ -112,9 +115,10 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		//teleop programs  (names are pretty self-explanatory)
-		climber.checkClimbImput2(joyL.getRawButton(2));
-		shoot.checkShootInput(joyL.getRawButton(1), joyR.getRawButton(1));
-		drive.joystickDrive(joyR.getRawAxis(0), joyL.getRawAxis(0));
+		climber.checkClimbInput2(joyL.getRawButton(8), joyL.getRawButton(9));
+//		shoot.checkShootInput(joyL.getRawButton(1), joyR.getRawButton(1));
+		drive.joystickDrive(joyR.getRawAxis(1), joyL.getRawAxis(1));
+//		climber.printClimblimVoltage();
 	}
 
 	/**
