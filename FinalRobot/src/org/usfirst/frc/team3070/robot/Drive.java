@@ -62,10 +62,10 @@ public class Drive {
 	public void drive(double right, double left) {
 		// drives the robot based on two different input values for left and
 		// right
-		talFR.set(-right);
-		talBR.set(-right);
-		talFL.set(left);
-		talBL.set(left);
+		talFR.set(right);
+		talBR.set(right);
+		talFL.set(-left);
+		talBL.set(-left);
 	}
 
 	public double[] getDistanceTraveled() {

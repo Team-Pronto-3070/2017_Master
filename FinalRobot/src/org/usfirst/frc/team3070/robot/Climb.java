@@ -2,14 +2,15 @@ package org.usfirst.frc.team3070.robot;
 
 import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.AnalogInput;
-//import edu.wpi.first.wpilibj.AnalogTrigger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Climb {
 	//Defines talons for the climber
 	static CANTalon talC1, talC2;
 //	static AnalogTrigger limitSwitch;
-	AnalogInput climbLim;
+//	AnalogInput climbLim;
+	AnalogInput climbLim1;
+	AnalogInput climbLim2;
 
 	//climber constructor
 	public Climb()
@@ -25,7 +26,8 @@ public class Climb {
 		talC2.setCurrentLimit(Pronstants.CLIMB_CURRENT_LIMIT);
 		//TODO: Implement analog switch with boolean output that triggers when at top, stop climber motors.
 		//defines limit switch
-		climbLim = new AnalogInput(0);
+		climbLim1 = new AnalogInput(Pronstants.LIMIT_SWITCH_1_PORT);
+		climbLim2 = new AnalogInput(Pronstants.LIMIT_SWITCH_2_PORT);
 //		limitSwitch = new AnalogTrigger(Pronstants.LIMIT_SWITCH_PORT);
 	}
 //	public void checkClimbInput(boolean button1, boolean button2) {
@@ -63,18 +65,33 @@ public class Climb {
 //		}
 //	}
 
-	public void checkClimbImput2(boolean button1) {
-		if (button1 && climbLim.getVoltage() < 3) {
-			talC1.set(-Pronstants.AUTO_CLIMB_SPEED);
+	public void checkClimbInput2(boolean button1, boolean button2) {
+		double limit1 = climbLim1.getVoltage();
+		double limit2 = climbLim2.getVoltage();
+		SmartDashboard.putNumber("DB/String 7", limit1);
+		SmartDashboard.putNumber("DB/String 8", limit2);
+		if (limit1 < 3 && limit2 < 3) {
+			if (button1 && !button2) {
+				//these should BOTH BE NEGATIVE, ALEX >:(
+				talC1.set(-Pronstants.AUTO_CLIMB_SPEED);
+				talC2.set(-Pronstants.AUTO_CLIMB_SPEED);
+			}
+		}
+		else if (button2 && !button1){
+			talC1.set(Pronstants.AUTO_CLIMB_SPEED);
 			talC2.set(Pronstants.AUTO_CLIMB_SPEED);
 		}
-		else {
-			talC2.set(0);
+		else if (button1 && button2) {
 			talC1.set(0);
+			talC2.set(0);
+		}
+		else {
+			talC1.set(0);
+			talC2.set(0);
 		}
 	}
 	
-	public void printClimblimVoltage() {
-		SmartDashboard.putString("DB/String 3", "adj = " + climbLim.getVoltage());
-	}
+//	public void printClimblimVoltage() {
+//		SmartDashboard.putString("DB/String 3", "adj = " + climbLim.getVoltage());
+//	}
 }
