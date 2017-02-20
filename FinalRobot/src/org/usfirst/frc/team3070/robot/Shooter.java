@@ -9,9 +9,9 @@ public class Shooter {
 	public Shooter()
 	{
 		//defines the talon variables
-		talS = new CANTalon(Pronstants.TALON_SHOOTER_PORT);
+		talS = new CANTalon(5);
 		//sets a voltage ramp rate on the talons
-		talS.setVoltageRampRate(Pronstants.RAMP_RATE);
+	//	talS.setVoltageRampRate(Pronstants.RAMP_RATE);
 		//sets a current limit on the talons
 		talS.setCurrentLimit(Pronstants.SHOOT_CURRENT_LIMIT);
 	}
@@ -37,5 +37,15 @@ public class Shooter {
 		else {
 			talS.set(0);
 		}
+	}
+	public void shooterStop(){
+		talS.set(0);
+	}
+	public void shooterGo(){
+		talS.set(-.965);
+		System.out.println(talS.getBusVoltage());
+	}
+	public void shooterGoNega(){
+		talS.set(.965);
 	}
 }

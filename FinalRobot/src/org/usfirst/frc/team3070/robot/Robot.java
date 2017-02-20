@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3070.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.IterativeRobot;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -20,6 +21,7 @@ public class Robot extends IterativeRobot implements Pronstants {
 	Joystick joystick;
 	Shooter shoot;
 	static double startHeading;
+	Timer timer;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -52,9 +54,11 @@ public class Robot extends IterativeRobot implements Pronstants {
 	 */
 	@Override
 	public void autonomousInit() {
-		drive.setStraightValue();
-		drive.resetDistanceTraveled();
-		SmartDashboard.putString("DB/String 0", "Test thing");
+//		drive.setStraightValue();
+//		drive.resetDistanceTraveled();
+//		SmartDashboard.putString("DB/String 0", "Test thing");
+		shoot.shooterStop();
+//		timer.start();
 	}
 
 	/**
@@ -62,8 +66,13 @@ public class Robot extends IterativeRobot implements Pronstants {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		/*if(timer.get()<15){
+			shoot.shooterGo();
+		}else{
+			shoot.shooterStop();
+		}*/
 		//what happens during autonomous (stays during autonomous)
-		auto.autoSkeleton();
+		//auto.autoSkeleton();
 		//TODO Placeholder for vision
 		//sensors.visionAuto();
 		
@@ -84,9 +93,16 @@ public class Robot extends IterativeRobot implements Pronstants {
 	@Override
 	public void teleopPeriodic() {
 		//teleop programs
-		climber.checkClimbInput(joystick.getRawButton(1), joystick.getRawButton(2));
+		/*climber.checkClimbInput(joystick.getRawButton(1), joystick.getRawButton(2));
 		shoot.checkShootInput(joystick.getRawButton(3), joystick.getRawButton(4));
-		drive.joystickDrive(joystick.getRawAxis(5), joystick.getRawAxis(1));
+		drive.joystickDrive(joystick.getRawAxis(5), joystick.getRawAxis(1));*/
+		if(joystick.getRawButton(1)){
+			shoot.shooterGo();
+		} else if(joystick.getRawButton(2)){
+			shoot.shooterGoNega();
+		}else{
+			shoot.shooterStop();
+		}
 		//sensors.visionTeleop();
 	}
 
