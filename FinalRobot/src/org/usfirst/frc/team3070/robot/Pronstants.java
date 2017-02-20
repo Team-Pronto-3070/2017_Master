@@ -29,8 +29,8 @@ public interface Pronstants {
 	//static final int TALON_SHOOTER_2_PORT = 7;
 	static final int LIMIT_SWITCH_1_PORT = 0;
 	static final int LIMIT_SWITCH_2_PORT = 1;
-	static final int LEFT_JOYSTICK_PORT = 2;
-	static final int RIGHT_JOYSTICK_PORT = 1;
+	static final int LEFT_JOYSTICK_PORT = 0;
+	static final int RIGHT_JOYSTICK_PORT = 2;
 	//Conversion from encoder values to feet, which is 162.97 ticks per foot.
 	static final double TICK_COEFFICIENT = 162.97;
 	//sensors variables
@@ -38,4 +38,6 @@ public interface Pronstants {
 	static final int IMG_HEIGHT = 240;
 	static final double ADJUSTING_CONSTANT = .016;
 	static final double ANGLE_VARIANCE = .5;
+	//Button for switching joystick controls
+	static final int CONTROL_SWITCH_BUTTON = 6;
 }

@@ -67,6 +67,35 @@ public class Drive {
 		talFL.set(-left);
 		talBL.set(-left);
 	}
+	
+	public void driveSwitch(double joyR, double joyL) {
+		// makes the joystick control the talons
+		// defines the variables for the speed of left and right sides of the
+		// robot
+		double speedR, speedL;
+		// checks if the right joystick is in the deadzone
+		if (Math.abs(joyR) > Pronstants.DEAD_ZONE) {
+			// If it isn't, set the speed of the right side to the joystick
+			// value
+			speedR = joyR;
+		} else {
+			// If the joystick is in the deadzone, set the speed of the right
+			// side to 0
+			speedR = 0;
+		}
+		// checks if the left joystick is in the deadzone
+		if (Math.abs(joyL) > Pronstants.DEAD_ZONE) {
+			// If it isn't, set the speed of the right side to the joystick
+			// value
+			speedL = joyL;
+		} else {
+			// If the joystick is in the deadzone, set the speed of the right
+			// side to 0
+			speedL = 0;
+		}
+		// drives the robot forward at the speeds set earlier for left and right
+		drive(-speedR, -speedL);
+	}
 
 	public double[] getDistanceTraveled() {
 		// gets the distance traveled from the encoders
@@ -110,19 +139,17 @@ public class Drive {
 	}
 
 	public void driveRobotStraight() {
-		double currentHeading = gyro.calculateHeading();
-		if (currentHeading > startHeading + 2) {
-			drive(Pronstants.AUTO_DRIVE_SPEED + 0.1, Pronstants.AUTO_DRIVE_SPEED);
-		} else if (currentHeading > (startHeading - 2)) {
-			drive(Pronstants.AUTO_DRIVE_SPEED, Pronstants.AUTO_DRIVE_SPEED + 0.1);
-		} else {
-			drive(Pronstants.AUTO_DRIVE_SPEED, Pronstants.AUTO_DRIVE_SPEED);
-		}
+//		double currentHeading = gyro.calculateHeading();
+//		if (currentHeading > startHeading + 2) {
+//			drive(Pronstants.AUTO_DRIVE_SPEED + 0.1, Pronstants.AUTO_DRIVE_SPEED);
+//		} else if (currentHeading > (startHeading - 2)) {
+//			drive(Pronstants.AUTO_DRIVE_SPEED, Pronstants.AUTO_DRIVE_SPEED + 0.1);
+//		} else {
+//			drive(Pronstants.AUTO_DRIVE_SPEED, Pronstants.AUTO_DRIVE_SPEED);
+//		}
+		drive(Pronstants.AUTO_DRIVE_SPEED + gyro.adjSpeed(), -(Pronstants.AUTO_DRIVE_SPEED + gyro.adjSpeed()));
 	}
 
-	public void setStraightValue() {
-		startHeading = gyro.calculateHeading();
-	}
 	
 	public void visionDrive() {
 		

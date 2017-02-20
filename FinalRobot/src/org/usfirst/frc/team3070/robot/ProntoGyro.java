@@ -11,9 +11,12 @@ public class ProntoGyro {
 	}
 	
 	public double calculateHeading() {	
-		double angle = (imu.getHeading()-angleOffset) % 360;
-		if (angle > 180) {
-			angle = angle-360;
+		double angle;
+		if (imu.getHeading()-angleOffset < 0) {
+			angle = ((imu.getHeading() - angleOffset) % 180) * -1;
+		}
+		else {
+		angle = (imu.getHeading()-angleOffset) % 180;
 		}
 		return angle;
 	}
@@ -22,5 +25,12 @@ public class ProntoGyro {
 	{
 		angleOffset = imu.getHeading();
 	}
-
+	
+	public double adjSpeed() {
+		double adjVolt = 0;
+		if (Math.abs(calculateHeading() - angleOffset) > Pronstants.ANGLE_VARIANCE) {
+			 adjVolt =  calculateHeading() * Pronstants.ADJUSTING_CONSTANT;
+		}
+		return adjVolt;
+	}
 }
