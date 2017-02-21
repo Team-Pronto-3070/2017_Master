@@ -30,14 +30,18 @@ public interface Pronstants {
 	static final int LIMIT_SWITCH_1_PORT = 0;
 	static final int LIMIT_SWITCH_2_PORT = 1;
 	static final int LEFT_JOYSTICK_PORT = 0;
-	static final int RIGHT_JOYSTICK_PORT = 2;
+	static final int RIGHT_JOYSTICK_PORT = 1;
 	//Conversion from encoder values to feet, which is 162.97 ticks per foot.
 	static final double TICK_COEFFICIENT = 162.97;
-	//sensors variables
+	// sensors variables
 	static final int IMG_WIDTH = 320;
 	static final int IMG_HEIGHT = 240;
+	// ProntoGyro variables
 	static final double ADJUSTING_CONSTANT = .016;
 	static final double ANGLE_VARIANCE = .5;
-	//Button for switching joystick controls
+	// Button for switching joystick controls
 	static final int CONTROL_SWITCH_BUTTON = 6;
+	// Values for the autonomous selector
+	static int AUTO_SIDE_LEFT = 1;
+	static int AUTO_SIDE_RIGHT = 2;
 }
