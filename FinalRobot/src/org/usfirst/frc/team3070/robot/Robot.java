@@ -24,8 +24,8 @@ public class Robot extends IterativeRobot {
 	Shooter shoot;
 	ProntoGyro gyro;
 	//vision variables
-	public VisionThread visionThread;
-	public static vision grip;
+//	public VisionThread visionThread;
+//	public static vision grip;
 	//defines the encoder starting variables
 	public static int startEnc1;
 	public static int startEnc2;
@@ -55,10 +55,10 @@ public class Robot extends IterativeRobot {
 		climber = new Climb();
 		shoot = new Shooter();
 		gyro = new ProntoGyro();
-		grip = new vision();
+//		grip = new vision();
 	//vision code
-		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-		camera.setResolution(Pronstants.IMG_WIDTH, Pronstants.IMG_HEIGHT);
+//		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+//		camera.setResolution(Pronstants.IMG_WIDTH, Pronstants.IMG_HEIGHT);
 //visionThread = new VisionThread (camera, grip,pipline ->{
 //			System.out.println(grip.findBlobsOutput().size());
 //		});
@@ -80,6 +80,8 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		//resets the distance traveled
 		drive.resetDistanceTraveled();
+		// resets the gyro
+		gyro.reset();
 		//gets the value of the buttons on the "basic" smartDash tab
 		dash1 = SmartDashboard.getBoolean("DB/Button 0", false);
 		dash2 = SmartDashboard.getBoolean("DB/Button 1", false);
@@ -95,6 +97,7 @@ public class Robot extends IterativeRobot {
 		//what happens during autonomous (stays during autonomous)
 		//tells the code which autonomous program to run based on buttons from the SmartDash
 		//checks if the 1st and 4th buttons are pressed
+//		drive.turn(90, Pronstants.AUTO_DRIVE_SPEED);
 		if (dash1 && dash4) {
 			//if so, run the left side to left gearloader code
 			auto.autoOutsideCenter(Pronstants.AUTO_SIDE_LEFT);

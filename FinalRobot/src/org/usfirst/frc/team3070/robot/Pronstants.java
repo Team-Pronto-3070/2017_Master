@@ -4,11 +4,12 @@ public interface Pronstants {
 	//The modifier of the negative acceleration the robot undergoes at the end of a movement.
 	static final double RAMP_RATE = 0.5;
 	//The speed at which the robot travels in autonomous.
-	static final double AUTO_DRIVE_SPEED = 0.3;
+	static final double AUTO_DRIVE_SPEED = 0.5;
 	//The speed at which the robot climbs the rope.
 	static final double AUTO_CLIMB_SPEED = 0.8;
 	//The speed at which the robot shoots the balls.
 	static final double AUTO_SHOOT_SPEED = 1;
+	static final double AUTO_HOPPER_SPEED = 1;
 	//The value which the robot doesn't move if the controller value is under.
 	static final double DEAD_ZONE = 0.1;
 	//The value which limits the amp usage of the drive talons.
@@ -25,8 +26,8 @@ public interface Pronstants {
 	static final int TALON_BACK_LEFT_PORT = 5;
 	static final int TALON_CLIMBER_1_PORT = 1;
 	static final int TALON_CLIMBER_2_PORT = 2;
-	//static final int TALON_SHOOTER_1_PORT = 6;
-	//static final int TALON_SHOOTER_2_PORT = 7;
+	static final int TALON_SHOOTER_1_PORT = 8;
+	static final int TALON_SHOOTER_2_PORT = 9;
 	static final int LIMIT_SWITCH_1_PORT = 0;
 	static final int LIMIT_SWITCH_2_PORT = 1;
 	static final int LEFT_JOYSTICK_PORT = 0;

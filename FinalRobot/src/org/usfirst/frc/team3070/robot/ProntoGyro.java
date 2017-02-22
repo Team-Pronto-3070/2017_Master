@@ -5,7 +5,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ProntoGyro {
 	// defines the variable imu from the class BNO055
-	private static BNO055 imu = BNO055.getInstance(BNO055.opmode_t.OPERATION_MODE_IMUPLUS,BNO055.vector_type_t.VECTOR_EULER);
+	public static BNO055 imu = BNO055.getInstance(BNO055.opmode_t.OPERATION_MODE_IMUPLUS,BNO055.vector_type_t.VECTOR_EULER);
+	
 	// defines the variable for the angle offset
 	private static double angleOffset;
 	
@@ -26,7 +27,7 @@ public class ProntoGyro {
 		if (imu.getHeading()-angleOffset < 0) {
 			// if so, set angle to the remainder of the current angle
 			// divided by 180 times -1 (a negative angle)
-			angle = ((imu.getHeading() - angleOffset) % 180) * -1;
+			angle = ((imu.getHeading() - angleOffset) % 180)/* -1 */;
 		}
 		
 		else {
@@ -44,6 +45,14 @@ public class ProntoGyro {
 	public void reset() {
 		// resets the angleOffset to the current heading
 		angleOffset = calculateHeading();
+	}
+	
+	public double getHeading() {
+		return imu.getHeading();
+	}
+	
+	public double getOffset() {
+		return angleOffset;
 	}
 	
 	public double adjSpeed() {
