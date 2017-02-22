@@ -32,13 +32,14 @@ public class Drive {
 		talBL.setCurrentLimit(Pronstants.DRIVE_CURRENT_LIMIT);
 		// sets feedback device on the talons to encoders
 		talFR.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-		talFL.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+		talBL.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
 	}
 
 	public void joystickDrive(double joyR, double joyL) {
 		// makes the joystick control the talons
 		// defines the variables for the speed of left and right sides of the robot
 		double speedR, speedL;
+		System.out.println(ProntoGyro.imu.getHeading());
 		// checks if the right joystick is in the deadzone
 		if (Math.abs(joyR) > Pronstants.DEAD_ZONE) {
 			// If it isn't, set the speed of the right side to the joystick
@@ -116,7 +117,7 @@ public class Drive {
 		
 		// creates a double for each encoder value converted into feet
 		ar[0] = talFR.getEncPosition() / Pronstants.TICK_COEFFICIENT;
-		ar[1] = talFL.getEncPosition() / Pronstants.TICK_COEFFICIENT;
+		ar[1] = -talBL.getEncPosition() / Pronstants.TICK_COEFFICIENT;
 		
 		// creates a double for the average of the two encoder values (in feet)
 		ar[2] = (ar[1] + ar[0]) / 2;
@@ -132,7 +133,7 @@ public class Drive {
 	public void resetDistanceTraveled() {
 		// resets the encoder values to 0
 		talFR.setEncPosition(0);
-		talFL.setEncPosition(0);
+		talBL.setEncPosition(0);
 	}
 
 	public boolean turn(double angle, double speed) {
