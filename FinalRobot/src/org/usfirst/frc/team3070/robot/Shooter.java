@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3070.robot;
 
 import com.ctre.CANTalon;
+import com.ctre.CANTalon.TalonControlMode;
 
 public class Shooter {
 	//Defines talons for the shooter
@@ -14,6 +15,7 @@ public class Shooter {
 	//	talS.setVoltageRampRate(Pronstants.RAMP_RATE);
 		//sets a current limit on the talons
 		talS.setCurrentLimit(Pronstants.SHOOT_CURRENT_LIMIT);
+		talS.changeControlMode(TalonControlMode.Voltage);
 	}
 	public void checkShootInput(boolean button1, boolean button2) {
 		//maps shooter to joystick buttons
@@ -38,10 +40,11 @@ public class Shooter {
 			talS.set(0);
 		}
 	}
+	int jarodVariable = 69;
 	public void shooterStop(){
 		talS.set(0);
 	}
-	int speed = 1;
+	double speed = .83 * 12.3;
 	public void shooterGo(){
 		talS.set(speed);
 		System.out.println(talS.getBusVoltage());

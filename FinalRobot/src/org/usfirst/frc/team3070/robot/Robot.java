@@ -33,9 +33,9 @@ public class Robot extends IterativeRobot implements Pronstants {
 
 		joystick = new Joystick(JOYSTICK_PORT);
 		//Initializes Pronto Classes
-		drive = new Drive();
-		auto = new Auto(drive);
-		climber = new Climb();
+		//drive = new Drive();
+		//auto = new Auto(drive);
+		//climber = new Climb();
 		shoot = new Shooter();
 		//Sets encoders to the feedback device for Talons
 		//TODO see which talons have encoders
