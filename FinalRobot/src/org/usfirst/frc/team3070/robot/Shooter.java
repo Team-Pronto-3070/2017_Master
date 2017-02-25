@@ -41,11 +41,12 @@ public class Shooter {
 	public void shooterStop(){
 		talS.set(0);
 	}
+	int speed = 1;
 	public void shooterGo(){
-		talS.set(-.965);
+		talS.set(speed);
 		System.out.println(talS.getBusVoltage());
 	}
 	public void shooterGoNega(){
-		talS.set(.965);
+		talS.set(-speed);
 	}
 }
