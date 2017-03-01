@@ -2,9 +2,11 @@ package org.usfirst.frc.team3070.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import org.usfirst.frc.team3070.robot.Pronstants;
-//import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.vision.VisionThread;
+import gripvis.vision;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -14,11 +16,30 @@ import org.usfirst.frc.team3070.robot.Pronstants;
  * directory.
  */
 public class Robot extends IterativeRobot {
+	//Defines classes
 	Drive drive;
 	Auto auto;
 	Climb climber;
-	Joystick joystick;
-	double startHeading;
+	Joystick joyL, joyR;
+	Shooter shoot;
+	ProntoGyro gyro;
+	Sensors sensors;
+	//vision variables
+//	public VisionThread visionThread;
+//	public static vision grip;
+	//defines the encoder starting variables
+	public static int startEnc1;
+	public static int startEnc2;
+	//defines a double for adjusting the speed of the motors
+	public static double adjSpeed;
+	//public double[] distanceTraveled = drive.getDistanceTraveled();
+	//creates a boolean for the control switcher button
+	boolean button1 = false;
+	//creates booleans for buttons on the SmartDash
+	boolean dash1;
+	boolean dash2;
+	boolean dash3;
+	boolean dash4;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -26,15 +47,24 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		//Initializes robot
-		//variable init
-
-		joystick = new Joystick(0);
+		//Initializes FRC WPILIB Classes
+		joyL = new Joystick(Pronstants.LEFT_JOYSTICK_PORT);
+		joyR = new Joystick(Pronstants.RIGHT_JOYSTICK_PORT);
 		//Initializes Pronto Classes
 		drive = new Drive();
 		auto = new Auto(drive);
 		climber = new Climb();
-		//Sets encoders to the feedback device for Talons
-		//TODO see which talons have encoders
+		shoot = new Shooter();
+		gyro = new ProntoGyro();
+		sensors = new Sensors();
+//		grip = new vision();
+	//vision code
+//		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+//		camera.setResolution(Pronstants.IMG_WIDTH, Pronstants.IMG_HEIGHT);
+//visionThread = new VisionThread (camera, grip,pipline ->{
+//			System.out.println(grip.findBlobsOutput().size());
+//		});
+//visionThread.start();
 	}
 
 	/**
@@ -50,20 +80,61 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		startHeading = Sensors.imu.getHeading();
-		Sensors.calculateHeading(startHeading);
+		//resets the distance traveled
+		drive.resetDistanceTraveled();
+		// resets the gyro
+		drive.talFR.enableBrakeMode(true);
+		drive.talFL.enableBrakeMode(true);
+		drive.talBR.enableBrakeMode(true);
+		drive.talBL.enableBrakeMode(true);
+		drive.resetGyro();
+		//gets the value of the buttons on the "basic" smartDash tab
+		dash1 = SmartDashboard.getBoolean("DB/Button 0", false);
+		dash2 = SmartDashboard.getBoolean("DB/Button 1", false);
+		dash3 = SmartDashboard.getBoolean("DB/Button 2", false);
+		dash4 = SmartDashboard.getBoolean("DB/Button 3", false);
 	}
-
+//practice comment
 	/**
 	 * This function is called periodically during autonomous
 	 */
 	@Override
 	public void autonomousPeriodic() {
 		//what happens during autonomous (stays during autonomous)
-		auto.autoGeneric();
-		//TODO Placeholder for vision
-		//sensors.visionAuto();
-		
+		//tells the code which autonomous program to run based on buttons from the SmartDash
+		//checks if the 1st and 4th buttons are pressed
+//		drive.turn(90, Pronstants.AUTO_DRIVE_SPEED);
+		if (dash1 && dash4) {
+			//if so, run the left side to left gearloader code
+			auto.autoOutsideCenter(Pronstants.AUTO_SIDE_LEFT);
+		}
+		//checks if the 1st button and not 4th button is pressed
+		else if (dash1 && !dash4) {
+			//if so, run the right side to right gearloader code
+			auto.autoOutsideCenter(Pronstants.AUTO_SIDE_RIGHT);
+		}
+		//checks if the 2nd and 4th buttons are pressed
+		else if (dash2 && dash4) {
+			//if so, run the left side to center gearloader code
+			auto.autoOutside(Pronstants.AUTO_SIDE_LEFT);
+		}
+		//checks if the 2nd button and not the 4th button is pressed
+		else if (dash2 && !dash4) {
+			//if so, run the right side to center gearloader code
+			auto.autoOutside(Pronstants.AUTO_SIDE_RIGHT);
+		}
+		//checks if the 3rd button is pressed
+		else if (dash3) {
+			//if so, run the center to center gearloader code
+			auto.autoC();
+		}
+		else {
+			//if none of the previous cases are true, have the robot stay still
+			drive.turn(90, 0.15);
+		}
+
+//		SmartDashboard.putString("DB/String 1", "enc1 =" + distanceTraveled[0]);
+//		SmartDashboard.putString("DB/String 2", "enc2 = " + distanceTraveled[1]);
 //		switch (autoSelected) {
 //		case customAuto:
 //			// Put custom auto code here
@@ -75,15 +146,47 @@ public class Robot extends IterativeRobot {
 //		}
 }
 
+	public void teleopInit(){
+		drive.resetDistanceTraveled();
+		drive.talFR.enableBrakeMode(false);
+		drive.talFL.enableBrakeMode(false);
+		drive.talBR.enableBrakeMode(false);
+		drive.talBL.enableBrakeMode(false);
+	}
 	/**
 	 * This function is called periodically during operator control
 	 */
 	@Override
 	public void teleopPeriodic() {
-		//teleop programs
-		climber.checkClimbInput(joystick.getRawButton(1), joystick.getRawButton(2));
-		drive.joystickDrive(joystick.getRawAxis(5), joystick.getRawAxis(1));
-		//sensors.visionTeleop();
+		//teleop programs  (names are pretty self-explanatory)
+		
+		//runs the climber program on the 8 and 9 buttons on the left joystick
+		climber.checkClimbInput2(joyL.getRawButton(8), joyL.getRawButton(9));
+		//runs the shooter program for the left and right joystick triggers
+//		shoot.checkShootInput(joyL.getRawButton(1), joyR.getRawButton(1));
+		//checks if the control switcher button is pressed
+		if (joyR.getRawButton(Pronstants.CONTROL_SWITCH_BUTTON)) {
+			//if so, set the boolean for that button to true
+			button1 = true;
+		}
+		else if (joyL.getRawButton(Pronstants.CONTROL_SWITCH_BUTTON)) {
+			//otherwise, set that button's boolean to false
+			button1 = false;
+		}
+		//checks if the boolean for the control switcher button is true
+		if (button1) {
+			//if so, switch the controls
+			drive.driveSwitch(joyR.getRawAxis(1), joyL.getRawAxis(1));
+		}
+		else {
+			//if not, keep the controls the same
+			drive.joystickDrive(joyR.getRawAxis(1), joyL.getRawAxis(1));
+		}
+		//gets and displays the distance traveled
+		drive.getDistanceTraveled();
+		//gets and displays the current Heading for the gyro
+ 		sensors.ultrasonicOutput();
+//		climber.printClimblimVoltage();
 	}
 
 	/**
@@ -94,4 +197,3 @@ public class Robot extends IterativeRobot {
 		//unimportant
 	}
 }
-
