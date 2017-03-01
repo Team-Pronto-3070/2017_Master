@@ -10,6 +10,9 @@ public class Drive {
 //	double startHeading;
 	//defines the gyro
 	private ProntoGyro gyro;
+	
+	public static final double MAX_DEGREES_FULL_SPEED = 10.0;
+	public static final double MIN_TURN_SPEED = 0.18;
 
 	public Drive() {
 		// drive constructor
@@ -46,7 +49,6 @@ public class Drive {
 		// makes the joystick control the talons
 		// defines the variables for the speed of left and right sides of the robot
 		double speedR, speedL;
-		System.out.println(ProntoGyro.imu.getHeading());
 		// checks if the right joystick is in the deadzone
 		if (Math.abs(joyR) > Pronstants.DEAD_ZONE) {
 			// If it isn't, set the speed of the right side to the joystick
@@ -75,7 +77,6 @@ public class Drive {
 		// this speed is cubed so that the controls are less sensitives
 		// (all speed values are between 0 and 1)
 		drive(Math.pow(speedR, 3), Math.pow(speedL, 3));
-		System.out.println("done");
 	}
 
 	public void drive(double right, double left) {
@@ -144,21 +145,38 @@ public class Drive {
 		talBL.setEncPosition(0);
 	}
 
-	public boolean turn(double angle, double speed) {
+	public boolean turn(double angle, double maxSpeed) {
 		// turns the robot until it aligns with an angle on the gyro
 		// gets the heading and makes it the value of a variable
-		double currentHeading = gyro.calculateHeading();
+		double currentHeading = gyro.getRawHeading();
+		
+		// Default to maximum speed
+		double speed = maxSpeed;
+		
+		// adjust speed linearly when within 10 degrees of expected value
+		double delta =  Math.abs(currentHeading - angle);
+		if(delta <= MAX_DEGREES_FULL_SPEED )
+		{
+			// Simple linear regression
+			//     m =         (Y2      -     Y1)           /             ( X2        -          X1 )
+			double m = ( ( maxSpeed - MIN_TURN_SPEED )  / ( MAX_DEGREES_FULL_SPEED - Pronstants.TURN_OFFSET ) );
+			// y = m*x + b => b = y - m*x. Choosing Y1 and X1: 
+			double b = MIN_TURN_SPEED - ( m * Pronstants.TURN_OFFSET );
+			
+			// Substitute in the angle delta for x and 
+			speed = m * delta + b;
+		}
 		
 		// checks if the gyro angle is less than the desired angle
-		if (currentHeading > angle + Pronstants.TURN_OFFSET) {
+		if (currentHeading < angle + Pronstants.TURN_OFFSET) {
 			// If it is, turn left
-			drive(speed, -speed);
+			drive(-speed, speed);
 		}
 		
 		// checks if the gyro angle is greater than the desired angle
-		else if (currentHeading < angle + Pronstants.TURN_OFFSET) {
+		else if (currentHeading > angle + Pronstants.TURN_OFFSET) {
 			// if it is, turn right
-			drive(-speed, speed);
+			drive(speed, -speed);
 		}
 		
 		else {
@@ -173,6 +191,15 @@ public class Drive {
 	}
 
 	public void driveRobotStraight() {
+		
+		// Some pseudo code to get you all started:
+		
+		// Step 1: Reset gyro prior to first call to set the desired angle to drive forward at (this will set the ProntoGyro "offset" to this value.)
+		// Step 2: If turning slightly left, decrease the speed on the right side OR increase the speed on the left side.
+		// 		   If turning slightly right, decrease the speed on the left side OR increase the speed on the right side.
+		// If running at 50 Hz, you can expect that whatever command you send will be active for about 20 ms. Determine how much you want to adjust the speed based on the angle offset.
+		// I would recommend targeting a tolerance of less than 1 degree (smaller tolerance is better and the gyro can handle it).
+		
 //		double currentHeading = gyro.calculateHeading();
 //		if (currentHeading > startHeading + 2) {
 //			drive(Pronstants.AUTO_DRIVE_SPEED + 0.1, Pronstants.AUTO_DRIVE_SPEED);
@@ -182,6 +209,8 @@ public class Drive {
 //			drive(Pronstants.AUTO_DRIVE_SPEED, Pronstants.AUTO_DRIVE_SPEED);
 //		}
 		// drives the robot forward at a speed adjusted by the "adjSpeed" function (see ProntoGyro)
-		drive(Pronstants.AUTO_DRIVE_SPEED + gyro.adjSpeed(), Pronstants.AUTO_DRIVE_SPEED + gyro.adjSpeed());
+		// This isn't going to work. Need to adjust only one side or both sides separately to cause the robot to turn slightly and adjust for not driving straight.
+		//drive(Pronstants.AUTO_DRIVE_SPEED + gyro.adjSpeed(), Pronstants.AUTO_DRIVE_SPEED + gyro.adjSpeed());
+		drive(Pronstants.AUTO_DRIVE_SPEED, Pronstants.AUTO_DRIVE_SPEED);
 	}
 }
