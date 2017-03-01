@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.*;
 
 public class Drive {
 	//defines the talons
-	private static CANTalon talFR, talFL, talBR, talBL;
+	public CANTalon talFR, talFL, talBR, talBL;
 //	double startHeading;
 	//defines the gyro
 	private ProntoGyro gyro;
@@ -33,8 +33,15 @@ public class Drive {
 		// sets feedback device on the talons to encoders
 		talFR.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
 		talBL.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+		
+		resetDistanceTraveled();
 	}
-
+	
+	public void resetGyro()
+	{
+		gyro.reset();
+	}
+	
 	public void joystickDrive(double joyR, double joyL) {
 		// makes the joystick control the talons
 		// defines the variables for the speed of left and right sides of the robot
@@ -68,6 +75,7 @@ public class Drive {
 		// this speed is cubed so that the controls are less sensitives
 		// (all speed values are between 0 and 1)
 		drive(Math.pow(speedR, 3), Math.pow(speedL, 3));
+		System.out.println("done");
 	}
 
 	public void drive(double right, double left) {
@@ -142,13 +150,13 @@ public class Drive {
 		double currentHeading = gyro.calculateHeading();
 		
 		// checks if the gyro angle is less than the desired angle
-		if (currentHeading < angle) {
+		if (currentHeading > angle + Pronstants.TURN_OFFSET) {
 			// If it is, turn left
 			drive(speed, -speed);
 		}
 		
 		// checks if the gyro angle is greater than the desired angle
-		else if (currentHeading > angle) {
+		else if (currentHeading < angle + Pronstants.TURN_OFFSET) {
 			// if it is, turn right
 			drive(-speed, speed);
 		}
@@ -156,6 +164,7 @@ public class Drive {
 		else {
 			// if the gyro angle is aligned with the desired angle, tell the
 			// source that called the method that turning is done
+			drive(0,0);
 			return true;
 		}
 		

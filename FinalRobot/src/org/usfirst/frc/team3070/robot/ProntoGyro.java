@@ -21,38 +21,45 @@ public class ProntoGyro {
 		// calculates the heading of the gyro
 		// puts the value of imu.getHeading on the SmartDash string 6 (see BNO055 class)
 		SmartDashboard.putString("DB/String 6", " "+ imu.getHeading());
+		
 		// defines a variable for angle
 		double angle;
-		// checks if the current angle is negative
-		if (imu.getHeading()-angleOffset < 0) {
-			// if so, set angle to the remainder of the current angle
-			// divided by 180 times -1 (a negative angle)
-			angle = ((imu.getHeading() - angleOffset) % 180)/* -1 */;
-		}
+
+		// set the angle to the remainder of the current
+		// angle divided by 180
+		angle = normalizeHeadingVal(getHeading() - angleOffset);
 		
-		else {
-			// if not, set the angle to the remainder of the current
-			// angle divided by 180 (a positive angle)
-			angle = (imu.getHeading()-angleOffset) % 180;
-		}
 		// print the angle offset and the current heading in the dashboard
 		SmartDashboard.putString("DB/String 2", String.format("Offset = %f", angleOffset));
 		SmartDashboard.putString("DB/String 3", String.format("Heading = %f", angle));
+		
 		// return the angle
 		return angle;
 	}
 	
 	public void reset() {
 		// resets the angleOffset to the current heading
-		angleOffset = calculateHeading();
+		angleOffset = getHeading();
 	}
 	
 	public double getHeading() {
-		return imu.getHeading();
+		return normalizeHeadingVal(imu.getHeading());
 	}
 	
 	public double getOffset() {
 		return angleOffset;
+	}
+	
+	private double normalizeHeadingVal( double heading )
+	{
+		if( heading > 180.0 )
+		{
+			heading = ( heading % 180.0 ) - 180.0;
+		} else if ( heading < -180.0 )
+		{
+			heading = - (heading % 180.0);
+		}
+		return heading;
 	}
 	
 	public double adjSpeed() {

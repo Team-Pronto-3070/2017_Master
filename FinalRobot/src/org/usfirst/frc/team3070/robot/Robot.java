@@ -23,6 +23,7 @@ public class Robot extends IterativeRobot {
 	Joystick joyL, joyR;
 	Shooter shoot;
 	ProntoGyro gyro;
+	Sensors sensors;
 	//vision variables
 //	public VisionThread visionThread;
 //	public static vision grip;
@@ -55,6 +56,7 @@ public class Robot extends IterativeRobot {
 		climber = new Climb();
 		shoot = new Shooter();
 		gyro = new ProntoGyro();
+		sensors = new Sensors();
 //		grip = new vision();
 	//vision code
 //		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
@@ -81,7 +83,11 @@ public class Robot extends IterativeRobot {
 		//resets the distance traveled
 		drive.resetDistanceTraveled();
 		// resets the gyro
-		gyro.reset();
+		drive.talFR.enableBrakeMode(true);
+		drive.talFL.enableBrakeMode(true);
+		drive.talBR.enableBrakeMode(true);
+		drive.talBL.enableBrakeMode(true);
+		drive.resetGyro();
 		//gets the value of the buttons on the "basic" smartDash tab
 		dash1 = SmartDashboard.getBoolean("DB/Button 0", false);
 		dash2 = SmartDashboard.getBoolean("DB/Button 1", false);
@@ -124,7 +130,7 @@ public class Robot extends IterativeRobot {
 		}
 		else {
 			//if none of the previous cases are true, have the robot stay still
-			drive.drive(0, 0);
+			drive.turn(90, 0.15);
 		}
 
 //		SmartDashboard.putString("DB/String 1", "enc1 =" + distanceTraveled[0]);
@@ -140,12 +146,20 @@ public class Robot extends IterativeRobot {
 //		}
 }
 
+	public void teleopInit(){
+		drive.resetDistanceTraveled();
+		drive.talFR.enableBrakeMode(false);
+		drive.talFL.enableBrakeMode(false);
+		drive.talBR.enableBrakeMode(false);
+		drive.talBL.enableBrakeMode(false);
+	}
 	/**
 	 * This function is called periodically during operator control
 	 */
 	@Override
 	public void teleopPeriodic() {
 		//teleop programs  (names are pretty self-explanatory)
+		
 		//runs the climber program on the 8 and 9 buttons on the left joystick
 		climber.checkClimbInput2(joyL.getRawButton(8), joyL.getRawButton(9));
 		//runs the shooter program for the left and right joystick triggers
@@ -172,6 +186,7 @@ public class Robot extends IterativeRobot {
 		drive.getDistanceTraveled();
 		//gets and displays the current Heading for the gyro
 		gyro.calculateHeading();
+		sensors.ultrasonicOutput();
 //		climber.printClimblimVoltage();
 	}
 

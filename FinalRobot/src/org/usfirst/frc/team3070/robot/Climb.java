@@ -91,7 +91,8 @@ public class Climb {
 		}
 	}
 	
-//	public void printClimblimVoltage() {
-//		SmartDashboard.putString("DB/String 3", "adj = " + climbLim.getVoltage());
-//	}
+	public void printClimblimValue() {
+		SmartDashboard.putString("DB/String 7", "adj = %d" + climbLim1.getVoltage());
+		SmartDashboard.putString("DB/String 8", "adj = %d" + climbLim2.getVoltage());
+	}
 }

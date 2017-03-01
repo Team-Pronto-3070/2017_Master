@@ -3,7 +3,9 @@ package org.usfirst.frc.team3070.robot;
 public interface Pronstants {
 	//The modifier of the negative acceleration the robot undergoes at the end of a movement.
 	static final double RAMP_RATE = 0.5;
-	//The speed at which the robot travels in autonomous.
+	//The speed at which the robot turns
+	static final double AUTO_TURN_SPEED = 0.3;
+	//The speed at which the robot drives straight
 	static final double AUTO_DRIVE_SPEED = 0.5;
 	//The speed at which the robot climbs the rope.
 	static final double AUTO_CLIMB_SPEED = 0.8;
@@ -32,17 +34,29 @@ public interface Pronstants {
 	static final int LIMIT_SWITCH_2_PORT = 1;
 	static final int LEFT_JOYSTICK_PORT = 0;
 	static final int RIGHT_JOYSTICK_PORT = 1;
+	
 	//Conversion from encoder values to feet, which is 162.97 ticks per foot.
-	static final double TICK_COEFFICIENT = 162.97;
+	static final double TICK_COEFFICIENT = 638;
+	
 	// sensors variables
 	static final int IMG_WIDTH = 320;
 	static final int IMG_HEIGHT = 240;
+	
 	// ProntoGyro variables
 	static final double ADJUSTING_CONSTANT = .016;
 	static final double ANGLE_VARIANCE = .5;
+	
 	// Button for switching joystick controls
 	static final int CONTROL_SWITCH_BUTTON = 6;
+	
 	// Values for the autonomous selector
-	static int AUTO_SIDE_LEFT = 1;
-	static int AUTO_SIDE_RIGHT = 2;
+	static final int AUTO_SIDE_LEFT = 1;
+	static final int AUTO_SIDE_RIGHT = 2;
+	
+	//Adjusting constant for turn function
+	static final double TURN_OFFSET = 2;
+	
+	//This is how far in feet it coasts after braking.
+	static final double DISTANCE_OFFSET = 0.5;
+	
 }

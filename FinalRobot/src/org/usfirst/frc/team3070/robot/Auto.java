@@ -20,11 +20,13 @@ public Auto(Drive drive) {
 
 // initial distance
 double[] rotations = drive.getDistanceTraveled();
-double initDist = rotations[2]; 
+double initDist = 0; 
 // Difference in distance
 double diffDist; 
+ 
 // initial heading
-double initHeading = gyro.getHeading(); 
+double initHeading = gyro.getOffset();
+
 // Flags for if we're turning
 boolean firstTurning = false;
 boolean secondTurning = false;
@@ -51,7 +53,7 @@ public void autoC() {
     diffDist = rotations[2] - initDist; 
 
     // If the robot has not gone 5 feet, drive straight forward
-    if (diffDist < 5) {
+    if (diffDist < 7.77 - Pronstants.DISTANCE_OFFSET) {
         drive.driveRobotStraight();
     }
     // If the robot has gone 5 feet, let vision take over
@@ -60,6 +62,8 @@ public void autoC() {
         drive.drive(0, 0);
     }
 }
+
+static boolean turnStarted = false;
 
 public void autoOutside(int side) {
     // autonomous code for going to an outside gearloader
@@ -70,7 +74,7 @@ public void autoOutside(int side) {
     // difference in distance
     diffDist = rotations[2] - initDist; 
     // difference in angle
-    double diffAngle = gyro.getHeading()-initHeading; 
+    //double diffAngle = gyro.getHeading()- initHeading; 
 
     // creates a case statement for the value of "side"
     switch(side) {
@@ -93,23 +97,24 @@ public void autoOutside(int side) {
         drive.driveRobotStraight();
         robotShoot = false;
     }
-    // If the robot has gone 5 feet and the first turn is not finished
-    else if (!drive.turn(initHeading + firstTurn, Pronstants.AUTO_DRIVE_SPEED)) {
+    // If the robot has gone 5 feet and the first turn is not finished\
+    if(!turnStarted){
+    	drive.resetGyro();
+    }
+    else if (!drive.turn(initHeading + firstTurn, Pronstants.AUTO_TURN_SPEED)) {
         // if so, turn it a number of degrees equal to "firstTurn",
         // reset the distance traveled, and set robotShoot to false
-
-        // drive.turn(initHeading + firstTurn, Pronstants.AUTO_DRIVE_SPEED);
         drive.resetDistanceTraveled();
         robotShoot = false;
         firstTurning = true;
     }
-    // checks if the first turn has finished
-    else if (drive.turn(initHeading + firstTurn, Pronstants.AUTO_DRIVE_SPEED)) {
-        // if so, start vision here and set robotShoot to true
-        drive.drive(0, 0);
-        robotShoot = true;
-        // TODO: finish vision and implement here
-    }
+//    // checks if the first turn has finished
+//    else if (drive.turn(initHeading + firstTurn, Pronstants.AUTO_TURN_SPEED)) {
+//        // if so, start vision here and set robotShoot to true
+//        drive.drive(0, 0);
+//        robotShoot = true;
+//        // TODO: finish vision and implement here
+//    }
 
     // checks if robotShoot is true
     if (robotShoot) {
