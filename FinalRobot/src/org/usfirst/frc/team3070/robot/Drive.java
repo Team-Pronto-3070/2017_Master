@@ -148,7 +148,7 @@ public class Drive {
 	public boolean turn(double angle, double maxSpeed) {
 		// turns the robot until it aligns with an angle on the gyro
 		// gets the heading and makes it the value of a variable
-		double currentHeading = gyro.getRawHeading();
+		double currentHeading = gyro.getOffsetHeading();
 		
 		// Default to maximum speed
 		double speed = maxSpeed;
@@ -165,24 +165,32 @@ public class Drive {
 			
 			// Substitute in the angle delta for x and 
 			speed = m * delta + b;
+			SmartDashboard.putString("DB/String 2", "Speed" +speed);
+
 		}
 		
 		// checks if the gyro angle is less than the desired angle
-		if (currentHeading < angle + Pronstants.TURN_OFFSET) {
+		 if(currentHeading < angle - Pronstants.TURN_OFFSET) {
 			// If it is, turn left
 			drive(-speed, speed);
+			SmartDashboard.putString("DB/String 1", "heqq");
+
 		}
 		
 		// checks if the gyro angle is greater than the desired angle
 		else if (currentHeading > angle + Pronstants.TURN_OFFSET) {
 			// if it is, turn right
 			drive(speed, -speed);
+			SmartDashboard.putString("DB/String 1", "heck");
+
 		}
 		
 		else {
 			// if the gyro angle is aligned with the desired angle, tell the
 			// source that called the method that turning is done
 			drive(0,0);
+			SmartDashboard.putString("DB/String 1", "fuck");
+
 			return true;
 		}
 		
@@ -190,7 +198,11 @@ public class Drive {
 		return false;
 	}
 
-	public void driveRobotStraight() {
+	public void driveRobotStraight(){
+		driveRobotStraightSpeed(Pronstants.AUTO_DRIVE_SPEED);
+	}
+	
+	public void driveRobotStraightSpeed( double speed ) {
 		
 		// Some pseudo code to get you all started:
 		
@@ -211,6 +223,31 @@ public class Drive {
 		// drives the robot forward at a speed adjusted by the "adjSpeed" function (see ProntoGyro)
 		// This isn't going to work. Need to adjust only one side or both sides separately to cause the robot to turn slightly and adjust for not driving straight.
 		//drive(Pronstants.AUTO_DRIVE_SPEED + gyro.adjSpeed(), Pronstants.AUTO_DRIVE_SPEED + gyro.adjSpeed());
-		drive(Pronstants.AUTO_DRIVE_SPEED, Pronstants.AUTO_DRIVE_SPEED);
+		double heading = gyro.getOffsetHeading();
+		double offset = gyro.getOffset();
+		double adjSpeed = 0.0;
+		
+		if( heading > 0)
+		{
+			adjSpeed = gyro.getOffsetHeading() * Pronstants.ADJUSTING_CONSTANT;
+		}
+		else if( heading < 0)
+		{
+			adjSpeed = gyro.getOffsetHeading() * Pronstants.ADJUSTING_CONSTANT;
+		}
+		
+		SmartDashboard.putString("DB/String 7", ""+ adjSpeed);
+		System.out.println(adjSpeed + " " + gyro.getOffsetHeading());
+		
+		drive(speed + adjSpeed, speed - adjSpeed);
+//		if (heading > 0 ) {
+//			drive(speed + gyro.adjSpeed(), speed );
+//		}
+//		else if (heading <= 0 ) {
+//			drive(speed, speed + gyro.adjSpeed());
+//		}
+//		else {
+//			drive(speed, speed);
+//		}
 	}
 }

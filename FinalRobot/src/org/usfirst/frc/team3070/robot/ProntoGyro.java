@@ -15,6 +15,7 @@ public class ProntoGyro {
 	{
 		// ProntoGyro constructor
 		// runs the reset function (see below)
+	
 		reset();
 	}
 	
@@ -31,7 +32,7 @@ public class ProntoGyro {
 		angle = normalizeHeadingVal(getRawHeading() - angleOffset);
 		
 		// print the angle offset and the current heading in the dashboard
-		SmartDashboard.putString("DB/String 2", String.format("Offset = %f", angleOffset));
+		SmartDashboard.putString("DB/String 4", String.format("Offset = %f", angleOffset));
 		SmartDashboard.putString("DB/String 3", String.format("Heading = %f", angle));
 		
 		// return the angle
@@ -41,10 +42,14 @@ public class ProntoGyro {
 	public void reset() {
 		// resets the angleOffset to the current heading
 		angleOffset = getRawHeading();
+		
 	}
 	
 	public double getRawHeading() {
+		SmartDashboard.putString("DB/String 0", ""+normalizeHeadingVal(imu.getVector()[0]));
+
 		return normalizeHeadingVal(imu.getVector()[0]);
+	
 	}
 	
 	public double getOffset() {
@@ -63,4 +68,18 @@ public class ProntoGyro {
 		}
 		return heading;
 	}
+//	public double adjSpeed() {
+// 		// adjusts the speed of the talons for the driveRobotStraight function
+// 		// defines a double for adjSpeed
+// 		double adjSpeed = 0;
+// 		// checks if the current Heading isn't within the value of
+// 		// ANGLE_VARIANCE (see pronstants) of the angle offset
+// 		if (Math.abs(getOffsetHeading()) > Pronstants.ANGLE_VARIANCE) {
+// 			// if so, set adjSpeed to the current Heading times the value of
+// 			// ADJUSTING_CONSTANT (see pronstants)
+// 			 adjSpeed =  getOffsetHeading() * Pronstants.ADJUSTING_CONSTANT;
+// 		}
+// 		// returns the value of adjSpeed
+// 		return adjSpeed;
+// 	}
 }

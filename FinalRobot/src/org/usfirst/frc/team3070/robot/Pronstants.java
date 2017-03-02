@@ -6,7 +6,7 @@ public interface Pronstants {
 	//The speed at which the robot turns
 	static final double AUTO_TURN_SPEED = 0.3;
 	//The speed at which the robot drives straight
-	static final double AUTO_DRIVE_SPEED = 0.5;
+	static final double AUTO_DRIVE_SPEED = 0.3;
 	//The speed at which the robot climbs the rope.
 	static final double AUTO_CLIMB_SPEED = 0.8;
 	//The speed at which the robot shoots the balls.
@@ -43,8 +43,8 @@ public interface Pronstants {
 	static final int IMG_HEIGHT = 240;
 	
 	// ProntoGyro variables
-	static final double ADJUSTING_CONSTANT = .016;
-	static final double ANGLE_VARIANCE = .5;
+	static final double ADJUSTING_CONSTANT = .012;
+	static final double ANGLE_VARIANCE = .2;
 	
 	// Button for switching joystick controls
 	static final int CONTROL_SWITCH_BUTTON = 6;
@@ -54,7 +54,7 @@ public interface Pronstants {
 	static final int AUTO_SIDE_RIGHT = 2;
 	
 	//Adjusting constant for turn function
-	static final double TURN_OFFSET = 2;
+	static final double TURN_OFFSET = 3;
 	
 	//This is how far in feet it coasts after braking.
 	static final double DISTANCE_OFFSET = 0.5;

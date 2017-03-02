@@ -49,7 +49,7 @@ public class Robot extends IterativeRobot {
 		//Initializes robot
 		//Initializes FRC WPILIB Classes
 		joyL = new Joystick(Pronstants.LEFT_JOYSTICK_PORT);
-		joyR = new Joystick(Pronstants.RIGHT_JOYSTICK_PORT);
+	//	joyR = new Joystick(Pronstants.RIGHT_JOYSTICK_PORT);
 		//Initializes Pronto Classes
 		drive = new Drive();
 		auto = new Auto(drive);
@@ -88,6 +88,7 @@ public class Robot extends IterativeRobot {
 		drive.talBR.enableBrakeMode(true);
 		drive.talBL.enableBrakeMode(true);
 		drive.resetGyro();
+		//gyro.reset();
 		//gets the value of the buttons on the "basic" smartDash tab
 		dash1 = SmartDashboard.getBoolean("DB/Button 0", false);
 		dash2 = SmartDashboard.getBoolean("DB/Button 1", false);
@@ -104,7 +105,7 @@ public class Robot extends IterativeRobot {
 		//tells the code which autonomous program to run based on buttons from the SmartDash
 		//checks if the 1st and 4th buttons are pressed
 //		drive.turn(90, Pronstants.AUTO_DRIVE_SPEED);
-		if (dash1 && dash4) {
+		/*if (dash1 && dash4) {
 			//if so, run the left side to left gearloader code
 			auto.autoOutsideCenter(Pronstants.AUTO_SIDE_LEFT);
 		}
@@ -144,14 +145,18 @@ public class Robot extends IterativeRobot {
 //			// Put default auto code here
 //			break;
 //		}
+ * 		
+// */  //drive.turn(-170, .15);
 }
 
 	public void teleopInit(){
 		drive.resetDistanceTraveled();
-		drive.talFR.enableBrakeMode(false);
+		/*drive.talFR.enableBrakeMode(false);
 		drive.talFL.enableBrakeMode(false);
 		drive.talBR.enableBrakeMode(false);
-		drive.talBL.enableBrakeMode(false);
+		drive.talBL.enableBrakeMode(false); */
+		drive.resetGyro();
+
 	}
 	/**
 	 * This function is called periodically during operator control
@@ -161,7 +166,7 @@ public class Robot extends IterativeRobot {
 		//teleop programs  (names are pretty self-explanatory)
 		
 		//runs the climber program on the 8 and 9 buttons on the left joystick
-		climber.checkClimbInput2(joyL.getRawButton(8), joyL.getRawButton(9));
+		/*climber.checkClimbInput2(joyL.getRawButton(8), joyL.getRawButton(9));
 		//runs the shooter program for the left and right joystick triggers
 //		shoot.checkShootInput(joyL.getRawButton(1), joyR.getRawButton(1));
 		//checks if the control switcher button is pressed
@@ -192,6 +197,8 @@ public class Robot extends IterativeRobot {
 	/**
 	 * This function is called periodically during test mode
 	 */
+		drive.driveRobotStraightSpeed(joyL.getRawAxis(1));
+	}
 	@Override
 	public void testPeriodic() {
 		//unimportant
