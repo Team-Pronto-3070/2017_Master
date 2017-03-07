@@ -4,6 +4,12 @@ import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/*
+methods:
+public void checkClimbInput()
+public void printClimblimValue()
+ */
+
 public class Climb {
 	//Defines talons for the climber
 	static CANTalon talC1, talC2;
@@ -65,7 +71,7 @@ public class Climb {
 //		}
 //	}
 
-	public void checkClimbInput2(boolean button1, boolean button2) {
+	public void checkClimbInput(boolean button1, boolean button2) {
 		double limit1 = climbLim1.getVoltage();
 		double limit2 = climbLim2.getVoltage();
 		SmartDashboard.putNumber("DB/String 7", limit1);

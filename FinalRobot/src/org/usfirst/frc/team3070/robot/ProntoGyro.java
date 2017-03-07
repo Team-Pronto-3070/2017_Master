@@ -3,6 +3,15 @@ import org.usfirst.frc.team3070.robot.BNO055;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/*
+methods:
+public double getOffsetHeading()
+public void reset()
+public double getRawHeading()
+public double getOffset()
+public double normalizeHeadingVal(double heading)
+ */
+
 public class ProntoGyro {
 	// defines the variable imu from the class BNO055
 	public static BNO055 imu = BNO055.getInstance(BNO055.opmode_t.OPERATION_MODE_IMUPLUS,BNO055.vector_type_t.VECTOR_EULER);
