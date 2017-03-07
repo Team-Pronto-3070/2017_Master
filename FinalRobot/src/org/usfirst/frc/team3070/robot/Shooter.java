@@ -2,6 +2,13 @@ package org.usfirst.frc.team3070.robot;
 
 import com.ctre.CANTalon;
 
+/*
+methods:
+public void checkShootInput()
+public void stopShooter()
+public void shoot()
+ */
+
 public class Shooter { 
 //Defines talons for the shooter 
 static CANTalon talHopper = new CANTalon(Pronstants.TALON_SHOOTER_2_PORT);

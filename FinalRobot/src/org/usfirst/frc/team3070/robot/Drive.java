@@ -4,6 +4,19 @@ import com.ctre.CANTalon;
 import org.usfirst.frc.team3070.robot.Pronstants;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 
+/*
+methods:
+public void resetGyro()
+public void joystickDrive()
+public void drive()
+public void driveSwitch()
+public double[] getDistanceTraveled()
+public void resetDistanceTraveled()
+public double getGyroOffset()
+public boolean turn()
+public void driveRobotStraight()
+ */
+
 public class Drive {
 	//defines the talons
 	public CANTalon talFR, talFL, talBR, talBL;
@@ -14,10 +27,10 @@ public class Drive {
 	public static final double MAX_DEGREES_FULL_SPEED = 10.0;
 	public static final double MIN_TURN_SPEED = 0.18;
 
-	public Drive() {
+	public Drive(ProntoGyro gyro) {
 		// drive constructor
 		// initializes the gyro
-		gyro = new ProntoGyro();
+		this.gyro = gyro;
 		// defines the talon variables
 		talFR = new CANTalon(Pronstants.TALON_FRONT_RIGHT_PORT);
 		talFL = new CANTalon(Pronstants.TALON_FRONT_LEFT_PORT);
@@ -145,6 +158,10 @@ public class Drive {
 		talBL.setEncPosition(0);
 	}
 
+	public double getGyroOffset() {
+		return gyro.getOffset();
+	}
+	
 	public boolean turn(double angle, double maxSpeed) {
 		// turns the robot until it aligns with an angle on the gyro
 		// gets the heading and makes it the value of a variable
@@ -197,12 +214,8 @@ public class Drive {
 		// otherwise, tell the source that called the function that turning is not done
 		return false;
 	}
-
-	public void driveRobotStraight(){
-		driveRobotStraightSpeed(Pronstants.AUTO_DRIVE_SPEED);
-	}
 	
-	public void driveRobotStraightSpeed( double speed ) {
+	public void driveRobotStraight( double speed ) {
 		
 		// Some pseudo code to get you all started:
 		

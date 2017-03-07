@@ -3,6 +3,12 @@ package org.usfirst.frc.team3070.robot;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/*
+methods:
+public static double[] findCamOut(String camIn)
+public int[] ultrasonicOutput()
+ */
+
 public class Sensors {
 	AnalogInput ultra1, ultra2;
 	public Sensors() {

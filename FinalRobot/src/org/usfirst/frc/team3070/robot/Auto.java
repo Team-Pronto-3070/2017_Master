@@ -1,6 +1,5 @@
 package org.usfirst.frc.team3070.robot;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard; 
 /* methods: 
  * public void autoC() - drive center
  * public void autoOutside(int side) - drive from outer start position to outer lift
@@ -9,9 +8,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Auto {
 // initializes classes
-private Drive drive = new Drive();
+// TODO: Talk about constructors and using a class multiple times
+private Drive drive;
 private Shooter shooter = new Shooter();
-private ProntoGyro gyro = new ProntoGyro();
 
 public Auto(Drive drive) {
     // Auto constructor
@@ -25,7 +24,7 @@ double initDist = 0;
 double diffDist; 
  
 // initial heading
-double initHeading = gyro.getOffset();
+double initHeading = drive.getGyroOffset();
 
 // Flags for if we're turning
 boolean firstTurning = false;
@@ -54,7 +53,7 @@ public void autoC() {
 
     // If the robot has not gone 5 feet, drive straight forward
     if (diffDist < 7.77 - Pronstants.DISTANCE_OFFSET) {
-        drive.driveRobotStraight();
+        drive.driveRobotStraight(Pronstants.AUTO_DRIVE_SPEED);
     }
     // If the robot has gone 5 feet, let vision take over
     else {
@@ -93,8 +92,8 @@ public void autoOutside(int side) {
     }
 
     // If the robot has not gone 5 feet, drive straight forward
-    if (diffDist < 5 && !firstTurning) {
-        drive.driveRobotStraight();
+    if (diffDist < 7.77 - Pronstants.DISTANCE_OFFSET && !firstTurning) {
+        drive.driveRobotStraight(Pronstants.AUTO_DRIVE_SPEED);
         robotShoot = false;
     }
     // If the robot has gone 5 feet and the first turn is not finished\
@@ -156,9 +155,9 @@ public void autoOutsideCenter(int side) {
     }
 
     // checks if the robot has not gone 5 feet
-    if (diffDist < 5 && !firstTurning) {
+    if (diffDist < 7.77 - Pronstants.DISTANCE_OFFSET && !firstTurning) {
         //if so, drive straight forward
-        drive.driveRobotStraight();
+        drive.driveRobotStraight(Pronstants.AUTO_DRIVE_SPEED);
     }
     //checks if the robot has gone 5 feet and the first is not finished
     else if (drive.turn(initHeading + firstTurn, Pronstants.AUTO_DRIVE_SPEED) == false && !secondTurning) {
@@ -170,10 +169,10 @@ public void autoOutsideCenter(int side) {
     }
     //checks if the first turn has finished
     //and the robot has not traveled an additional 2 feet
-    else if (rotations[2] < 2 && !secondTurning) {
+    else if (diffDist - Pronstants.DISTANCE_OFFSET < 2 && !secondTurning) {
         //if so, drive the robot straight
         initHeading += firstTurn;
-        drive.driveRobotStraight();
+        drive.driveRobotStraight(Pronstants.AUTO_DRIVE_SPEED);
     }
     //checks if the robot has traveled an additional 2 feet
     //and the second has not finished

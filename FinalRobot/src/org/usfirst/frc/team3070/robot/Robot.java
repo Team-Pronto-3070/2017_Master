@@ -8,6 +8,15 @@ import gripvis.vision;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 
+/*
+methods:
+public void robotInit()
+public void autonomousInit()
+public void autonomousPeriodic()
+public void teleopInit()
+public void teleopPeriodic()
+ */
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -51,7 +60,7 @@ public class Robot extends IterativeRobot {
 		joyL = new Joystick(Pronstants.LEFT_JOYSTICK_PORT);
 	//	joyR = new Joystick(Pronstants.RIGHT_JOYSTICK_PORT);
 		//Initializes Pronto Classes
-		drive = new Drive();
+		drive = new Drive(gyro);
 		auto = new Auto(drive);
 		climber = new Climb();
 		shoot = new Shooter();
@@ -105,7 +114,7 @@ public class Robot extends IterativeRobot {
 		//tells the code which autonomous program to run based on buttons from the SmartDash
 		//checks if the 1st and 4th buttons are pressed
 //		drive.turn(90, Pronstants.AUTO_DRIVE_SPEED);
-		/*if (dash1 && dash4) {
+		if (dash1 && dash4) {
 			//if so, run the left side to left gearloader code
 			auto.autoOutsideCenter(Pronstants.AUTO_SIDE_LEFT);
 		}
@@ -145,8 +154,7 @@ public class Robot extends IterativeRobot {
 //			// Put default auto code here
 //			break;
 //		}
- * 		
-// */  //drive.turn(-170, .15);
+//		//drive.turn(-170, .15);
 }
 
 	public void teleopInit(){
@@ -197,7 +205,9 @@ public class Robot extends IterativeRobot {
 	/**
 	 * This function is called periodically during test mode
 	 */
-		drive.driveRobotStraightSpeed(joyL.getRawAxis(1));
+		drive.joystickDrive(joyR.getRawAxis(0), joyL.getRawAxis(0));
+		climber.checkClimbInput(joyR.getRawButton(0), joyL.getRawButton(0));
+		shoot.checkShootInput(joyR.getRawButton(1), joyL.getRawButton(1));
 	}
 	@Override
 	public void testPeriodic() {
