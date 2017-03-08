@@ -35,6 +35,13 @@ public interface Pronstants {
 	static final int LEFT_JOYSTICK_PORT = 0;
 	static final int RIGHT_JOYSTICK_PORT = 1;
 	
+	static enum AutoMode {  AUTO_MODE_NONE,
+							AUTO_MODE_CENTER_CENTER,
+							AUTO_MODE_CENTER_RIGHT,
+							AUTO_MODE_CENTER_LEFT,
+							AUTO_MODE_LEFT_LEFT,
+							AUTO_MODE_RIGHT_RIGHT };
+	
 	//Conversion from encoder values to feet, which is 162.97 ticks per foot.
 	static final double TICK_COEFFICIENT = 638;
 	

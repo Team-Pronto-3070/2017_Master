@@ -27,10 +27,9 @@ public class Drive {
 	public static final double MAX_DEGREES_FULL_SPEED = 10.0;
 	public static final double MIN_TURN_SPEED = 0.18;
 
-	public Drive(ProntoGyro gyro) {
+	public Drive() {
 		// drive constructor
 		// initializes the gyro
-		this.gyro = gyro;
 		// defines the talon variables
 		talFR = new CANTalon(Pronstants.TALON_FRONT_RIGHT_PORT);
 		talFL = new CANTalon(Pronstants.TALON_FRONT_LEFT_PORT);
@@ -49,7 +48,7 @@ public class Drive {
 		// sets feedback device on the talons to encoders
 		talFR.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
 		talBL.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-		
+		gyro = new ProntoGyro();
 		resetDistanceTraveled();
 	}
 	
@@ -116,7 +115,7 @@ public class Drive {
 			speedR = 0;
 		}
 		
-		// checks if the left joystick is in the deadzone
+		// checks if the left joystick is in the deadzone`
 		if (Math.abs(joyL) > Pronstants.DEAD_ZONE) {
 			// If it isn't, set the speed of the right side to the joystick value
 			speedL = joyL;
@@ -236,18 +235,7 @@ public class Drive {
 		// drives the robot forward at a speed adjusted by the "adjSpeed" function (see ProntoGyro)
 		// This isn't going to work. Need to adjust only one side or both sides separately to cause the robot to turn slightly and adjust for not driving straight.
 		//drive(Pronstants.AUTO_DRIVE_SPEED + gyro.adjSpeed(), Pronstants.AUTO_DRIVE_SPEED + gyro.adjSpeed());
-		double heading = gyro.getOffsetHeading();
-		double offset = gyro.getOffset();
-		double adjSpeed = 0.0;
-		
-		if( heading > 0)
-		{
-			adjSpeed = gyro.getOffsetHeading() * Pronstants.ADJUSTING_CONSTANT;
-		}
-		else if( heading < 0)
-		{
-			adjSpeed = gyro.getOffsetHeading() * Pronstants.ADJUSTING_CONSTANT;
-		}
+		double adjSpeed = gyro.getOffsetHeading() * Pronstants.ADJUSTING_CONSTANT;
 		
 		SmartDashboard.putString("DB/String 7", ""+ adjSpeed);
 		System.out.println(adjSpeed + " " + gyro.getOffsetHeading());
