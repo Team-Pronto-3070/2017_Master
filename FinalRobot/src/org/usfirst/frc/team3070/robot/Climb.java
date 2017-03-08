@@ -96,6 +96,15 @@ public class Climb {
 			talC2.set(0);
 		}
 	}
+	public void moveUp() {
+		talC1.set(-Pronstants.AUTO_CLIMB_SPEED);
+		talC2.set(-Pronstants.AUTO_CLIMB_SPEED);
+
+	}
+	public void stop() {
+		talC1.set(0);
+		talC2.set(0);
+	}
 	
 	public void printClimblimValue() {
 		SmartDashboard.putString("DB/String 7", "adj = %d" + climbLim1.getVoltage());

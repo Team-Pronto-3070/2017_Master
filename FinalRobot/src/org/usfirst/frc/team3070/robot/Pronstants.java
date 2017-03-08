@@ -3,12 +3,10 @@ package org.usfirst.frc.team3070.robot;
 public interface Pronstants {
 	//The modifier of the negative acceleration the robot undergoes at the end of a movement.
 	static final double RAMP_RATE = 0.5;
-	//The speed at which the robot turns
-	static final double AUTO_TURN_SPEED = 0.3;
-	//The speed at which the robot drives straight
-	static final double AUTO_DRIVE_SPEED = 0.3;
+	//The speed at which the robot travels in autonomous.
+	static final double AUTO_DRIVE_SPEED = 0.5;
 	//The speed at which the robot climbs the rope.
-	static final double AUTO_CLIMB_SPEED = 0.8;
+	static final double AUTO_CLIMB_SPEED = 1;
 	//The speed at which the robot shoots the balls.
 	static final double AUTO_SHOOT_SPEED = 1;
 	static final double AUTO_HOPPER_SPEED = 1;
@@ -34,7 +32,6 @@ public interface Pronstants {
 	static final int LIMIT_SWITCH_2_PORT = 1;
 	static final int LEFT_JOYSTICK_PORT = 0;
 	static final int RIGHT_JOYSTICK_PORT = 1;
-	
 	static enum AutoMode {  AUTO_MODE_NONE,
 							AUTO_MODE_CENTER_CENTER,
 							AUTO_MODE_CENTER_RIGHT,
@@ -43,27 +40,25 @@ public interface Pronstants {
 							AUTO_MODE_RIGHT_RIGHT };
 	
 	//Conversion from encoder values to feet, which is 162.97 ticks per foot.
-	static final double TICK_COEFFICIENT = 638;
-	
+	static final double TICK_COEFFICIENT = 162.97;
 	// sensors variables
 	static final int IMG_WIDTH = 320;
 	static final int IMG_HEIGHT = 240;
-	
 	// ProntoGyro variables
-	static final double ADJUSTING_CONSTANT = .012;
-	static final double ANGLE_VARIANCE = .2;
-	
+	static final double ADJUSTING_CONSTANT = .016;
+	static final double ANGLE_VARIANCE = .5;
 	// Button for switching joystick controls
 	static final int CONTROL_SWITCH_BUTTON = 6;
-	
-	// Values for the autonomous selector
-	static final int AUTO_SIDE_LEFT = 1;
-	static final int AUTO_SIDE_RIGHT = 2;
-	
-	//Adjusting constant for turn function
 	static final double TURN_OFFSET = 3;
-	
 	//This is how far in feet it coasts after braking.
 	static final double DISTANCE_OFFSET = 0.5;
-	
+	// Values for the autonomous selector
+	static int AUTO_SIDE_LEFT = 1;
+	static int AUTO_SIDE_RIGHT = 2;
+	//Auto values				     L   C  R  NONE
+	static final int[] AUTO_TURN = {-60, 0, 60, 0};
+	static final double AUTO_MAX_TURN_SPEED = .16; //     L     C    R  NONE
+	static final double[] FIRST_AUTO_STRAIGHT_DISTANCE = {5.0, 5.0, 5.0, 0.0};
+	//													    L    C    R  NONE
+	static final double[] SECOND_AUTO_STRAIGHT_DISTANCE = {2.0, 0.0, 2.0, 0.0};
 }

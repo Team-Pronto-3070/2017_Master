@@ -29,10 +29,9 @@ public class Robot extends IterativeRobot {
 	Drive drive;
 	Auto auto;
 	Climb climber;
-	Joystick joyL, joyR;
 	Shooter shoot;
 	ProntoGyro gyro;
-	Sensors sensors;
+	Joystick joyL, joyR;
 	SendableChooser<Pronstants.AutoMode> autoChooser;
 	Pronstants.AutoMode startMode;
 	
@@ -56,14 +55,13 @@ public class Robot extends IterativeRobot {
 		//Initializes robot
 		//Initializes FRC WPILIB Classes
 		joyL = new Joystick(Pronstants.LEFT_JOYSTICK_PORT);
-	//	joyR = new Joystick(Pronstants.RIGHT_JOYSTICK_PORT);
+		joyR = new Joystick(Pronstants.RIGHT_JOYSTICK_PORT);
 		//Initializes Pronto Classes
 		drive = new Drive();
 		auto = new Auto();
 		climber = new Climb();
 		shoot = new Shooter();
 		gyro = new ProntoGyro();
-		sensors = new Sensors();
 		
 		autoChooser = new SendableChooser<Pronstants.AutoMode>();
 		autoChooser.addDefault("None",Pronstants.AutoMode.AUTO_MODE_NONE);
@@ -101,17 +99,17 @@ public class Robot extends IterativeRobot {
 		//resets the distance traveled
 		drive.resetDistanceTraveled();
 		// resets the gyro
+		gyro.reset();
 		drive.talFR.enableBrakeMode(true);
 		drive.talFL.enableBrakeMode(true);
 		drive.talBR.enableBrakeMode(true);
 		drive.talBL.enableBrakeMode(true);
 		drive.resetGyro();
-		
+		//gyro.reset();
 		startMode = autoChooser.getSelected();
 		
 		
 		drive.resetDistanceTraveled();
-		gyro.reset();
 
 	}
 //practice comment
@@ -138,33 +136,59 @@ public class Robot extends IterativeRobot {
 		case AUTO_MODE_CENTER_LEFT:
 			auto.autoOutsideCenter(Pronstants.AUTO_SIDE_LEFT);
 		}
-		
-//		drive.turn(90, Pronstants.AUTO_DRIVE_SPEED);
-//		if (dash1 && dash4) {
-//			//if so, run the left side to left gearloader code
-//			auto.autoOutsideCenter(Pronstants.AUTO_SIDE_LEFT);
+
 //		}
-//		//checks if the 1st button and not 4th button is pressed
-//		else if (dash1 && !dash4) {
-//			//if so, run the right side to right gearloader code
-//			auto.autoOutsideCenter(Pronstants.AUTO_SIDE_RIGHT);
-//		}
-//		//checks if the 2nd and 4th buttons are pressed
-//		else if (dash2 && dash4) {
-//			//if so, run the left side to center gearloader code
-//			auto.autoOutside(Pronstants.AUTO_SIDE_LEFT);
-//		}
-//		//checks if the 2nd button and not the 4th button is pressed
-//		else if (dash2 && !dash4) {
-//			//if so, run the right side to center gearloader code
-//			auto.autoOutside(Pronstants.AUTO_SIDE_RIGHT);
-//		}
-//		//checks if the 3rd button is pressed
-//		else if (dash3) {
-//			auto.autoC();
 //		else {
 //			//if none of the previous cases are true, have the robot stay still
-//			drive.drive(0, 0)
+//			drive.drive(0, 0);
+//		}
+		
+		autoProg = (binarySearch(autoSelect, true));
+		
+		switch(autoCase) {
+		case 1: // Drive straight with first value if needed
+			if(drive.getDistanceTraveled()[2] < Pronstants.FIRST_AUTO_STRAIGHT_DISTANCE[autoProg]) {
+				drive.driveRobotStraight(Pronstants.AUTO_DRIVE_SPEED);
+			} else {
+				autoCase = 2;
+				drive.resetDistanceTraveled();
+				drive.drive(0, 0);
+			}
+			break;
+		case 2: // Turn 60 degrees right or left, depending on auto selected, or if not needed don't turn
+			if(!drive.turn(Pronstants.AUTO_TURN[autoProg], Pronstants.AUTO_MAX_TURN_SPEED)) {
+				break;
+			} else {
+				autoCase = 3;
+				drive.resetDistanceTraveled();
+				drive.drive(0, 0);
+			}
+			break;
+		case 3: // Drive straight with second value if needed
+			if(drive.getDistanceTraveled()[2] < Pronstants.SECOND_AUTO_STRAIGHT_DISTANCE[autoProg]) {
+				drive.driveRobotStraight(Pronstants.AUTO_DRIVE_SPEED);
+			} else {
+				autoCase = 4;
+				drive.resetDistanceTraveled();
+				drive.drive(0,  0);
+			}
+			break;
+		case 4: // Code for loading gear using vision
+			drive.drive(0, 0);
+			break;
+		}
+		
+		
+//		SmartDashboard.putString("DB/String 1", "enc1 =" + distanceTraveled[0]);
+//		SmartDashboard.putString("DB/String 2", "enc2 = " + distanceTraveled[1]);
+//		switch (autoSelected) {
+//		case customAuto:
+//			// Put custom auto code here
+//			break;
+//		case defaultAuto:
+//		default:
+//			// Put default auto code here
+//			break;
 //		}
 	}
 
@@ -183,13 +207,12 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		//teleop programs  (names are pretty self-explanatory)
-		
 		//runs the climber program on the 8 and 9 buttons on the left joystick
-		/*climber.checkClimbInput2(joyL.getRawButton(8), joyL.getRawButton(9));
+		//climber.checkClimbInput2(joyL.getRawButton(8), joyL.getRawButton(9));
 		//runs the shooter program for the left and right joystick triggers
 //		shoot.checkShootInput(joyL.getRawButton(1), joyR.getRawButton(1));
 		//checks if the control switcher button is pressed
-		if (joyR.getRawButton(Pronstants.CONTROL_SWITCH_BUTTON)) {
+		/*if (joyR.getRawButton(Pronstants.CONTROL_SWITCH_BUTTON)) {
 			//if so, set the boolean for that button to true
 			button1 = true;
 		}
@@ -209,19 +232,21 @@ public class Robot extends IterativeRobot {
 		//gets and displays the distance traveled
 		drive.getDistanceTraveled();
 		//gets and displays the current Heading for the gyro
- 		sensors.ultrasonicOutput();
+		gyro.calculateHeading();
 //		climber.printClimblimVoltage();
+ * 
+ * */
+		drive.joystickDrive(-joyR.getRawAxis(1), -joyL.getRawAxis(1));
+		if(joyR.getRawButton(2)) {
+			climber.moveUp();
+		} else {
+			climber.stop();
+		}
 	}
 
 	/**
 	 * This function is called periodically during test mode
 	 */
-		drive.drive(0.3, 0.3);
-
-//		drive.joystickDrive(joyR.getRawAxis(0), joyL.getRawAxis(0));
-//		climber.checkClimbInput(joyR.getRawButton(0), joyL.getRawButton(0));
-//		shoot.checkShootInput(joyR.getRawButton(1), joyL.getRawButton(1));
-	}
 	@Override
 	public void testPeriodic() {
 		//unimportant

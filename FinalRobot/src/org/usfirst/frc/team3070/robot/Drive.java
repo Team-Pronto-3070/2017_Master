@@ -150,6 +150,11 @@ public class Drive {
 		//returns the array
 		return ar;
 	}
+	
+	public double getDistanceTraveledAvg()
+	{
+		return getDistanceTraveled()[2];
+	}
 
 	public void resetDistanceTraveled() {
 		// resets the encoder values to 0
