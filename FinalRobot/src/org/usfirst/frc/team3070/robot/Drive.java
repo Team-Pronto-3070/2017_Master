@@ -2,211 +2,206 @@ package org.usfirst.frc.team3070.robot;
 
 import com.ctre.CANTalon;
 import org.usfirst.frc.team3070.robot.Pronstants;
-import edu.wpi.first.wpilibj.smartdashboard.*;
 
 /*
 methods:
-public void resetGyro()
-public void joystickDrive()
-public void drive()
-public void driveSwitch()
-public double[] getDistanceTraveled()
-public void resetDistanceTraveled()
-public double getGyroOffset()
-public boolean turn()
-public void driveRobotStraight()
+public Drive() - constructs the class
+public void toggleDriveMode(boolean brake) - toggles the drive talons between brake and coast mode
+public void startPID() - starts the PID controller
+public void resetGyro() - resets the gyro
+public void joystickDrive() - drives the robot according to joystick values
+public void drive() - sets the talons to speeds which will drive the robot
+public double[] getDistanceTraveled() - gets an array for the distance traveled by each side in feet and the average of those two distances
+public double[] getEncoderVelocity() - gets an array for the velocity of each side of the robot
+public void resetDistanceTraveled() - resets the encoder values to 0
+public double getGyroOffset() - gets the angle offset from the ProntoGyro class (see ProntoGyro)
+public boolean turn() - turns the robot autonomously
+public void encDrive() - drives the robot autonomously based off of encoder velocities and PID values
+public void pidDrive() - drives the robot based off of PID values
  */
 
 public class Drive {
-	//defines the talons
+	// Defines the drive talons
 	public CANTalon talFR, talFL, talBR, talBL;
-//	double startHeading;
-	//defines the gyro
+	
+	// Defines the gyro
 	private ProntoGyro gyro;
 	
-	public static final double MAX_DEGREES_FULL_SPEED = 10.0;
-	public static final double MIN_TURN_SPEED = 0.18;
-
+	// Defines the PID controller
+	HeadingController pid;
+	
 	public Drive() {
-		// drive constructor
-		// initializes the gyro
-		// defines the talon variables
+		// Constructs the class
+
+		// Defines the drive talons
 		talFR = new CANTalon(Pronstants.TALON_FRONT_RIGHT_PORT);
 		talFL = new CANTalon(Pronstants.TALON_FRONT_LEFT_PORT);
 		talBR = new CANTalon(Pronstants.TALON_BACK_RIGHT_PORT);
 		talBL = new CANTalon(Pronstants.TALON_BACK_LEFT_PORT);
-		// sets a voltage ramp rate on the talons
+		
+		// Sets a voltage ramp rate on the talons
 		talFR.setVoltageRampRate(Pronstants.RAMP_RATE);
 		talFL.setVoltageRampRate(Pronstants.RAMP_RATE);
 		talBR.setVoltageRampRate(Pronstants.RAMP_RATE);
 		talBL.setVoltageRampRate(Pronstants.RAMP_RATE);
-		// sets a current amperage limit on the talons
+		
+		// Sets a current amperage limit on the talons
 		talFR.setCurrentLimit(Pronstants.DRIVE_CURRENT_LIMIT);
 		talFL.setCurrentLimit(Pronstants.DRIVE_CURRENT_LIMIT);
 		talBR.setCurrentLimit(Pronstants.DRIVE_CURRENT_LIMIT);
 		talBL.setCurrentLimit(Pronstants.DRIVE_CURRENT_LIMIT);
-		// sets feedback device on the talons to encoders
+		
+		// Sets the feedback device on the talons to encoders
 		talFR.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
 		talBL.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+		
+		// Initializes the gyro
 		gyro = new ProntoGyro();
+		
+		// Initializes the PID controller
+		pid = new HeadingController(gyro);
+		
+		// Resets the distance traveled on the encoders
 		resetDistanceTraveled();
 	}
 	
-	public void resetGyro()
-	{
+	public void toggleDriveMode(boolean brake) {
+		// Toggles brake mode on the drive
+		talFR.enableBrakeMode(brake);
+		talFL.enableBrakeMode(brake);
+		talBR.enableBrakeMode(brake);
+		talBL.enableBrakeMode(brake);
+	}
+	
+	public void startPID() {
+		// Starts the PID controller
+		pid.start();
+	}
+	
+	public void resetGyro() {
+		// Resets the gyro
 		gyro.reset();
 	}
 	
 	public void joystickDrive(double joyR, double joyL) {
-		// makes the joystick control the talons
-		// defines the variables for the speed of left and right sides of the robot
+		// Makes the joystick control the talons
+		
+		// Defines the variables for the speed of left and right sides of the robot
 		double speedR, speedL;
-		// checks if the right joystick is in the deadzone
+		
+		// Checks if the right joystick is in the deadzone
 		if (Math.abs(joyR) > Pronstants.DEAD_ZONE) {
-			// If it isn't, set the speed of the right side to the joystick
-			// value
+			// If it isn't, set the speed of the right side to the joystick value
 			speedR = joyR;
 		}
+		
 		else {
-			// If the joystick is in the deadzone, set the speed of the right
-			// side to 0
+			// If the joystick is in the deadzone, set the speed of the right side to 0
 			speedR = 0;
 		}
 		
-		// checks if the left joystick is in the deadzone
+		// Checks if the left joystick is in the deadzone
 		if (Math.abs(joyL) > Pronstants.DEAD_ZONE) {
-			// If it isn't, set the speed of the right side to the joystick
-			// value
+			// If it isn't, set the speed of the right side to the joystick value
 			speedL = joyL;
 		}
+		
 		else {
-			// If the joystick is in the deadzone, set the speed of the right
-			// side to 0
+			// If the joystick is in the deadzone, set the speed of the right side to 0
 			speedL = 0;
 		}
 		
-		// drives the robot forward at the speeds set earlier for left and right
-		// this speed is cubed so that the controls are less sensitives
+		// Drives the robot forward at the speeds set earlier for left and right
+		// This speed is cubed so that the controls are less sensitive
 		// (all speed values are between 0 and 1)
-		drive(Math.pow(speedR, 3), Math.pow(speedL, 3));
+		pidDrive(Math.pow(speedR, 3), Math.pow(speedL, 3));
 	}
 
 	public void drive(double right, double left) {
-		// drives the robot based on two different input values for left and right
+		// Drives the robot based on two different input values for left and right
 		talFR.set(-right);
 		talBR.set(-right);
 		talFL.set(left);
 		talBL.set(left);
 	}
-	
-	public void driveSwitch(double joyR, double joyL) {
-		// makes the joystick control the talons (with front and back switched)
-		// defines the variables for the speed of left and right sides of the robot
-		double speedR, speedL;
-		
-		// checks if the right joystick is in the deadzone
-		if (Math.abs(joyR) > Pronstants.DEAD_ZONE) {
-			// If it isn't, set the speed of the right side to the joystick value
-			speedR = joyR;
-		}
-		else {
-			// If the joystick is in the deadzone, set the speed of the right
-			// side to 0
-			speedR = 0;
-		}
-		
-		// checks if the left joystick is in the deadzone`
-		if (Math.abs(joyL) > Pronstants.DEAD_ZONE) {
-			// If it isn't, set the speed of the right side to the joystick value
-			speedL = joyL;
-		}
-		else {
-			// If the joystick is in the deadzone, set the speed of the right
-			// side to 0
-			speedL = 0;
-		}
-		// drives the robot forward at the speeds set earlier for left and right,
-		// except the front and back sides are reversed
-		// (again, all values cubed for more driving control)
-		drive(-Math.pow(speedR, 3), -Math.pow(speedL, 3));
-	}
 
 	public double[] getDistanceTraveled() {
-		// gets the distance traveled from the encoders
-		// creates an array with 3 doubles
+		// Gets the distance traveled from the encoders
+		// Creates an array with 3 doubles
 		double ar[] = new double[3];
 		
-		// creates a double for each encoder value converted into feet
+		// Creates a double for each encoder value converted into feet
 		ar[0] = talFR.getEncPosition() / Pronstants.TICK_COEFFICIENT;
 		ar[1] = -talBL.getEncPosition() / Pronstants.TICK_COEFFICIENT;
 		
-		// creates a double for the average of the two encoder values (in feet)
+		// Creates a double for the average of the two encoder values (in feet)
 		ar[2] = (ar[1] + ar[0]) / 2;
-		
-		//prints the left and right encoder values in the SmartDash
-		SmartDashboard.putString("DB/String 0", String.format("RightDist = %f", ar[0]));
-		SmartDashboard.putString("DB/String 1", String.format("LeftDist = %f", ar[1]));
 
-		//returns the array
+		return ar;
+	}
+	
+	public double[] getEncoderVelocity() {
+		// Gets an array with the encoder velocities (0 is right, 1 is left)
+		
+		// Creates an array with 2 doubles
+		double ar[] = new double[2];
+		
+		// Creates a variable for the right and left speeds of the sides of the robot
+		ar[0] = talFR.getEncVelocity();
+		ar[1] = -talBL.getEncVelocity();
+		
 		return ar;
 	}
 
 	public void resetDistanceTraveled() {
-		// resets the encoder values to 0
+		// Resets the encoder values to 0
 		talFR.setEncPosition(0);
 		talBL.setEncPosition(0);
 	}
 
 	public double getGyroOffset() {
+		// Returns the angle offset from the gyro
 		return gyro.getOffset();
 	}
 	
 	public boolean turn(double angle, double maxSpeed) {
-		// turns the robot until it aligns with an angle on the gyro
-		// gets the heading and makes it the value of a variable
+		// Turns the robot until it aligns with the gyro and returns a boolean of whether it's done turning or not
+		
+		// Gets the heading in relation to the offset from the gyro and makes it the value of a variable
 		double currentHeading = gyro.getOffsetHeading();
 		
 		// Default to maximum speed
 		double speed = maxSpeed;
 		
-		// adjust speed linearly when within 10 degrees of expected value
+		// Adjust speed linearly when within 10 degrees of expected value
 		double delta =  Math.abs(currentHeading - angle);
-		if(delta <= MAX_DEGREES_FULL_SPEED )
+		if(delta <= Pronstants.MAX_DEGREES_FULL_SPEED )
 		{
 			// Simple linear regression
 			//     m =         (Y2      -     Y1)           /             ( X2        -          X1 )
-			double m = ( ( maxSpeed - MIN_TURN_SPEED )  / ( MAX_DEGREES_FULL_SPEED - Pronstants.TURN_OFFSET ) );
+			double m = ( ( maxSpeed - Pronstants.MIN_TURN_SPEED )  / ( Pronstants.MAX_DEGREES_FULL_SPEED - Pronstants.TURN_OFFSET ) );
 			// y = m*x + b => b = y - m*x. Choosing Y1 and X1: 
-			double b = MIN_TURN_SPEED - ( m * Pronstants.TURN_OFFSET );
+			double b = Pronstants.MIN_TURN_SPEED - ( m * Pronstants.TURN_OFFSET );
 			
 			// Substitute in the angle delta for x and 
 			speed = m * delta + b;
-			SmartDashboard.putString("DB/String 2", "Speed" +speed);
-
 		}
 		
-		// checks if the gyro angle is less than the desired angle
+		// Checks if the gyro angle is less than the desired angle
 		 if(currentHeading < angle - Pronstants.TURN_OFFSET) {
 			// If it is, turn left
 			drive(-speed, speed);
-			SmartDashboard.putString("DB/String 1", "heqq");
-
 		}
 		
-		// checks if the gyro angle is greater than the desired angle
+		// Checks if the gyro angle is greater than the desired angle
 		else if (currentHeading > angle + Pronstants.TURN_OFFSET) {
-			// if it is, turn right
+			// If it is, turn right
 			drive(speed, -speed);
-			SmartDashboard.putString("DB/String 1", "heck");
-
 		}
 		
 		else {
-			// if the gyro angle is aligned with the desired angle, tell the
-			// source that called the method that turning is done
+			// If the gyro angle is aligned with the desired angle, tell the source that called the method that turning is done
 			drive(0,0);
-			SmartDashboard.putString("DB/String 1", "fuck");
-
 			return true;
 		}
 		
@@ -214,41 +209,36 @@ public class Drive {
 		return false;
 	}
 	
-	public void driveRobotStraight( double speed ) {
+	public void encDrive(double speed) {
+		// Drives the robot at a speed based off the encoders and the PID controller
 		
-		// Some pseudo code to get you all started:
+		// Creates an array equal to the encoder velocities
+		// NOTE: 0 is right and 1 is left
+		double[] velocity = getEncoderVelocity();
 		
-		// Step 1: Reset gyro prior to first call to set the desired angle to drive forward at (this will set the ProntoGyro "offset" to this value.)
-		// Step 2: If turning slightly left, decrease the speed on the right side OR increase the speed on the left side.
-		// 		   If turning slightly right, decrease the speed on the left side OR increase the speed on the right side.
-		// If running at 50 Hz, you can expect that whatever command you send will be active for about 20 ms. Determine how much you want to adjust the speed based on the angle offset.
-		// I would recommend targeting a tolerance of less than 1 degree (smaller tolerance is better and the gyro can handle it).
+		// Creates a variable equal to the velocity of the right side minus the velocity of the left side
+		double veldiff = velocity[0] - velocity[1];
 		
-//		double currentHeading = gyro.calculateHeading();
-//		if (currentHeading > startHeading + 2) {
-//			drive(Pronstants.AUTO_DRIVE_SPEED + 0.1, Pronstants.AUTO_DRIVE_SPEED);
-//		} else if (currentHeading > (startHeading - 2)) {
-//			drive(Pronstants.AUTO_DRIVE_SPEED, Pronstants.AUTO_DRIVE_SPEED + 0.1);
-//		} else {
-//			drive(Pronstants.AUTO_DRIVE_SPEED, Pronstants.AUTO_DRIVE_SPEED);
-//		}
-		// drives the robot forward at a speed adjusted by the "adjSpeed" function (see ProntoGyro)
-		// This isn't going to work. Need to adjust only one side or both sides separately to cause the robot to turn slightly and adjust for not driving straight.
-		//drive(Pronstants.AUTO_DRIVE_SPEED + gyro.adjSpeed(), Pronstants.AUTO_DRIVE_SPEED + gyro.adjSpeed());
-		double adjSpeed = gyro.getOffsetHeading() * Pronstants.ADJUSTING_CONSTANT;
+		// Checks if the difference in velocities is greater than the speed variance
+		if (veldiff > Pronstants.SPEED_VARIANCE) {
+			// If so, drive with an increased amount on the left side to compensate
+			drive(speed, speed + pid.getAdjFactor());
+		}
 		
-		SmartDashboard.putString("DB/String 7", ""+ adjSpeed);
-		System.out.println(adjSpeed + " " + gyro.getOffsetHeading());
+		// Checks if the difference in velocities is less than the negative speed variance
+		else if (veldiff < -Pronstants.SPEED_VARIANCE) {
+			// If so, drive with an increased amount on the right side to compensate
+			drive(speed, speed + pid.getAdjFactor());
+		}
 		
-		drive(speed + adjSpeed, speed - adjSpeed);
-//		if (heading > 0 ) {
-//			drive(speed + gyro.adjSpeed(), speed );
-//		}
-//		else if (heading <= 0 ) {
-//			drive(speed, speed + gyro.adjSpeed());
-//		}
-//		else {
-//			drive(speed, speed);
-//		}
+		else {
+			// Otherwise, drive the robot with no compensation factor
+			drive(speed, speed);
+		}
+	}
+	
+	public void pidDrive(double right, double left) {
+		// Drives the robot at two speed which are adjusted according to PID values to compensate
+		drive(right - pid.getAdjFactor(), left + pid.getAdjFactor());
 	}
 }

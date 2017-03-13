@@ -6,98 +6,83 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /*
 methods:
+public Climb() - constructs the class
 public void checkClimbInput()
 public void printClimblimValue()
  */
 
 public class Climb {
-	//Defines talons for the climber
+	// Defines the climber talons
 	static CANTalon talC1, talC2;
-//	static AnalogTrigger limitSwitch;
-//	AnalogInput climbLim;
-	AnalogInput climbLim1;
-	AnalogInput climbLim2;
+	// Defines the limit switches
+	AnalogInput climbLim1, climbLim2;
 
-	//climber constructor
 	public Climb()
 	{
-		//defines the talon variables
+		//Constructs the climber
+		
+		// Initializes the climber talons
 		talC1 = new CANTalon(Pronstants.TALON_CLIMBER_1_PORT);
 		talC2 = new CANTalon(Pronstants.TALON_CLIMBER_2_PORT);
-		//sets a voltage ramp rate on the talons
+		
+		// Sets a voltage ramp rate on the talons
 		talC1.setVoltageRampRate(Pronstants.RAMP_RATE);
 		talC2.setVoltageRampRate(Pronstants.RAMP_RATE);
-		//sets a current limit on the talons
+		
+		// Sets a current amperage limit on the talons
 		talC1.setCurrentLimit(Pronstants.CLIMB_CURRENT_LIMIT);
 		talC2.setCurrentLimit(Pronstants.CLIMB_CURRENT_LIMIT);
-		//TODO: Implement analog switch with boolean output that triggers when at top, stop climber motors.
-		//defines limit switch
+		
+		// Initializes limit switches
 		climbLim1 = new AnalogInput(Pronstants.LIMIT_SWITCH_1_PORT);
 		climbLim2 = new AnalogInput(Pronstants.LIMIT_SWITCH_2_PORT);
-//		limitSwitch = new AnalogTrigger(Pronstants.LIMIT_SWITCH_PORT);
 	}
-//	public void checkClimbInput(boolean button1, boolean button2) {
-//		//maps climber to joystick buttons
-//		//checks if button1 is pressed and button2 is not
-//		if (button1 && !button2) {
-//			if (!limitSwitch.getTriggerState()) {
-//				//If true, climb up
-//				talC1.set(Pronstants.AUTO_CLIMB_SPEED);
-//				talC2.set(Pronstants.AUTO_CLIMB_SPEED);
-//			}
-//			//checks if the limit switch is pressed
-//			if (limitSwitch.getTriggerState()) {
-//				//If true, climb down
-//				talC1.set(0);
-//				talC2.set(0);
-//			}
-//		}
-//		//checks if button2 is pressed and button1 is not
-//		else if (button2 && !button1) {
-//			talC1.set(-Pronstants.AUTO_CLIMB_SPEED);
-//			talC2.set(-Pronstants.AUTO_CLIMB_SPEED);
-//		}
-//		//checks if button1 and button2 are pressed
-//		else if (button1 && button2) {
-//			//If true, set climber to 0
-//			//This prevents the climber from trying to go in 2 directions at once
-//			talC1.set(0);
-//			talC2.set(0);
-//		}
-//		//In any other case, set climber to 0
-//		else {
-//			talC1.set(0);
-//			talC2.set(0);
-//		}
-//	}
 
 	public void checkClimbInput(boolean button1, boolean button2) {
+		// Handles the climber buttons on the joysticks
+		
+		// Creates variables for the limit switch voltages
 		double limit1 = climbLim1.getVoltage();
 		double limit2 = climbLim2.getVoltage();
-		SmartDashboard.putNumber("DB/String 7", limit1);
-		SmartDashboard.putNumber("DB/String 8", limit2);
+		
+		// Checks if the limit switches are not pressed
 		if (limit1 < 3 && limit2 < 3) {
+			// Checks if the first button and not the second button are pressed
 			if (button1 && !button2) {
-				//these should BOTH BE NEGATIVE, ALEX >:(
+				// If so, climb up
 				talC1.set(-Pronstants.AUTO_CLIMB_SPEED);
 				talC2.set(-Pronstants.AUTO_CLIMB_SPEED);
 			}
 		}
-		else if (button2 && !button1){
+		
+		// Checks if the second button and not the first button are pressed
+		else if (button2 && !button1) {
+			// If so, climb down
+			// This method is for after the round so we can undo the rope,
+			// or if there is a potential error when we climb up
 			talC1.set(Pronstants.AUTO_CLIMB_SPEED);
 			talC2.set(Pronstants.AUTO_CLIMB_SPEED);
 		}
+		
+		// checks if both buttons are pressed
 		else if (button1 && button2) {
+			// If so, don't climb up or down
+			// This is to protect against both the buttons getting pressed
+			// and the talons trying to go both directions as a result
 			talC1.set(0);
 			talC2.set(0);
 		}
+		
 		else {
+			// If none of the above cases are true, don't climb up or down
 			talC1.set(0);
 			talC2.set(0);
 		}
 	}
 	
 	public void printClimblimValue() {
+		// Prints the value of the limit switches
+		// This method is here in case we want the driver to see how far the robot has climbed up
 		SmartDashboard.putString("DB/String 7", "adj = %d" + climbLim1.getVoltage());
 		SmartDashboard.putString("DB/String 8", "adj = %d" + climbLim2.getVoltage());
 	}
