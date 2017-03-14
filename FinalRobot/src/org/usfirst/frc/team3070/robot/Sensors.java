@@ -28,8 +28,8 @@ public class Sensors {
 		ar[0] = ultra1.getAverageValue();
 		ar[1] = ultra2.getAverageValue();
 		
-		SmartDashboard.putString("DB/String 4", "leftUltra = %d" + ar[0]);
-		SmartDashboard.putString("DB/String 5", "rightUltra = %d" + ar[1]);
+		//SmartDashboard.putString("DB/String 4", "leftUltra = %d" + ar[0]);
+		//SmartDashboard.putString("DB/String 5", "rightUltra = %d" + ar[1]);
 		
 		return ar;
 	}

@@ -1,11 +1,13 @@
 package org.usfirst.frc.team3070.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.vision.VisionThread;
 import gripvis.vision;
+
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 
@@ -35,6 +37,7 @@ public class Robot extends IterativeRobot {
 	Sensors sensors;
 	SendableChooser<Pronstants.AutoMode> autoChooser;
 	Pronstants.AutoMode startMode;
+	Thread checkSensors;
 	
 	//vision variables
 //	public VisionThread visionThread;
@@ -47,6 +50,7 @@ public class Robot extends IterativeRobot {
 	//public double[] distanceTraveled = drive.getDistanceTraveled();
 	//creates a boolean for the control switcher button
 	boolean button1 = false;
+	boolean checkSwitch = false;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -56,7 +60,7 @@ public class Robot extends IterativeRobot {
 		//Initializes robot
 		//Initializes FRC WPILIB Classes
 		joyL = new Joystick(Pronstants.LEFT_JOYSTICK_PORT);
-	//	joyR = new Joystick(Pronstants.RIGHT_JOYSTICK_PORT);
+		joyR = new Joystick(Pronstants.RIGHT_JOYSTICK_PORT);
 		//Initializes Pronto Classes
 		drive = new Drive();
 		auto = new Auto();
@@ -72,11 +76,36 @@ public class Robot extends IterativeRobot {
 		autoChooser.addObject("Center -> Left", Pronstants.AutoMode.AUTO_MODE_CENTER_LEFT);
 		autoChooser.addObject("Left -> Left", Pronstants.AutoMode.AUTO_MODE_LEFT_LEFT);
 		autoChooser.addObject("Right -> Right", Pronstants.AutoMode.AUTO_MODE_RIGHT_RIGHT);
-		
+		checkSensors = new Thread(() -> {
+			while(!Thread.interrupted())
+			{
+				SmartDashboard.putString("EncPos/FR", ""+drive.talFR.getEncPosition());
+				SmartDashboard.putString("EncPos/BL",	""+drive.talBL.getEncPosition());
+				SmartDashboard.putString("I/FR", "FR I: "+drive.talFR.getOutputCurrent());
+				SmartDashboard.putString("I/FL", "FL I: "+drive.talFL.getOutputCurrent());
+				SmartDashboard.putString("I/BR", "BR I: "+drive.talBR.getOutputCurrent());
+				SmartDashboard.putString("I/BL", "BL I: "+drive.talBL.getOutputCurrent());	
+				if (climber.climbLim1.getVoltage() > .4) {
+					SmartDashboard.putBoolean("Climb/C1", true);
+				} else {
+					SmartDashboard.putBoolean("Climb/C1", false);
+				}
+				if (climber.climbLim2.getVoltage() > .4) {
+					SmartDashboard.putBoolean("Climb/C2", true);
+				} else {
+					SmartDashboard.putBoolean("Climb/C2", false);
+				}
+				SmartDashboard.putNumber("Gyro/gyro", gyro.getOffsetHeading());
+				Timer.delay(.1);
+			}
+			
+		});
+		checkSensors.setDaemon(true);
+		checkSensors.start();
 //		grip = new vision();
 	//vision code
-//		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-//		camera.setResolution(Pronstants.IMG_WIDTH, Pronstants.IMG_HEIGHT);
+		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+		camera.setResolution(Pronstants.IMG_WIDTH, Pronstants.IMG_HEIGHT);
 //visionThread = new VisionThread (camera, grip,pipline ->{
 //			System.out.println(grip.findBlobsOutput().size());
 //		});
@@ -107,11 +136,12 @@ public class Robot extends IterativeRobot {
 		drive.talBL.enableBrakeMode(true);
 		drive.resetGyro();
 		
-		startMode = autoChooser.getSelected();
+		//startMode = autoChooser.getSelected();
 		
 		
 		drive.resetDistanceTraveled();
 		gyro.reset();
+		
 
 	}
 //practice comment
@@ -123,22 +153,23 @@ public class Robot extends IterativeRobot {
 		//what happens during autonomous (stays during autonomous)
 		//tells the code which autonomous program to run based on buttons from the SmartDash
 		//checks if the 1st and 4th buttons are pressed
+//		
+//		switch(startMode) {
+//		case AUTO_MODE_NONE:
+//			drive.drive(0, 0);
+//		case AUTO_MODE_CENTER_CENTER:
+//			auto.autoC();
+//		case AUTO_MODE_RIGHT_RIGHT:
+//			auto.autoOutside(Pronstants.AUTO_SIDE_RIGHT);
+//		case AUTO_MODE_LEFT_LEFT:
+//			auto.autoOutside(Pronstants.AUTO_SIDE_LEFT);
+//		case AUTO_MODE_CENTER_RIGHT:
+//			auto.autoOutsideCenter(Pronstants.AUTO_SIDE_RIGHT);
+//		case AUTO_MODE_CENTER_LEFT:
+//			auto.autoOutsideCenter(Pronstants.AUTO_SIDE_LEFT);
 		
-		switch(startMode) {
-		case AUTO_MODE_NONE:
-			drive.drive(0, 0);
-		case AUTO_MODE_CENTER_CENTER:
-			auto.autoC();
-		case AUTO_MODE_RIGHT_RIGHT:
-			auto.autoOutside(Pronstants.AUTO_SIDE_RIGHT);
-		case AUTO_MODE_LEFT_LEFT:
-			auto.autoOutside(Pronstants.AUTO_SIDE_LEFT);
-		case AUTO_MODE_CENTER_RIGHT:
-			auto.autoOutsideCenter(Pronstants.AUTO_SIDE_RIGHT);
-		case AUTO_MODE_CENTER_LEFT:
-			auto.autoOutsideCenter(Pronstants.AUTO_SIDE_LEFT);
-		}
-		
+//		}
+		auto.turn(90, .2);
 //		drive.turn(90, Pronstants.AUTO_DRIVE_SPEED);
 //		if (dash1 && dash4) {
 //			//if so, run the left side to left gearloader code
@@ -176,6 +207,7 @@ public class Robot extends IterativeRobot {
 		drive.talFL.enableBrakeMode(false);
 		drive.talBR.enableBrakeMode(false);
 		drive.talBL.enableBrakeMode(false);
+		checkSwitch = false;
 	}
 	/**
 	 * This function is called periodically during operator control
@@ -216,14 +248,17 @@ public class Robot extends IterativeRobot {
 	/**
 	 * This function is called periodically during test mode
 	 */
-		drive.drive(0.3, 0.3);
+		//drive.drive(0.3, 0.3);
+		if (joyR.getRawAxis(2) > .5) {
+			checkSwitch = true;
+			System.out.println(checkSwitch);
+		} else {
+			checkSwitch = false;
+			System.out.println(checkSwitch);
 
-//		drive.joystickDrive(joyR.getRawAxis(0), joyL.getRawAxis(0));
-//		climber.checkClimbInput(joyR.getRawButton(0), joyL.getRawButton(0));
+		}
+	drive.joystickDrive(joyR.getRawAxis(1), joyL.getRawAxis(1), checkSwitch);
+		climber.checkClimbInput(joyR.getRawButton(2), joyL.getRawButton(2));
 //		shoot.checkShootInput(joyR.getRawButton(1), joyL.getRawButton(1));
-	}
-	@Override
-	public void testPeriodic() {
-		//unimportant
 	}
 }

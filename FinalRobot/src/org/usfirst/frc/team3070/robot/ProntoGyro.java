@@ -41,8 +41,8 @@ public class ProntoGyro {
 		angle = normalizeHeadingVal(getRawHeading() - angleOffset);
 		
 		// print the angle offset and the current heading in the dashboard
-		SmartDashboard.putString("DB/String 4", String.format("Offset = %f", angleOffset));
-		SmartDashboard.putString("DB/String 3", String.format("Heading = %f", angle));
+	//	SmartDashboard.putString("DB/String 4", String.format("Offset = %f", angleOffset));
+	//	SmartDashboard.putString("DB/String 3", String.format("Heading = %f", angle));
 		
 		// return the angle
 		return angle;
@@ -55,7 +55,7 @@ public class ProntoGyro {
 	}
 	
 	public double getRawHeading() {
-		SmartDashboard.putString("DB/String 0", ""+normalizeHeadingVal(imu.getVector()[0]));
+		//SmartDashboard.putString("DB/String 0", ""+normalizeHeadingVal(imu.getVector()[0]));
 
 		return normalizeHeadingVal(imu.getVector()[0]);
 	

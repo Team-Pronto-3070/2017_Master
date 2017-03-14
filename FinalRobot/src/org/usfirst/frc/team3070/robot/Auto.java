@@ -1,5 +1,8 @@
 package org.usfirst.frc.team3070.robot;
 
+import java.sql.Time;
+import java.util.Timer;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /* methods: 
@@ -11,11 +14,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Auto extends Drive{
 // initializes classes
 // TODO: Talk about constructors and using a class multiple times
+Timer time = new Timer();
 private Drive drive = new Drive();
 private Shooter shooter = new Shooter();
 
 public Auto() {
     // Auto constructor
+	time = new Timer();
 	
 }
 
@@ -58,7 +63,7 @@ public void autoC() {
         // TODO: implement vision here
         drive.drive(0, 0);
     }
-    SmartDashboard.putString("DB/String 9", "autoC diffDist = " + diffDist);
+  //  SmartDashboard.putString("DB/String 9", "autoC diffDist = " + diffDist);
 }
 
 static boolean turnStarted = false;
@@ -183,5 +188,7 @@ public void autoOutsideCenter(int side) {
         drive.drive(0, 0);
         //TODO: implement vision here
     }
+}
+private void deadReackoning()  {
 }
 }

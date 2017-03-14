@@ -36,69 +36,21 @@ public class Climb {
 		climbLim2 = new AnalogInput(Pronstants.LIMIT_SWITCH_2_PORT);
 //		limitSwitch = new AnalogTrigger(Pronstants.LIMIT_SWITCH_PORT);
 	}
-//	public void checkClimbInput(boolean button1, boolean button2) {
-//		//maps climber to joystick buttons
-//		//checks if button1 is pressed and button2 is not
-//		if (button1 && !button2) {
-//			if (!limitSwitch.getTriggerState()) {
-//				//If true, climb up
-//				talC1.set(Pronstants.AUTO_CLIMB_SPEED);
-//				talC2.set(Pronstants.AUTO_CLIMB_SPEED);
-//			}
-//			//checks if the limit switch is pressed
-//			if (limitSwitch.getTriggerState()) {
-//				//If true, climb down
-//				talC1.set(0);
-//				talC2.set(0);
-//			}
-//		}
-//		//checks if button2 is pressed and button1 is not
-//		else if (button2 && !button1) {
-//			talC1.set(-Pronstants.AUTO_CLIMB_SPEED);
-//			talC2.set(-Pronstants.AUTO_CLIMB_SPEED);
-//		}
-//		//checks if button1 and button2 are pressed
-//		else if (button1 && button2) {
-//			//If true, set climber to 0
-//			//This prevents the climber from trying to go in 2 directions at once
-//			talC1.set(0);
-//			talC2.set(0);
-//		}
-//		//In any other case, set climber to 0
-//		else {
-//			talC1.set(0);
-//			talC2.set(0);
-//		}
-//	}
-
 	public void checkClimbInput(boolean button1, boolean button2) {
-		double limit1 = climbLim1.getVoltage();
-		double limit2 = climbLim2.getVoltage();
-		SmartDashboard.putNumber("DB/String 7", limit1);
-		SmartDashboard.putNumber("DB/String 8", limit2);
-		if (limit1 < 3 && limit2 < 3) {
-			if (button1 && !button2) {
-				//these should BOTH BE NEGATIVE, ALEX >:(
-				talC1.set(-Pronstants.AUTO_CLIMB_SPEED);
-				talC2.set(-Pronstants.AUTO_CLIMB_SPEED);
-			}
+		if (climbLim1.getVoltage() > .5) {
+			//SmartDashboard.putString("DB/Lim", );
 		}
+		if (button1 && !button2) {
+			talC1.set(-Pronstants.AUTO_CLIMB_SPEED);
+			talC2.set(-Pronstants.AUTO_CLIMB_SPEED);
+		} 
 		else if (button2 && !button1){
 			talC1.set(Pronstants.AUTO_CLIMB_SPEED);
 			talC2.set(Pronstants.AUTO_CLIMB_SPEED);
-		}
-		else if (button1 && button2) {
-			talC1.set(0);
-			talC2.set(0);
 		}
 		else {
 			talC1.set(0);
 			talC2.set(0);
 		}
-	}
-	
-	public void printClimblimValue() {
-		SmartDashboard.putString("DB/String 7", "adj = %d" + climbLim1.getVoltage());
-		SmartDashboard.putString("DB/String 8", "adj = %d" + climbLim2.getVoltage());
 	}
 }

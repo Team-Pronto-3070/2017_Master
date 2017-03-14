@@ -57,7 +57,7 @@ public class Drive {
 		gyro.reset();
 	}
 	
-	public void joystickDrive(double joyR, double joyL) {
+	public void joystickDrive(double joyR, double joyL, boolean checkSwitch) {
 		// makes the joystick control the talons
 		// defines the variables for the speed of left and right sides of the robot
 		double speedR, speedL;
@@ -88,7 +88,14 @@ public class Drive {
 		// drives the robot forward at the speeds set earlier for left and right
 		// this speed is cubed so that the controls are less sensitives
 		// (all speed values are between 0 and 1)
-		drive(Math.pow(speedR, 3), Math.pow(speedL, 3));
+		System.out.println(checkSwitch);
+
+		
+		if (checkSwitch == false) {
+		drive(-Math.copySign(Math.sqrt(Math.abs(speedR)), speedR), -Math.copySign(Math.sqrt(Math.abs(speedL)), speedL));
+		} else {
+			drive(speedL,speedR);
+		}
 	}
 
 	public void drive(double right, double left) {
@@ -97,38 +104,7 @@ public class Drive {
 		talBR.set(-right);
 		talFL.set(left);
 		talBL.set(left);
-	}
 	
-	public void driveSwitch(double joyR, double joyL) {
-		// makes the joystick control the talons (with front and back switched)
-		// defines the variables for the speed of left and right sides of the robot
-		double speedR, speedL;
-		
-		// checks if the right joystick is in the deadzone
-		if (Math.abs(joyR) > Pronstants.DEAD_ZONE) {
-			// If it isn't, set the speed of the right side to the joystick value
-			speedR = joyR;
-		}
-		else {
-			// If the joystick is in the deadzone, set the speed of the right
-			// side to 0
-			speedR = 0;
-		}
-		
-		// checks if the left joystick is in the deadzone`
-		if (Math.abs(joyL) > Pronstants.DEAD_ZONE) {
-			// If it isn't, set the speed of the right side to the joystick value
-			speedL = joyL;
-		}
-		else {
-			// If the joystick is in the deadzone, set the speed of the right
-			// side to 0
-			speedL = 0;
-		}
-		// drives the robot forward at the speeds set earlier for left and right,
-		// except the front and back sides are reversed
-		// (again, all values cubed for more driving control)
-		drive(-Math.pow(speedR, 3), -Math.pow(speedL, 3));
 	}
 
 	public double[] getDistanceTraveled() {
@@ -144,8 +120,8 @@ public class Drive {
 		ar[2] = (ar[1] + ar[0]) / 2;
 		
 		//prints the left and right encoder values in the SmartDash
-		SmartDashboard.putString("DB/String 0", String.format("RightDist = %f", ar[0]));
-		SmartDashboard.putString("DB/String 1", String.format("LeftDist = %f", ar[1]));
+	//	SmartDashboard.putString("DB/String 0", String.format("RightDist = %f", ar[0]));
+		//SmartDashboard.putString("DB/String 1", String.format("LeftDist = %f", ar[1]));
 
 		//returns the array
 		return ar;
@@ -181,7 +157,7 @@ public class Drive {
 			
 			// Substitute in the angle delta for x and 
 			speed = m * delta + b;
-			SmartDashboard.putString("DB/String 2", "Speed" +speed);
+		//SmartDashboard.putString("DB/String 2", "Speed" +speed);
 
 		}
 		
@@ -189,7 +165,6 @@ public class Drive {
 		 if(currentHeading < angle - Pronstants.TURN_OFFSET) {
 			// If it is, turn left
 			drive(-speed, speed);
-			SmartDashboard.putString("DB/String 1", "heqq");
 
 		}
 		
@@ -197,7 +172,6 @@ public class Drive {
 		else if (currentHeading > angle + Pronstants.TURN_OFFSET) {
 			// if it is, turn right
 			drive(speed, -speed);
-			SmartDashboard.putString("DB/String 1", "heck");
 
 		}
 		
@@ -205,7 +179,6 @@ public class Drive {
 			// if the gyro angle is aligned with the desired angle, tell the
 			// source that called the method that turning is done
 			drive(0,0);
-			SmartDashboard.putString("DB/String 1", "fuck");
 
 			return true;
 		}
@@ -237,7 +210,7 @@ public class Drive {
 		//drive(Pronstants.AUTO_DRIVE_SPEED + gyro.adjSpeed(), Pronstants.AUTO_DRIVE_SPEED + gyro.adjSpeed());
 		double adjSpeed = gyro.getOffsetHeading() * Pronstants.ADJUSTING_CONSTANT;
 		
-		SmartDashboard.putString("DB/String 7", ""+ adjSpeed);
+	//	SmartDashboard.putString("DB/String 7", ""+ adjSpeed);
 		System.out.println(adjSpeed + " " + gyro.getOffsetHeading());
 		
 		drive(speed + adjSpeed, speed - adjSpeed);
@@ -250,5 +223,5 @@ public class Drive {
 //		else {
 //			drive(speed, speed);
 //		}
-	}
+	} 
 }

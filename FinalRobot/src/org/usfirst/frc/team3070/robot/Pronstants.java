@@ -2,7 +2,7 @@ package org.usfirst.frc.team3070.robot;
 
 public interface Pronstants {
 	//The modifier of the negative acceleration the robot undergoes at the end of a movement.
-	static final double RAMP_RATE = 0.5;
+	static final double RAMP_RATE = .5;
 	//The speed at which the robot turns
 	static final double AUTO_TURN_SPEED = 0.3;
 	//The speed at which the robot drives straight
