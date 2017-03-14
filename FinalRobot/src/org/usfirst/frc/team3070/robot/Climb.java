@@ -17,10 +17,8 @@ public class Climb {
 	// Defines the limit switches
 	AnalogInput climbLim1, climbLim2;
 
-	public Climb()
-	{
-		//Constructs the climber
-		
+	//Constructs the class
+	public Climb() {
 		// Initializes the climber talons
 		talC1 = new CANTalon(Pronstants.TALON_CLIMBER_1_PORT);
 		talC2 = new CANTalon(Pronstants.TALON_CLIMBER_2_PORT);
@@ -38,9 +36,8 @@ public class Climb {
 		climbLim2 = new AnalogInput(Pronstants.LIMIT_SWITCH_2_PORT);
 	}
 
-	public void checkClimbInput(boolean button1, boolean button2) {
-		// Handles the climber buttons on the joysticks
-		
+	// Handles the climber buttons on the joysticks
+	public void checkClimbInput(boolean button1, boolean button2) {		
 		// Creates variables for the limit switch voltages
 		double limit1 = climbLim1.getVoltage();
 		double limit2 = climbLim2.getVoltage();
@@ -80,8 +77,8 @@ public class Climb {
 		}
 	}
 	
+	// Prints the value of the limit switches
 	public void printClimblimValue() {
-		// Prints the value of the limit switches
 		// This method is here in case we want the driver to see how far the robot has climbed up
 		SmartDashboard.putString("DB/String 7", "adj = %d" + climbLim1.getVoltage());
 		SmartDashboard.putString("DB/String 8", "adj = %d" + climbLim2.getVoltage());

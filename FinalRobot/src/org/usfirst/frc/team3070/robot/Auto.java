@@ -15,9 +15,8 @@ public class Auto extends Drive {
 	// Defines the timer
 	private Timer timer;
 
+	// Constructs the class
 	public Auto(Drive drive, Shooter shooter) {
-		// Constructs the class
-
 		// Tells the class which Pronto Classes to use
 		this.drive = drive;
 		this.shooter = shooter;
@@ -30,25 +29,23 @@ public class Auto extends Drive {
 	int step = 1;
 
 	// NOTE: The corresponding ints for autonomous are as follows:
-	// Center -> Center - 0
-	// Left -> Left - 1
-	// Right -> Right - 2
-	// Center -> Left - 3
-	// Center -> Right - 4
+	// 0 = Center -> Center
+	// 1 = Left -> Left
+	// 2 = Right -> Right
+	// 3 = Center -> Left
+	// 4 = Center -> Right
 
 	// Creates an array for the first distance traveled by the robot in
 	// autonomous
-	double firstDist[] = { 6.5 - Pronstants.DISTANCE_OFFSET, 6.5 - Pronstants.DISTANCE_OFFSET,
-			6.5 - Pronstants.DISTANCE_OFFSET, 6.5 - Pronstants.DISTANCE_OFFSET, 6.5 - Pronstants.DISTANCE_OFFSET };
+	double firstDist[] = { 6.5, 6.5, 6.5, 6.5, 6.5 };
 
 	// Creates an array for the second distance traveled by the robot in
 	// autonomous
-	double secondDist[] = { 0, 1.5 - Pronstants.DISTANCE_OFFSET, 1.5 - Pronstants.DISTANCE_OFFSET,
-			3 - Pronstants.DISTANCE_OFFSET, 3 - Pronstants.DISTANCE_OFFSET };
+	double secondDist[] = { 0, 1.5, 1.5, 3, 3 };
 
 	// Creates an array for the third distance traveled by the robot in
 	// autonomous
-	double thirdDist[] = { 0, 0, 0, 1.5 - Pronstants.DISTANCE_OFFSET, 1.5 - Pronstants.DISTANCE_OFFSET };
+	double thirdDist[] = { 0, 0, 0, 1.5, 1.5 };
 
 	// Creates an array for the angle of the first turn during autonomous
 	double firstTurn[] = { 0, 60, -60, -90, 90 };
@@ -56,9 +53,8 @@ public class Auto extends Drive {
 	// Creates an array for the angle of the second turn during autonomous
 	double secondTurn[] = { 0, 0, 0, 90, -90 };
 
+	// Runs the autonomous program for a given path
 	public void auto(int program) {
-		// Runs the autonomous program for a given path
-
 		// Creates an array for the distance traveled by the robot
 		double realDist[] = drive.getDistanceTraveled();
 
@@ -150,11 +146,6 @@ public class Auto extends Drive {
 				step++;
 			}
 
-			else {
-				// If not, don't move the robot
-				drive(0, 0);
-			}
-
 			break;
 
 		// Checks if the robot is on the seventh step
@@ -163,11 +154,6 @@ public class Auto extends Drive {
 			if (program == 2 || program == 3) {
 				// If so, shoot at the high goal
 				shooter.shoot();
-			}
-
-			else {
-				// If not, don't move the robot
-				drive(0, 0);
 			}
 
 			break;
