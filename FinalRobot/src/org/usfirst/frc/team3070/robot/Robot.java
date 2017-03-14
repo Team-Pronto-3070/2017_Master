@@ -34,7 +34,6 @@ public class Robot extends IterativeRobot {
 	Climb climber;
 	Joystick joyL, joyR;
 	Shooter shoot;
-	Sensors sensors;
 	// Defines a new SendableChooser to be the auto selector
 	SendableChooser<Pronstants.AutoMode> autoChooser;
 	// Creates a variable for the enums "AutoMode"
@@ -53,7 +52,6 @@ public class Robot extends IterativeRobot {
 		auto = new Auto(drive, shoot);
 		climber = new Climb();
 		shoot = new Shooter();
-		sensors = new Sensors();
 
 		// Starts the PID controller
 		drive.startPID();
