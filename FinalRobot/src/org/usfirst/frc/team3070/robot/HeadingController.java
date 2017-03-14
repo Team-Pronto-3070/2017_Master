@@ -28,9 +28,8 @@ public class HeadingController implements PIDSource, PIDOutput {
 	// Creates a double equal to pidWrite
 	double writeVar;
 	
+	// Constructs the class
 	public HeadingController(ProntoGyro gyro) {
-		// Constructs the class
-		
 		// Tells the class which gyro to use
 		this.gyro = gyro;
 		
@@ -38,9 +37,8 @@ public class HeadingController implements PIDSource, PIDOutput {
 		controller = new PIDController(Pronstants.Kp, Pronstants.Ki, Pronstants.Kd, this, this);
 	}
 	
+	// starts the PID controller
 	public void start() {
-		// starts the PID controller
-		
 		// Sets P, I, and D equal to variables on the smartDash
 		double tempP = SmartDashboard.getNumber("DB/Slider 1", 0);
 		double tempI = SmartDashboard.getNumber("DB/Slider 2", 0);
@@ -53,8 +51,8 @@ public class HeadingController implements PIDSource, PIDOutput {
 		controller.enable();
 	}
 	
+	// Returns the variable given from pidWrite
 	public double getAdjFactor() {
-		// Returns the variable given from pidWrite
 		return writeVar;
 	}
 	
