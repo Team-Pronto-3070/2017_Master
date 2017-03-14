@@ -51,7 +51,10 @@ public class ProntoGyro {
 	public void reset() {
 		// resets the angleOffset to the current heading
 		angleOffset = getRawHeading();
-		
+		//to account for a problem we saw on the field
+		if (angleOffset == 360.0) {
+			angleOffset = 0;
+		}
 	}
 	
 	public double getRawHeading() {
@@ -77,18 +80,5 @@ public class ProntoGyro {
 		}
 		return heading;
 	}
-//	public double adjSpeed() {
-// 		// adjusts the speed of the talons for the driveRobotStraight function
-// 		// defines a double for adjSpeed
-// 		double adjSpeed = 0;
-// 		// checks if the current Heading isn't within the value of
-// 		// ANGLE_VARIANCE (see pronstants) of the angle offset
-// 		if (Math.abs(getOffsetHeading()) > Pronstants.ANGLE_VARIANCE) {
-// 			// if so, set adjSpeed to the current Heading times the value of
-// 			// ADJUSTING_CONSTANT (see pronstants)
-// 			 adjSpeed =  getOffsetHeading() * Pronstants.ADJUSTING_CONSTANT;
-// 		}
-// 		// returns the value of adjSpeed
-// 		return adjSpeed;
-// 	}
+
 }
