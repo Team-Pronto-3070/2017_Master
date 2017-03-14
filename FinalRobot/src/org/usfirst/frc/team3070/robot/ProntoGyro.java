@@ -20,16 +20,14 @@ public class ProntoGyro {
 	// Leave as a class variable so that each instance can have it's own angleOffset
 	private double angleOffset;
 	
+	// Constructs the class
 	public ProntoGyro() {
-		// Constructs the class
-		
 		// Resets the angle offset
 		reset();
 	}
 	
+	// Calculates the heading of the gyro in relation to the angle offset
 	public double getOffsetHeading() {	
-		// calculates the heading of the gyro in relation to the angle offset
-		
 		// defines a variable for angle
 		double angle;
 
@@ -39,24 +37,23 @@ public class ProntoGyro {
 		return angle;
 	}
 	
+	// Resets the angleOffset to the current heading
 	public void reset() {
-		// Resets the angleOffset to the current heading
 		angleOffset = getRawHeading();
 	}
 	
+	// Gets the Raw Heading
 	public double getRawHeading() {
-		// Gets the Raw Heading
 		return normalizeHeadingVal(imu.getVector()[0]);
 	}
 	
+	// Gets the angle offset
 	public double getOffset() {
-		// Gets the angle offset
 		return angleOffset;
 	}
 	
+	// Normalizes a heading value to the range of (-180, 180)
 	private double normalizeHeadingVal( double heading ) {
-		// Normalizes a heading value to the range of (-180, 180)
-		
 		// Checks if the remainder of the heading and 360 is greater than 180
 		if ( heading % 360 >  180.0 ) {
 			// If so, make the value negative

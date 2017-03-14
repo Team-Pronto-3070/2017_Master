@@ -16,10 +16,8 @@ public class Shooter {
 	// Defines shooter talon
 	static CANTalon talShooter = new CANTalon(Pronstants.TALON_SHOOTER_1_PORT);
 
-	public Shooter()
-	{
-		// Constructs the Shooter
-		
+	// Constructs the Shooter
+	public Shooter() {
 		// Initializes hopper talon
 		talHopper = new CANTalon(Pronstants.TALON_SHOOTER_1_PORT);
 		// Initializes shooter talon
@@ -34,11 +32,10 @@ public class Shooter {
 		talShooter.setCurrentLimit(Pronstants.SHOOT_CURRENT_LIMIT);
 	}
 
+	// Handles the Shooter Button on the joysticks
+	// While shooting is primarily for autonomous, this function is here
+	// in case we have balls left over and extra time to shoot
 	public void checkShootInput(boolean button) {
- 		// Handles the Shooter Button on the joysticks
-		// While shooting is primarily for autonomous, this function is here
-		// in case we have balls left over and extra time to shoot
-		
  		// Checks if button1 is pressed and button2 is not
 		if (button) {
  			// If so, shoot into the high goal
@@ -51,14 +48,14 @@ public class Shooter {
 		}
 	}
 
+	// Stops the shooter
 	public void stopShooter() {
-		// Stops the shooter
 		talShooter.set(0);
 		talHopper.set(0);
 	}
 
+	// Starts the shooter
 	public void shoot() {
-		// Starts the shooter
 		talShooter.set(Pronstants.AUTO_SHOOT_SPEED);
 		talHopper.set(Pronstants.AUTO_HOPPER_SPEED);
 	}

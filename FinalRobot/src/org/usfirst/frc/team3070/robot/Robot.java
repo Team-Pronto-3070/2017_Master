@@ -3,11 +3,6 @@ package org.usfirst.frc.team3070.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.vision.VisionThread;
-import gripvis.vision;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.CameraServer;
 
 /*
 methods:
@@ -74,6 +69,9 @@ public class Robot extends IterativeRobot {
 		//resets the distance traveled
 		drive.resetDistanceTraveled();
 		
+		// Sets the ramp rate on the drive talons to the autonomous ramp rate
+		drive.setDriveRampRate(Pronstants.AUTO_RAMP_RATE);
+		
 		// resets the gyro
 		drive.resetGyro();
 		
@@ -87,10 +85,9 @@ public class Robot extends IterativeRobot {
 		drive.resetDistanceTraveled();
 	}
 
+	// Iterative autonomous program
 	@Override
 	public void autonomousPeriodic() {
-		// Iterative autonomous program
-
 		// Creates a state engine (selector) for autonomous
 		switch(startMode) {
 		// Checks if the selector is on "None"
@@ -126,10 +123,8 @@ public class Robot extends IterativeRobot {
 		}
 	}
 
-
+	// Runs before the Iterative teleop program
 	public void teleopInit() {
-		// Runs before the Iterative teleop program
-		
 		// Resets the distance traveled
 		drive.resetDistanceTraveled();
 		
@@ -138,14 +133,16 @@ public class Robot extends IterativeRobot {
 		
 		// Sets the drive talons to coast mode
 		drive.toggleDriveMode(false);
+		
+		// Sets the ramp rate on the drive talons to the teleop ramp rate
+		drive.setDriveRampRate(Pronstants.RAMP_RATE);
 	}
 
+	// Iterative Teleop Program
 	@Override
 	public void teleopPeriodic() {
-		// Iterative Teleop Program
-		
 		// Drives the robot according to the joystick inputs
-		drive.joystickDrive(joyR.getRawAxis(0), joyL.getRawAxis(0));
+		drive.joystickDrive(joyR.getRawAxis(0), joyL.getRawAxis(0), joyR.getRawAxis(2));
 		
 		// Makes the robot climb up/down according to the set joystick buttons
 		climber.checkClimbInput(joyR.getRawButton(1), joyL.getRawButton(1));

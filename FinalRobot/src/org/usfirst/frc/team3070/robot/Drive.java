@@ -9,6 +9,7 @@ public Drive() - constructs the class
 public void toggleDriveMode(boolean brake) - toggles the drive talons between brake and coast mode
 public void startPID() - starts the PID controller
 public void resetGyro() - resets the gyro
+public void setDriveRampRate(double rate) - sets the voltage ramp rate on the drive talons
 public void joystickDrive() - drives the robot according to joystick values
 public void drive() - sets the talons to speeds which will drive the robot
 public double[] getDistanceTraveled() - gets an array for the distance traveled by each side in feet and the average of those two distances
@@ -30,9 +31,8 @@ public class Drive {
 	// Defines the PID controller
 	HeadingController pid;
 	
+	// Constructs the class
 	public Drive() {
-		// Constructs the class
-
 		// Defines the drive talons
 		talFR = new CANTalon(Pronstants.TALON_FRONT_RIGHT_PORT);
 		talFL = new CANTalon(Pronstants.TALON_FRONT_LEFT_PORT);
@@ -65,27 +65,34 @@ public class Drive {
 		resetDistanceTraveled();
 	}
 	
+	// Toggles brake mode on the drive
 	public void toggleDriveMode(boolean brake) {
-		// Toggles brake mode on the drive
 		talFR.enableBrakeMode(brake);
 		talFL.enableBrakeMode(brake);
 		talBR.enableBrakeMode(brake);
 		talBL.enableBrakeMode(brake);
 	}
 	
+	// Starts the PID controller
 	public void startPID() {
-		// Starts the PID controller
 		pid.start();
 	}
 	
+	// Resets the gyro
 	public void resetGyro() {
-		// Resets the gyro
 		gyro.reset();
 	}
 	
-	public void joystickDrive(double joyR, double joyL) {
-		// Makes the joystick control the talons
-		
+	// Sets the Ramp Rate on the drive talons to a given rate
+	public void setDriveRampRate(double rate) {
+		talFR.setVoltageRampRate(rate);
+		talFL.setVoltageRampRate(rate);
+		talBR.setVoltageRampRate(rate);
+		talBL.setVoltageRampRate(rate);
+	}
+	
+	// Makes the joystick control the talons
+	public void joystickDrive(double joyR, double joyL, double z) {
 		// Defines the variables for the speed of left and right sides of the robot
 		double speedR, speedL;
 		
@@ -111,22 +118,31 @@ public class Drive {
 			speedL = 0;
 		}
 		
+		// z is the z axis input on the right joyStick, it is used to switch the direction the robot drives
+		// Checks if the z axis is less than 0.5
+			if (z > .5) {
+				// If so, drive the robot with the sides swapped according to the joystick values
+				pidDrive(-Math.copySign(Math.sqrt(Math.abs(speedR)), speedR), -Math.copySign(Math.sqrt(Math.abs(speedL)), speedL));
+			  } 
+			else {
+				// Otherwise, drive the robot with the sides in their regular orientation
+			  	pidDrive(Math.pow(speedL, 3), Math.pow(speedR, 3));
+			}
 		// Drives the robot forward at the speeds set earlier for left and right
 		// This speed is cubed so that the controls are less sensitive
 		// (all speed values are between 0 and 1)
-		pidDrive(Math.pow(speedR, 3), Math.pow(speedL, 3));
 	}
 
+	// Drives the robot based on two different input values for left and right
 	public void drive(double right, double left) {
-		// Drives the robot based on two different input values for left and right
 		talFR.set(-right);
 		talBR.set(-right);
 		talFL.set(left);
 		talBL.set(left);
 	}
 
+	// Gets the distance traveled from the encoders
 	public double[] getDistanceTraveled() {
-		// Gets the distance traveled from the encoders
 		// Creates an array with 3 doubles
 		double ar[] = new double[3];
 		
@@ -140,9 +156,8 @@ public class Drive {
 		return ar;
 	}
 	
+	// Gets an array with the encoder velocities (0 is right, 1 is left)
 	public double[] getEncoderVelocity() {
-		// Gets an array with the encoder velocities (0 is right, 1 is left)
-		
 		// Creates an array with 2 doubles
 		double ar[] = new double[2];
 		
@@ -153,20 +168,19 @@ public class Drive {
 		return ar;
 	}
 
+	// Resets the encoder values to 0
 	public void resetDistanceTraveled() {
-		// Resets the encoder values to 0
 		talFR.setEncPosition(0);
 		talBL.setEncPosition(0);
 	}
 
+	// Returns the angle offset from the gyro
 	public double getGyroOffset() {
-		// Returns the angle offset from the gyro
 		return gyro.getOffset();
 	}
 	
+	// Turns the robot until it aligns with the gyro and returns a boolean of whether it's done turning or not
 	public boolean turn(double angle, double maxSpeed) {
-		// Turns the robot until it aligns with the gyro and returns a boolean of whether it's done turning or not
-		
 		// Gets the heading in relation to the offset from the gyro and makes it the value of a variable
 		double currentHeading = gyro.getOffsetHeading();
 		
@@ -205,13 +219,12 @@ public class Drive {
 			return true;
 		}
 		
-		// otherwise, tell the source that called the function that turning is not done
+		// Otherwise, tell the source that called the function that turning is not done
 		return false;
 	}
 	
+	// Drives the robot at a speed based off the encoders and the PID controller
 	public void encDrive(double speed) {
-		// Drives the robot at a speed based off the encoders and the PID controller
-		
 		// Creates an array equal to the encoder velocities
 		// NOTE: 0 is right and 1 is left
 		double[] velocity = getEncoderVelocity();
@@ -237,8 +250,8 @@ public class Drive {
 		}
 	}
 	
+	// Drives the robot at two speed which are adjusted according to PID values to compensate
 	public void pidDrive(double right, double left) {
-		// Drives the robot at two speed which are adjusted according to PID values to compensate
 		drive(right - pid.getAdjFactor(), left + pid.getAdjFactor());
 	}
 }
