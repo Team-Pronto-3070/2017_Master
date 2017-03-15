@@ -19,6 +19,7 @@ public double getGyroOffset() - gets the angle offset from the ProntoGyro class 
 public boolean turn() - turns the robot autonomously
 public void encDrive() - drives the robot autonomously based off of encoder velocities and PID values
 public void pidDrive() - drives the robot based off of PID values
+public double[] getDriveValues() - returns an array with the drive values for the smartDash
  */
 
 public class Drive {
@@ -253,5 +254,17 @@ public class Drive {
 	// Drives the robot at two speed which are adjusted according to PID values to compensate
 	public void pidDrive(double right, double left) {
 		drive(right - pid.getAdjFactor(), left + pid.getAdjFactor());
+	}
+	
+	public double[] getDriveValues() {
+		double[] ar = new double[7];
+		ar[0] = getDistanceTraveled()[0];
+		ar[1] = getDistanceTraveled()[1];
+		ar[2] = talFR.getOutputCurrent();
+		ar[3] = talFL.getOutputCurrent();
+		ar[4] = talBR.getOutputCurrent();
+		ar[5] = talBL.getOutputCurrent();
+		ar[6] = gyro.getOffsetHeading();
+		return ar;
 	}
 }

@@ -78,9 +78,23 @@ public class Climb {
 	}
 	
 	// Prints the value of the limit switches
-	public void printClimblimValue() {
+	public void printClimblimValues() {
 		// This method is here in case we want the driver to see how far the robot has climbed up
-		SmartDashboard.putString("DB/String 7", "adj = %d" + climbLim1.getVoltage());
-		SmartDashboard.putString("DB/String 8", "adj = %d" + climbLim2.getVoltage());
+		boolean limit1, limit2;
+		if (climbLim1.getVoltage() > 3) {
+			limit1 = true;
+		}
+		else {
+			limit1 = false;
+		}
+		
+		if (climbLim2.getVoltage() > 3) {
+			limit2 = true;
+		}
+		else {
+			limit2 = false;
+		}
+		SmartDashboard.putBoolean("Climb/C1", limit1);
+		SmartDashboard.putBoolean("Climb/C2", limit2);
 	}
 }

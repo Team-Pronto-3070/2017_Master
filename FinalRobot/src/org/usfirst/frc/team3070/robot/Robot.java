@@ -3,6 +3,7 @@ package org.usfirst.frc.team3070.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /*
 methods:
@@ -60,6 +61,17 @@ public class Robot extends IterativeRobot {
 		autoChooser.addObject("Center -> Left", Pronstants.AutoMode.AUTO_MODE_CENTER_LEFT);
 		autoChooser.addObject("Left -> Left", Pronstants.AutoMode.AUTO_MODE_LEFT_LEFT);
 		autoChooser.addObject("Right -> Right", Pronstants.AutoMode.AUTO_MODE_RIGHT_RIGHT);
+		SmartDashboard.putData("DB/Auto Selector", autoChooser);
+		
+		// Prints SmartDash values
+		SmartDashboard.putString("EncPos/FR", "Right Encoder = " + drive.getDriveValues()[0] + " feet");
+		SmartDashboard.putString("EncPos/BL", "Left Encoder = " + drive.getDriveValues()[1] + " feet");
+		SmartDashboard.putString("I/FR", "FR Current = " + drive.getDriveValues()[2]);
+		SmartDashboard.putString("I/FL", "FL Current = " + drive.getDriveValues()[3]);
+		SmartDashboard.putString("I/BR", "BR Current = " + drive.getDriveValues()[4]);
+		SmartDashboard.putString("I/BL", "BL Current = " + drive.getDriveValues()[5]);
+		climber.printClimblimValues();
+		SmartDashboard.putNumber("Gyro/gyro", drive.getDriveValues()[6]);
 	}
 
 	@Override
@@ -92,8 +104,7 @@ public class Robot extends IterativeRobot {
 		switch(startMode) {
 		// Checks if the selector is on "None"
 		case AUTO_MODE_NONE:
-			// If so, don't go anywhere
-			drive.drive(0, 0);
+			// If so, don't do anything
 			break;
 		// Checks if the selector is on "Center -> Center"
 		case AUTO_MODE_CENTER_CENTER:
