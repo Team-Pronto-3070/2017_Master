@@ -1,36 +1,26 @@
 package org.usfirst.frc.team3070.robot;
 
 public interface Pronstants {
-	
-	// The modifier of the negative acceleration the robot undergoes at the end of a movement.
-	static final double RAMP_RATE = 0.5;
+	//The modifier of the negative acceleration the robot undergoes at the end of a movement.
 	static final double AUTO_RAMP_RATE = .25;
-	
-	// The speed at which the robot turns
+	static final double RAMP_RATE = .5;
+	//The speed at which the robot turns
 	static final double AUTO_TURN_SPEED = 0.3;
-	
-	// The speed at which the robot drives straight
+	//The speed at which the robot drives straight
 	static final double AUTO_DRIVE_SPEED = 0.3;
-	
-	// The speed at which the robot climbs the rope.
+	//The speed at which the robot climbs the rope.
 	static final double AUTO_CLIMB_SPEED = 0.8;
-	
-	// The speeds at which the robot load and shoot balls
+	//The speed at which the robot shoots the balls.
 	static final double AUTO_SHOOT_SPEED = 1;
 	static final double AUTO_HOPPER_SPEED = 1;
-	
-	// The value of the joystick at which the robot doesn't move during teleop
+	//The value which the robot doesn't move if the controller value is under.
 	static final double DEAD_ZONE = 0.1;
-	
-	// The value which limits the amp usage of the drive talons.
+	//The value which limits the amp usage of the drive talons.
 	static final int DRIVE_CURRENT_LIMIT = 39;
-	
-	// The value which limits the amp usage of the climber talons.
+	//The value which limits the amp usage of the climber talons.
 	static final int CLIMB_CURRENT_LIMIT = 29;
-	
-	// The value which limits the amp usage of the shooter talons.
+	//The value which limits the amp usage of the shooter talons.
 	static final int SHOOT_CURRENT_LIMIT = 29;
-	
 	//Port declarations should be self-explanatory.
 	//NOTE: Encoders are on Ports 3 and 5
 	static final int TALON_FRONT_RIGHT_PORT = 3;
@@ -46,7 +36,6 @@ public interface Pronstants {
 	static final int LEFT_JOYSTICK_PORT = 0;
 	static final int RIGHT_JOYSTICK_PORT = 1;
 	
-	// The Enums for the autonomous selector
 	static enum AutoMode {  AUTO_MODE_NONE,
 							AUTO_MODE_CENTER_CENTER,
 							AUTO_MODE_CENTER_RIGHT,
@@ -54,36 +43,34 @@ public interface Pronstants {
 							AUTO_MODE_LEFT_LEFT,
 							AUTO_MODE_RIGHT_RIGHT };
 	
-	// The values for auto programs
-	static final int AUTO_CENTER = 0;
-	static final int AUTO_OUTSIDE_LEFT = 1;
-	static final int AUTO_OUTSIDE_RIGHT = 2;
-	static final int AUTO_CENTER_LEFT = 3;
-	static final int AUTO_CENTER_RIGHT = 4;
-	
-	// Conversion from encoder values to feet, which is about 638 ticks per foot.
+	//Conversion from encoder values to feet, which is 162.97 ticks per foot.
 	static final double TICK_COEFFICIENT = 638;
+	public static String AUTO_MODE_NONE = "AUTO_MODE_NONE";
+	public static String AUTO_MODE_CENTER_CENTER = "AUTO_MODE_CENTER_CENTER";
+	public static String AUTO_MODE_CENTER_RIGHT = "AUTO_MODE_CENTER_RIGHT";
+	public static String AUTO_MODE_CENTER_LEFT = "AUTO_MODE_CENTER_LEFT";
+	public static String AUTO_MODE_LEFT_LEFT = "AUTO_MODE_LEFT_LEFT";
+	public static String AUTO_MODE_RIGHT_RIGHT = "AUTO_MODE_RIGHT_RIGHT";
 	
-	// Vision variables
-	// TODO: confirm that we are not using vision and delete these
+	// sensors variables
 	static final int IMG_WIDTH = 320;
 	static final int IMG_HEIGHT = 240;
 	
-	// Adjusting constant for turn function
+	// ProntoGyro variables
+	static final double ADJUSTING_CONSTANT = .012;
+	static final double ANGLE_VARIANCE = .2;
+	
+	// Button for switching joystick controls
+	static final int CONTROL_SWITCH_BUTTON = 6;
+	
+	// Values for the autonomous selector
+	static final int AUTO_SIDE_LEFT = 1;
+	static final int AUTO_SIDE_RIGHT = 2;
+	
+	//Adjusting constant for turn function
 	static final double TURN_OFFSET = 3;
 	
-	// Margin of error for driving in autonomous
+	//This is how far in feet it coasts after braking.
 	static final double DISTANCE_OFFSET = 0.5;
 	
-	// PID variables
-	static final double Kp = .012;
-	static final double Ki = 0.0001;
-	static final double Kd = 0;
-	
-	// Speed variance for encDrive (see drive)
-	static final double SPEED_VARIANCE = 0.001;
-	
-	// Variables for the turn function (see drive)
-	static final double MAX_DEGREES_FULL_SPEED = 10.0;
-	static final double MIN_TURN_SPEED = 0.18;
 }

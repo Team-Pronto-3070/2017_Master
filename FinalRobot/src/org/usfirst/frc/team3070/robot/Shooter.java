@@ -4,58 +4,63 @@ import com.ctre.CANTalon;
 
 /*
 methods:
-public Shooter() - constructs the class
-public void checkShootInput(boolean button) - manages the shooter button
-public void stopShooter() - stops the shooter
-public void shoot() - starts the shooter
+public void checkShootInput()
+public void stopShooter()
+public void shoot()
  */
 
 public class Shooter { 
-	// Defines hopper talon
-	static CANTalon talHopper = new CANTalon(Pronstants.TALON_SHOOTER_2_PORT);
-	// Defines shooter talon
-	static CANTalon talShooter = new CANTalon(Pronstants.TALON_SHOOTER_1_PORT);
-
-	// Constructs the Shooter
-	public Shooter() {
-		// Initializes hopper talon
+//Defines talons for the shooter 
+static CANTalon talHopper = new CANTalon(Pronstants.TALON_SHOOTER_2_PORT);
+static CANTalon talShooter = new CANTalon(Pronstants.TALON_SHOOTER_1_PORT);
+	//shooter constructor
+	public Shooter()
+	{
+		//defines the talon variables
 		talHopper = new CANTalon(Pronstants.TALON_SHOOTER_1_PORT);
-		// Initializes shooter talon
 		talShooter = new CANTalon(Pronstants.TALON_SHOOTER_2_PORT);
-		
- 		// Sets a voltage ramp rate on the talons
+// 		//sets a voltage ramp rate on the talons
 		talHopper.setVoltageRampRate(Pronstants.RAMP_RATE);
 		talShooter.setVoltageRampRate(Pronstants.RAMP_RATE);
- 		
-		// Sets a current amperage limit on the talons
+// 		//sets a current limit on the talons
 		talHopper.setCurrentLimit(Pronstants.SHOOT_CURRENT_LIMIT);
 		talShooter.setCurrentLimit(Pronstants.SHOOT_CURRENT_LIMIT);
 	}
 
-	// Handles the Shooter Button on the joysticks
-	// While shooting is primarily for autonomous, this function is here
-	// in case we have balls left over and extra time to shoot
-	public void checkShootInput(boolean button) {
- 		// Checks if button1 is pressed and button2 is not
-		if (button) {
- 			// If so, shoot into the high goal
-			shoot();
+	public void checkShootInput(boolean button1, boolean button2) {
+ 		//maps shooter to joystick buttons
+ 		//checks if button1 is pressed and button2 is not
+		if (button1 && !button2) {
+ 			//If true, shoot up
+			talHopper.set(Pronstants.AUTO_SHOOT_SPEED);
+			talShooter.set(Pronstants.AUTO_SHOOT_SPEED);
 		}
-		
+ 		//checks if button2 is pressed and button1 is not
+		if (button2 && !button1) {
+			//If true, shoot down
+			talHopper.set(-Pronstants.AUTO_SHOOT_SPEED);
+			talShooter.set(-Pronstants.AUTO_SHOOT_SPEED);
+		} 
+ 		//checks if button1 and button2 are pressed
+		if (button1 && button2) {
+ 			//If true, set shooter to 0
+ 			//This prevents the shooter from trying to go in 2 directions at once
+			talHopper.set(0);
+			talShooter.set(0);
+	}
+ 		//In any other case, set shooter to 0
 		else {
-			// Otherwise, don't shoot
-			stopShooter();
+			talHopper.set(0);
+			talShooter.set(0);
 		}
 	}
 
-	// Stops the shooter
-	public void stopShooter() {
+	public void stopShooter(){
 		talShooter.set(0);
 		talHopper.set(0);
 	}
 
-	// Starts the shooter
-	public void shoot() {
+	public void shoot(){
 		talShooter.set(Pronstants.AUTO_SHOOT_SPEED);
 		talHopper.set(Pronstants.AUTO_HOPPER_SPEED);
 	}

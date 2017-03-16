@@ -1,71 +1,83 @@
 package org.usfirst.frc.team3070.robot;
-
 import org.usfirst.frc.team3070.robot.BNO055;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /*
 methods:
-public ProntoGyro() - constructs the class
-public double getOffsetHeading() - returns the heading in relation to the offset
-public void reset() - resets the angle offset to the current heading
-public double getRawHeading() - returns the heading without factoring in the angle offset
-public double getOffset() - returns the angle offset
-public double normalizeHeadingVal(double heading) - returns a heading in the range of 180 to -180
+public double getOffsetHeading()
+public void reset()
+public double getRawHeading()
+public double getOffset()
+public double normalizeHeadingVal(double heading)
  */
 
 public class ProntoGyro {
 	// defines the variable imu from the class BNO055
 	public static BNO055 imu = BNO055.getInstance(BNO055.opmode_t.OPERATION_MODE_IMUPLUS,BNO055.vector_type_t.VECTOR_EULER);
 	
-	// Defines the variable for the angle offset
+	// defines the variable for the angle offset.
 	// Leave as a class variable so that each instance can have it's own angleOffset
 	private double angleOffset;
 	
-	// Constructs the class
-	public ProntoGyro() {
-		// Resets the angle offset
+	public ProntoGyro()
+	{
+		// ProntoGyro constructor
+		// runs the reset function (see below)
+	
 		reset();
 	}
 	
-	// Calculates the heading of the gyro in relation to the angle offset
 	public double getOffsetHeading() {	
+		// calculates the heading of the gyro
+		// puts the value of imu.getHeading on the SmartDash string 6 (see BNO055 class)
+		SmartDashboard.putString("DB/String 6", " "+ imu.getVector()[0]);
+		
 		// defines a variable for angle
 		double angle;
 
-		// set the angle to the remainder of the current angle divided by 180
+		// set the angle to the remainder of the current
+		// angle divided by 180
 		angle = normalizeHeadingVal(getRawHeading() - angleOffset);
 		
+		// print the angle offset and the current heading in the dashboard
+	//	SmartDashboard.putString("DB/String 4", String.format("Offset = %f", angleOffset));
+	//	SmartDashboard.putString("DB/String 3", String.format("Heading = %f", angle));
+		
+		// return the angle
 		return angle;
 	}
 	
-	// Resets the angleOffset to the current heading
 	public void reset() {
+		// resets the angleOffset to the current heading
 		angleOffset = getRawHeading();
+		//to account for a problem we saw on the field
+		if (angleOffset == 360.0) {
+			angleOffset = 0;
+		}
 	}
 	
-	// Gets the Raw Heading
 	public double getRawHeading() {
+		//SmartDashboard.putString("DB/String 0", ""+normalizeHeadingVal(imu.getVector()[0]));
+
 		return normalizeHeadingVal(imu.getVector()[0]);
+	
 	}
 	
-	// Gets the angle offset
 	public double getOffset() {
 		return angleOffset;
 	}
 	
-	// Normalizes a heading value to the range of (-180, 180)
-	private double normalizeHeadingVal( double heading ) {
-		// Checks if the remainder of the heading and 360 is greater than 180
-		if ( heading % 360 >  180.0 ) {
-			// If so, make the value negative
+	private double normalizeHeadingVal( double heading )
+	{
+		// Normalize a heading value to the range of (-180, 180]
+		if( heading % 360 >  180.0 )
+		{
 			heading = ( heading % 360.0 ) - 360.0;
-		}
-		
-		// Checks if the remainder of the heading and 360 is less than or equal to -180
-		else if (( heading % 360 ) <= -180.0) {
-			// If so, make the value positive
+		} else if ( ( heading % 360 ) <= -180.0 )
+		{
 			heading = (heading % 360.0) + 360.0;
 		}
-		
 		return heading;
 	}
 

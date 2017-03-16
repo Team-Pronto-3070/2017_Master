@@ -1,162 +1,191 @@
 package org.usfirst.frc.team3070.robot;
 
-import edu.wpi.first.wpilibj.Timer;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard; 
 /* methods: 
- * public Auto(Drive drive, Shooter shooter) - constructs the class
- * public void auto(int program) - runs the autonomous code for a given path
+ * public void autoC() - drive center
+ * public void autoOutside(int side) - drive from outer start position to outer lift
+ * public void autoOutsideCenter(int side) - drive from outer start position to center
 */
 
-public class Auto extends Drive {
+public class Auto {
+// initializes classes
+private Drive drive = new Drive();
+private Shooter shooter = new Shooter();
+private ProntoGyro gyro = new ProntoGyro();
 
-	// Defines Pronto classes
-	private Drive drive;
-	private Shooter shooter;
-	// Defines the timer
-	private Timer timer;
+public Auto() {
+}
 
-	// Constructs the class
-	public Auto(Drive drive, Shooter shooter) {
-		// Tells the class which Pronto Classes to use
-		this.drive = drive;
-		this.shooter = shooter;
+// initial distance
+double[] rotations = drive.getDistanceTraveled();
+double initDist = 0; 
+// Difference in distance
+double diffDist; 
+ 
+// initial heading
+double initHeading = gyro.getOffset();
 
-		// Initializes the timer
-		timer = new Timer();
-	}
+// Flags for if we're turning
+boolean firstTurning = false;
+boolean secondTurning = false;
 
-	// Creates a variable for the step the autonomous is going through
-	int step = 1;
+// Turning distance
+double firstTurn = 0;
+double secondTurn = 0;
 
-	// NOTE: The corresponding ints for autonomous are as follows:
-	// 0 = Center -> Center
-	// 1 = Left -> Left
-	// 2 = Right -> Right
-	// 3 = Center -> Left
-	// 4 = Center -> Right
+// When it's time to shoot
+boolean robotShoot = false;
 
-	// Creates an array for the first distance traveled by the robot in
-	// autonomous
-	double firstDist[] = { 6.5, 6.5, 6.5, 6.5, 6.5 };
+// Things done during Autonomous
+public void autoSkeleton() {
+    autoC();
+}
 
-	// Creates an array for the second distance traveled by the robot in
-	// autonomous
-	double secondDist[] = { 0, 1.5, 1.5, 3, 3 };
+public void autoC() {
+    // autonomous code for the center to the center gearloading station
+    // Drives straight for 5 meters, then stops
 
-	// Creates an array for the third distance traveled by the robot in
-	// autonomous
-	double thirdDist[] = { 0, 0, 0, 1.5, 1.5 };
+    // updates distance
+    rotations = drive.getDistanceTraveled(); 
+    // difference in distance
+    diffDist = rotations[2] - initDist; 
 
-	// Creates an array for the angle of the first turn during autonomous
-	double firstTurn[] = { 0, 60, -60, -90, 90 };
+    // If the robot has not gone 5 feet, drive straight forward
+    if (diffDist < 5.755 ) {
+        drive.driveRobotStraight();
+    }
+    // If the robot has gone 5 feet, let vision take over
+    else {
+        // TODO: implement vision here
+        drive.drive(0, 0);
+    }
+}
 
-	// Creates an array for the angle of the second turn during autonomous
-	double secondTurn[] = { 0, 0, 0, 90, -90 };
+static boolean turnStarted = false;
 
-	// Runs the autonomous program for a given path
-	public void auto(int program) {
-		// Creates an array for the distance traveled by the robot
-		double realDist[] = drive.getDistanceTraveled();
+public void autoOutside(int side) {
+    // autonomous code for going to an outside gearloader
+    // from the same side starting position
 
-		// Creates a variable equal to the current time according to the timer
-		double time = timer.get();
+    // updates distance
+    rotations = drive.getDistanceTraveled(); 
+    // difference in distance
+    diffDist = rotations[2] - initDist; 
+    // difference in angle
+    //double diffAngle = gyro.getHeading()- initHeading; 
 
-		// Creates a state machine for the steps to go through for each
-		// autonomous program
-		switch (step) {
+    // creates a case statement for the value of "side"
+    switch(side) {
+    // If side = value for right
+    case Pronstants.AUTO_SIDE_LEFT: 
+        // Set firstTurn to 60
+        firstTurn = 60;
+        break;
+    // If side = value for right
+    case Pronstants.AUTO_SIDE_RIGHT: 
+        // Set firstTurn to -60
+        firstTurn = -60;
+        break;
+    default:
+        break;
+    }
 
-		// Checks if the code is on step one
-		case 1:
-			// Checks if the robot has traveled the first required distance
-			if (realDist[2] > firstDist[program]) {
-				// If so, move on to the next step and reset the gyro
-				step++;
-				drive.resetGyro();
-			}
+    // If the robot has not gone 5 feet, drive straight forward
+    if (diffDist < 5 && !firstTurning) {
+        drive.driveRobotStraight();
+        robotShoot = false;
+    }
+    // If the robot has gone 5 feet and the first turn is not finished\
+    if(!turnStarted){
+    	drive.resetGyro();
+    }
+    else if (!drive.turn(initHeading + firstTurn, Pronstants.AUTO_TURN_SPEED)) {
+        // if so, turn it a number of degrees equal to "firstTurn",
+        // reset the distance traveled, and set robotShoot to false
+        drive.resetDistanceTraveled();
+        robotShoot = false;
+        firstTurning = true;
+    }
+//    // checks if the first turn has finished
+//    else if (drive.turn(initHeading + firstTurn, Pronstants.AUTO_TURN_SPEED)) {
+//        // if so, start vision here and set robotShoot to true
+//        drive.drive(0, 0);
+//        robotShoot = true;
+//        // TODO: finish vision and implement here
+//    }
 
-			else {
-				// If not, drive the robot forward
-				drive.encDrive(Pronstants.AUTO_DRIVE_SPEED);
-			}
+    // checks if robotShoot is true
+    if (robotShoot) {
+        // if so, start shooting
+        shooter.shoot();
+    }
+    else {
+        // If not true, don't shoot
+        shooter.stopShooter();
+    }
+}
 
-			break;
+public void autoOutsideCenter(int side) {
+    // autonomous code for a non-center side
+    //to the center gearloading station
 
-		// Checks if the robot is on the second step
-		case 2:
-			// Starts turning the robot the amount for the first turn, then
-			// checks if it's done turning
-			if (drive.turn(firstTurn[program], Pronstants.AUTO_TURN_SPEED)) {
-				// If so, go on to the next step and reset the gyro
-				step++;
-				drive.resetGyro();
-			}
+    // updates distance
+    rotations = drive.getDistanceTraveled(); 
+    // difference in distance
+    diffDist = rotations[2] - initDist; 
+    // difference in angle
 
-			break;
+    // creates a case statement for the value of "side"
+    switch(side) {
+        // checks if side = value for left
+        case Pronstants.AUTO_SIDE_LEFT:
+            // if so, set firstTurn to 90 and secondTurn to -90
+            firstTurn = 90;
+            secondTurn = -90;
+            break;
+        // checks if side = value for right
+        case Pronstants.AUTO_SIDE_RIGHT:
+            // if so, set firstTurn to -90 and secondTurn to 90
+            firstTurn = -90;
+            secondTurn = 90;
+            break;
+        default:
+            break;
+    }
 
-		// Checks if the robot is on the third step
-		case 3:
-			// Checks if the robot has traveled the second required distance
-			if (realDist[2] > secondDist[program]) {
-				// If so, move on to the next step and reset the gyro
-				step++;
-				drive.resetGyro();
-			}
-
-			else {
-				// If not, drive the robot forward
-				drive.encDrive(Pronstants.AUTO_DRIVE_SPEED);
-			}
-
-			break;
-
-		// Checks if the robot is on the fourth step
-		case 4:
-			// Starts turning the robot the amount for the second turn, then
-			// checks if it's done turning
-			if (drive.turn(secondTurn[program], Pronstants.AUTO_TURN_SPEED)) {
-				// If so, move on to the next step and reset the gyro
-				step++;
-				drive.resetGyro();
-			}
-
-			break;
-
-		// Checks if the robot is on the fifth step
-		case 5:
-			// Checks if the robot has traveled the third required distance
-			if (realDist[2] > thirdDist[program]) {
-				// If so, move on to the next step and reset and start the timer
-				step++;
-				timer.reset();
-				timer.start();
-			}
-
-			else {
-				// If not, drive the robot forward
-				encDrive(Pronstants.AUTO_DRIVE_SPEED);
-			}
-
-			break;
-
-		// Checks if the robot is on the sixth step
-		case 6:
-			// Checks if one second has passed
-			if (time > 1) {
-				// If so, go to the next step
-				step++;
-			}
-
-			break;
-
-		// Checks if the robot is on the seventh step
-		case 7:
-			// Checks if we are on the side with the fuel hopper on it
-			if (program == 2 || program == 3) {
-				// If so, shoot at the high goal
-				shooter.shoot();
-			}
-
-			break;
-		}
-	}
+    // checks if the robot has not gone 5 feet
+    if (diffDist < 5 && !firstTurning) {
+        //if so, drive straight forward
+        drive.driveRobotStraight();
+    }
+    //checks if the robot has gone 5 feet and the first is not finished
+    else if (drive.turn(initHeading + firstTurn, Pronstants.AUTO_DRIVE_SPEED) == false && !secondTurning) {
+        //if so, turn it an amount of degrees equal to firstTurn
+        // and reset the distance traveled
+        drive.turn(initHeading + firstTurn, Pronstants.AUTO_DRIVE_SPEED);
+        drive.resetDistanceTraveled();
+        firstTurning = true;
+    }
+    //checks if the first turn has finished
+    //and the robot has not traveled an additional 2 feet
+    else if (rotations[2] < 2 && !secondTurning) {
+        //if so, drive the robot straight
+        initHeading += firstTurn;
+        drive.driveRobotStraight();
+    }
+    //checks if the robot has traveled an additional 2 feet
+    //and the second has not finished
+    else if (drive.turn(initHeading + secondTurn, Pronstants.AUTO_DRIVE_SPEED) == false) {
+        //if so, turn the robot to face the center gearloader (aka an amount
+        // of degrees equal to secondTurn)
+        drive.turn(initHeading + secondTurn, Pronstants.AUTO_DRIVE_SPEED);
+        drive.resetDistanceTraveled();
+        secondTurning = true;
+    }
+    //checks if the second turn has finished
+    else if (drive.turn(initHeading + secondTurn, Pronstants.AUTO_DRIVE_SPEED) == true) {
+        drive.drive(0, 0);
+        //TODO: implement vision here
+    }
+}
 }
