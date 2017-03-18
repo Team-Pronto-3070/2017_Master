@@ -1,7 +1,6 @@
 package org.usfirst.frc.team3070.robot;
-import org.usfirst.frc.team3070.robot.BNO055;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team3070.robot.BNO055;
 
 /*
 methods:
@@ -31,7 +30,7 @@ public class ProntoGyro {
 	public double getOffsetHeading() {	
 		// calculates the heading of the gyro
 		// puts the value of imu.getHeading on the SmartDash string 6 (see BNO055 class)
-		SmartDashboard.putString("DB/String 6", " "+ imu.getVector()[0]);
+		//SmartDashboard.putString("DB/String 6", " "+ imu.getVector()[0]);
 		
 		// defines a variable for angle
 		double angle;
