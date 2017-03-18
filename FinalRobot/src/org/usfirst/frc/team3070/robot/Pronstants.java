@@ -73,4 +73,7 @@ public interface Pronstants {
 	//This is how far in feet it coasts after braking.
 	static final double DISTANCE_OFFSET = 0.5;
 	
+	//auto field values 
+	static final double AUTO_CENTER_DIST = 5.755;
+	
 }

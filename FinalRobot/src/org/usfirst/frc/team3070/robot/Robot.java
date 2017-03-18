@@ -27,7 +27,7 @@ public void teleopPeriodic()
  * directory.
  */
 public class Robot extends IterativeRobot {
-	//Defines classes
+	// Defines classes
 	Drive drive;
 	Auto auto;
 	Climb climber;
@@ -37,56 +37,54 @@ public class Robot extends IterativeRobot {
 	SendableChooser<Pronstants.AutoMode> autoChooser;
 	Pronstants.AutoMode startMode;
 	Thread checkSensors;
-	
-	//vision variables
-	//	public VisionThread visionThread;
-	//	public static vision grip;
-	//defines the encoder starting variables
+
+	// vision variables
+	// public VisionThread visionThread;
+	// public static vision grip;
+	// defines the encoder starting variables
 	public static int startEnc1;
 	public static int startEnc2;
-	//defines a double for adjusting the speed of the motors
+	// defines a double for adjusting the speed of the motors
 	public static double adjSpeed;
-	//public double[] distanceTraveled = drive.getDistanceTraveled();
-	//creates a boolean for the control switcher button
+	// public double[] distanceTraveled = drive.getDistanceTraveled();
+	// creates a boolean for the control switcher button
 	boolean button1 = false;
 	boolean checkSwitch = false;
 	String mode;
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
 	@Override
 	public void robotInit() {
-		//Initializes robot
-		//Initializes FRC WPILIB Classes
+		// Initializes robot
+		// Initializes FRC WPILIB Classes
 		joyL = new Joystick(Pronstants.LEFT_JOYSTICK_PORT);
 		joyR = new Joystick(Pronstants.RIGHT_JOYSTICK_PORT);
-		//Initializes Pronto Classes
+		// Initializes Pronto Classes
 		drive = new Drive();
 		auto = new Auto();
 		climber = new Climb();
 		shoot = new Shooter();
 		gyro = new ProntoGyro();
-		//puts the auto program chooser on the dashboard
+		// puts the auto program chooser on the dashboard
 
 		autoChooser = new SendableChooser<Pronstants.AutoMode>();
-		autoChooser.addDefault("None",Pronstants.AutoMode.AUTO_MODE_NONE);
+		autoChooser.addDefault("None", Pronstants.AutoMode.AUTO_MODE_NONE);
 		autoChooser.addObject("Center -> Center", Pronstants.AutoMode.AUTO_MODE_CENTER_CENTER);
-		autoChooser.addObject("Center -> Right", Pronstants.AutoMode.AUTO_MODE_CENTER_RIGHT);
-		autoChooser.addObject("Center -> Left", Pronstants.AutoMode.AUTO_MODE_CENTER_LEFT);
 		autoChooser.addObject("Left -> Left", Pronstants.AutoMode.AUTO_MODE_LEFT_LEFT);
-		autoChooser.addObject("Right -> Right", Pronstants.AutoMode.AUTO_MODE_RIGHT_RIGHT); 
+		autoChooser.addObject("Right -> Right", Pronstants.AutoMode.AUTO_MODE_RIGHT_RIGHT);
 		SmartDashboard.putData("DB/Auto Selector", autoChooser);
-		//puts sensor values on the dashboard while disabled
+		// puts sensor values on the dashboard while disabled
 		checkSensors = new Thread(() -> {
-			while(!Thread.interrupted())
-			{
-				SmartDashboard.putString("EncPos/FR", ""+drive.talFR.getEncPosition());
-				SmartDashboard.putString("EncPos/BL",	""+drive.talBL.getEncPosition());
-				SmartDashboard.putString("I/FR", "FR I: "+drive.talFR.getOutputCurrent());
-				SmartDashboard.putString("I/FL", "FL I: "+drive.talFL.getOutputCurrent());
-				SmartDashboard.putString("I/BR", "BR I: "+drive.talBR.getOutputCurrent());
-				SmartDashboard.putString("I/BL", "BL I: "+drive.talBL.getOutputCurrent());	
+			while (!Thread.interrupted()) {
+				SmartDashboard.putString("EncPos/FR", "" + drive.talFR.getEncPosition());
+				SmartDashboard.putString("EncPos/BL", "" + drive.talBL.getEncPosition());
+				SmartDashboard.putString("I/FR", "FR I: " + drive.talFR.getOutputCurrent());
+				SmartDashboard.putString("I/FL", "FL I: " + drive.talFL.getOutputCurrent());
+				SmartDashboard.putString("I/BR", "BR I: " + drive.talBR.getOutputCurrent());
+				SmartDashboard.putString("I/BL", "BL I: " + drive.talBL.getOutputCurrent());
 				if (climber.climbLim1.getVoltage() > .4) {
 					SmartDashboard.putBoolean("Climb/C1", true);
 				} else {
@@ -100,24 +98,24 @@ public class Robot extends IterativeRobot {
 				SmartDashboard.putNumber("Gyro/gyro", gyro.getOffsetHeading());
 				Timer.delay(.1);
 			}
-			
+
 		});
 		checkSensors.setDaemon(true);
 		checkSensors.start();
-//		grip = new vision();
-	//vision code
+		// grip = new vision();
+		// vision code
 		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 		camera.setResolution(Pronstants.IMG_WIDTH, Pronstants.IMG_HEIGHT);
-//visionThread = new VisionThread (camera, grip,pipline ->{
-//			System.out.println(grip.findBlobsOutput().size());
-//		});
-//visionThread.start();
-		
-		
+		// visionThread = new VisionThread (camera, grip,pipline ->{
+		// System.out.println(grip.findBlobsOutput().size());
+		// });
+		// visionThread.start();
+
 	}
+
 	@Override
 	public void autonomousInit() {
-		//resets the distance traveled
+		// resets the distance traveled
 		drive.resetDistanceTraveled();
 		// resets the gyro
 		drive.talFR.enableBrakeMode(true);
@@ -128,46 +126,42 @@ public class Robot extends IterativeRobot {
 		drive.talFL.setVoltageRampRate(Pronstants.AUTO_RAMP_RATE);
 		drive.talBR.setVoltageRampRate(Pronstants.AUTO_RAMP_RATE);
 		drive.talBL.setVoltageRampRate(Pronstants.AUTO_RAMP_RATE);
-		drive.resetGyro();		
+		drive.resetGyro();
 		drive.resetDistanceTraveled();
 		gyro.reset();
-		//gets the start mode from the dashboard
+		// gets the start mode from the dashboard
 		mode = autoChooser.getSelected().toString();
 
 	}
-//practice comment
+
+	// practice comment
 	/**
 	 * This function is called periodically during autonomous
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		//what happens during autonomous (stays during autonomous)
-		//tells the code which autonomous program to run based on buttons from the SmartDas
+		// what happens during autonomous (stays during autonomous)
+		// tells the code which autonomous program to run based on buttons from
+		// the SmartDas
 
-	switch(mode) {
-		case Pronstants.AUTO_MODE_NONE:
-			drive.drive(0, 0);
-			break;
-		case Pronstants.AUTO_MODE_CENTER_CENTER:
-			auto.autoC();
-			break;
-		case Pronstants.AUTO_MODE_RIGHT_RIGHT:
-			auto.autoOutside(Pronstants.AUTO_SIDE_RIGHT);
-			break;
-		case Pronstants.AUTO_MODE_LEFT_LEFT:
-			auto.autoOutside(Pronstants.AUTO_SIDE_LEFT);
-			break;
-		case Pronstants.AUTO_MODE_CENTER_RIGHT:
-			auto.autoOutsideCenter(Pronstants.AUTO_SIDE_RIGHT);
-			break;
-		case Pronstants.AUTO_MODE_CENTER_LEFT:
-			auto.autoOutsideCenter(Pronstants.AUTO_SIDE_LEFT);
-			break;
-		}  
+//		switch (mode) {
+//		case Pronstants.AUTO_MODE_NONE:
+//			drive.drive(0, 0);
+//			break;
+//		case Pronstants.AUTO_MODE_CENTER_CENTER:
+//			auto.autoC();
+//			break;
+//		case Pronstants.AUTO_MODE_RIGHT_RIGHT:
+//			auto.autoOutsideRight();
+//			break;
+//		case Pronstants.AUTO_MODE_LEFT_LEFT:
+//			auto.autoOutsideLeft();
+//			break;
+//		}
+		auto.autoC();
 	}
 
-
-	public void teleopInit(){
+	public void teleopInit() {
 		drive.resetDistanceTraveled();
 		drive.resetGyro();
 		drive.talFR.setVoltageRampRate(Pronstants.RAMP_RATE);
@@ -179,14 +173,15 @@ public class Robot extends IterativeRobot {
 		drive.talBR.enableBrakeMode(false);
 		drive.talBL.enableBrakeMode(false);
 	}
+
 	/**
 	 * This function is called periodically during operator control
 	 */
 	@Override
 	public void teleopPeriodic() {
-		//teleop programs  (names are pretty self-explanatory)
+		// teleop programs (names are pretty self-explanatory)
 		drive.joystickDrive(joyR.getRawAxis(1), joyL.getRawAxis(1), joyR.getRawAxis(2));
 		climber.checkClimbInput(joyR.getRawButton(2), joyL.getRawButton(2));
-//		shoot.checkShootInput(joyR.getRawButton(1), joyL.getRawButton(1));
+		// shoot.checkShootInput(joyR.getRawButton(1), joyL.getRawButton(1));
 	}
 }

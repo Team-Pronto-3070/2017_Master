@@ -38,19 +38,15 @@ public class Climb {
 
 	// Handles the climber buttons on the joysticks
 	public void checkClimbInput(boolean button1, boolean button2) {		
-		// Creates variables for the limit switch voltages
-		double limit1 = climbLim1.getVoltage();
-		double limit2 = climbLim2.getVoltage();
 		
 		// Checks if the limit switches are not pressed
-		if (limit1 < 3 && limit2 < 3) {
-			// Checks if the first button and not the second button are pressed
+	
 			if (button1 && !button2) {
 				// If so, climb up
 				talC1.set(-Pronstants.AUTO_CLIMB_SPEED);
 				talC2.set(-Pronstants.AUTO_CLIMB_SPEED);
 			}
-		}
+		
 		
 		// Checks if the second button and not the first button are pressed
 		else if (button2 && !button1) {
@@ -61,26 +57,10 @@ public class Climb {
 			talC2.set(Pronstants.AUTO_CLIMB_SPEED);
 		}
 		
-		// checks if both buttons are pressed
-		else if (button1 && button2) {
-			// If so, don't climb up or down
-			// This is to protect against both the buttons getting pressed
-			// and the talons trying to go both directions as a result
-			talC1.set(0);
-			talC2.set(0);
-		}
-		
 		else {
 			// If none of the above cases are true, don't climb up or down
 			talC1.set(0);
 			talC2.set(0);
 		}
-	}
-	
-	// Prints the value of the limit switches
-	public void printClimblimValue() {
-		// This method is here in case we want the driver to see how far the robot has climbed up
-		SmartDashboard.putString("DB/String 7", "adj = %d" + climbLim1.getVoltage());
-		SmartDashboard.putString("DB/String 8", "adj = %d" + climbLim2.getVoltage());
 	}
 }
