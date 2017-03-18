@@ -16,7 +16,7 @@ public interface Pronstants {
 	//The value which the robot doesn't move if the controller value is under.
 	static final double DEAD_ZONE = 0.1;
 	//The value which limits the amp usage of the drive talons.
-	static final int DRIVE_CURRENT_LIMIT = 39;
+	static final int DRIVE_CURRENT_LIMIT = 35;
 	//The value which limits the amp usage of the climber talons.
 	static final int CLIMB_CURRENT_LIMIT = 29;
 	//The value which limits the amp usage of the shooter talons.

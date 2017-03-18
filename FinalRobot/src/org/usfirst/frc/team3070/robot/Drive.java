@@ -2,7 +2,6 @@ package org.usfirst.frc.team3070.robot;
 
 import com.ctre.CANTalon;
 import org.usfirst.frc.team3070.robot.Pronstants;
-import edu.wpi.first.wpilibj.smartdashboard.*;
 
 public class Drive {
 	//defines the talons
@@ -72,15 +71,7 @@ public class Drive {
 		// this speed is cubed so that the controls are less sensitives
 		// (all speed values are between 0 and 1)
 		// z is the z axis input on the right joyStick, it is used to switch the direction the robot drives
-		if (z > .5) {
-		drive(-balanceSpeed(speedR), -balanceSpeed(speedL));
-		}
-		
-		// a = 1.104, b = -0.221, c = 0.14
-		
-		else {
-			drive(-(balanceSpeed(speedL)), -(balanceSpeed(speedR)));
-		}
+		drive(-(balanceSpeed(speedR)), -(balanceSpeed(speedL)));
 	}
 	
 	public double balanceSpeed(double joy) {
@@ -95,6 +86,16 @@ public class Drive {
 
 	public void drive(double right, double left) {
 		// drives the robot based on two different input values for left and right
+		if(left > 0.9) {
+			left = 0.9;
+		} else if(left < -0.9) {
+			left = -0.9;
+		}
+		if(right > 0.9) {
+			right = 0.9;
+		} else if(right < -0.9) {
+			right = -0.9;
+		}
 		talFR.set(-right);
 		talBR.set(-right);
 		talFL.set(left);
@@ -116,8 +117,8 @@ public class Drive {
 		ar[2] = (ar[1] + ar[0]) / 2;
 		
 		//prints the left and right encoder values in the SmartDash
-		SmartDashboard.putString("DB/String 0", String.format("RightDist = %f", ar[0]));
-		SmartDashboard.putString("DB/String 1", String.format("LeftDist = %f", ar[1]));
+//		SmartDashboard.putString("DB/String 0", String.format("RightDist = %f", ar[0]));
+//		SmartDashboard.putString("DB/String 1", String.format("LeftDist = %f", ar[1]));
 
 		//returns the array
 		return ar;

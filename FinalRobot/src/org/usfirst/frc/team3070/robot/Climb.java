@@ -1,8 +1,6 @@
 package org.usfirst.frc.team3070.robot;
 
 import com.ctre.CANTalon;
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /*
 methods:
