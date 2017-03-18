@@ -1,6 +1,5 @@
 package org.usfirst.frc.team3070.robot;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /* methods: 
  * public void autoC() - drive center
  * public void autoOutside(int side) - drive from outer start position to outer lift
@@ -10,7 +9,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Auto {
 	// initializes classes
 	private Drive drive = new Drive();
-	private Shooter shooter = new Shooter();
 	private ProntoGyro gyro = new ProntoGyro();
 
 	public Auto() {
@@ -23,7 +21,7 @@ public class Auto {
 	double diffDist;
 
 	// initial heading
-	double initHeading = gyro.getOffset();
+	double initHeading = 0;
 
 	// Flags for if we're turning
 	boolean firstTurning = false;
@@ -63,7 +61,7 @@ public class Auto {
 	public void autoOutsideRight() {
 		// autonomous code for going to an outside gearloader
 		// from the same side starting position
-
+		initHeading = gyro.getOffset();
 		// updates distance
 		rotations = drive.getDistanceTraveled();
 		// difference in distance
@@ -102,6 +100,7 @@ public class Auto {
 	public void autoOutsideLeft() {
 		rotations = drive.getDistanceTraveled();
 		diffDist = rotations[2] - initDist;
+		initHeading = gyro.getOffset();
 		switch(state) {
 		case 1:
 			if (diffDist < 5) {

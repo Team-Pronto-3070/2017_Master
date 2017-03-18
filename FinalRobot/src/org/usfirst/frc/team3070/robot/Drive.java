@@ -23,11 +23,6 @@ public class Drive {
 		talFL = new CANTalon(Pronstants.TALON_FRONT_LEFT_PORT);
 		talBR = new CANTalon(Pronstants.TALON_BACK_RIGHT_PORT);
 		talBL = new CANTalon(Pronstants.TALON_BACK_LEFT_PORT);
-		// sets a voltage ramp rate on the talons
-		talFR.setVoltageRampRate(Pronstants.RAMP_RATE);
-		talFL.setVoltageRampRate(Pronstants.RAMP_RATE);
-		talBR.setVoltageRampRate(Pronstants.RAMP_RATE);
-		talBL.setVoltageRampRate(Pronstants.RAMP_RATE);
 		// sets a current amperage limit on the talons
 		talFR.setCurrentLimit(Pronstants.DRIVE_CURRENT_LIMIT);
 		talFL.setCurrentLimit(Pronstants.DRIVE_CURRENT_LIMIT);
@@ -36,7 +31,6 @@ public class Drive {
 		// sets feedback device on the talons to encoders
 		talFR.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
 		talBL.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-		
 		resetDistanceTraveled();
 	}
 	
@@ -80,7 +74,7 @@ public class Drive {
 		if (z > .5) {
 		drive(-Math.copySign(Math.sqrt(Math.abs(speedR)), speedR), -Math.copySign(Math.sqrt(Math.abs(speedL)), speedL));
 		} else {
-			drive(speedL,speedR);
+			drive(speedL, speedR);
 		}
 	}
 
@@ -182,5 +176,19 @@ public class Drive {
 			
 		drive(speed + adjSpeed, speed - adjSpeed);
 
+	}
+	
+	public void toggleDriveTrain(boolean brake) {
+		talFR.enableBrakeMode(brake);
+		talFL.enableBrakeMode(brake);
+		talBR.enableBrakeMode(brake);
+		talBL.enableBrakeMode(brake);
+	}
+	
+	public void setDriveRampRate(double rate) {
+		talFR.setVoltageRampRate(rate);
+		talFL.setVoltageRampRate(rate);
+		talBR.setVoltageRampRate(rate);
+		talBL.setVoltageRampRate(rate);
 	}
 }

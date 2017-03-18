@@ -32,7 +32,7 @@ public class Robot extends IterativeRobot {
 	Auto auto;
 	Climb climber;
 	Joystick joyL, joyR;
-	Shooter shoot;
+//	Shooter shoot;
 	ProntoGyro gyro;
 	SendableChooser<Pronstants.AutoMode> autoChooser;
 	Pronstants.AutoMode startMode;
@@ -66,7 +66,7 @@ public class Robot extends IterativeRobot {
 		drive = new Drive();
 		auto = new Auto();
 		climber = new Climb();
-		shoot = new Shooter();
+//		shoot = new Shooter();
 		gyro = new ProntoGyro();
 		// puts the auto program chooser on the dashboard
 
@@ -85,16 +85,6 @@ public class Robot extends IterativeRobot {
 				SmartDashboard.putString("I/FL", "FL I: " + drive.talFL.getOutputCurrent());
 				SmartDashboard.putString("I/BR", "BR I: " + drive.talBR.getOutputCurrent());
 				SmartDashboard.putString("I/BL", "BL I: " + drive.talBL.getOutputCurrent());
-				if (climber.climbLim1.getVoltage() > .4) {
-					SmartDashboard.putBoolean("Climb/C1", true);
-				} else {
-					SmartDashboard.putBoolean("Climb/C1", false);
-				}
-				if (climber.climbLim2.getVoltage() > .4) {
-					SmartDashboard.putBoolean("Climb/C2", true);
-				} else {
-					SmartDashboard.putBoolean("Climb/C2", false);
-				}
 				SmartDashboard.putNumber("Gyro/gyro", gyro.getOffsetHeading());
 				Timer.delay(.1);
 			}
@@ -118,17 +108,10 @@ public class Robot extends IterativeRobot {
 		// resets the distance traveled
 		drive.resetDistanceTraveled();
 		// resets the gyro
-		drive.talFR.enableBrakeMode(true);
-		drive.talFL.enableBrakeMode(true);
-		drive.talBR.enableBrakeMode(true);
-		drive.talBL.enableBrakeMode(true);
-		drive.talFR.setVoltageRampRate(Pronstants.AUTO_RAMP_RATE);
-		drive.talFL.setVoltageRampRate(Pronstants.AUTO_RAMP_RATE);
-		drive.talBR.setVoltageRampRate(Pronstants.AUTO_RAMP_RATE);
-		drive.talBL.setVoltageRampRate(Pronstants.AUTO_RAMP_RATE);
+		drive.toggleDriveTrain(true);
+		drive.setDriveRampRate(Pronstants.AUTO_RAMP_RATE);
 		drive.resetGyro();
 		drive.resetDistanceTraveled();
-		gyro.reset();
 		// gets the start mode from the dashboard
 		mode = autoChooser.getSelected().toString();
 
@@ -142,36 +125,29 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		// what happens during autonomous (stays during autonomous)
 		// tells the code which autonomous program to run based on buttons from
-		// the SmartDas
+		// the SmartDash
 
-//		switch (mode) {
-//		case Pronstants.AUTO_MODE_NONE:
-//			drive.drive(0, 0);
-//			break;
-//		case Pronstants.AUTO_MODE_CENTER_CENTER:
-//			auto.autoC();
-//			break;
-//		case Pronstants.AUTO_MODE_RIGHT_RIGHT:
-//			auto.autoOutsideRight();
-//			break;
-//		case Pronstants.AUTO_MODE_LEFT_LEFT:
-//			auto.autoOutsideLeft();
-//			break;
-//		}
-		auto.autoC();
+		switch (mode) {
+		case Pronstants.AUTO_MODE_NONE:
+			drive.drive(0, 0);
+			break;
+		case Pronstants.AUTO_MODE_CENTER_CENTER:
+			auto.autoC();
+			break;
+		case Pronstants.AUTO_MODE_RIGHT_RIGHT:
+			auto.autoOutsideRight();
+			break;
+		case Pronstants.AUTO_MODE_LEFT_LEFT:
+			auto.autoOutsideLeft();
+			break;
+		}
 	}
 
 	public void teleopInit() {
 		drive.resetDistanceTraveled();
 		drive.resetGyro();
-		drive.talFR.setVoltageRampRate(Pronstants.RAMP_RATE);
-		drive.talFL.setVoltageRampRate(Pronstants.RAMP_RATE);
-		drive.talBR.setVoltageRampRate(Pronstants.RAMP_RATE);
-		drive.talBL.setVoltageRampRate(Pronstants.RAMP_RATE);
-		drive.talFR.enableBrakeMode(false);
-		drive.talFL.enableBrakeMode(false);
-		drive.talBR.enableBrakeMode(false);
-		drive.talBL.enableBrakeMode(false);
+		drive.setDriveRampRate(Pronstants.RAMP_RATE);
+		drive.toggleDriveTrain(false);
 	}
 
 	/**
@@ -182,6 +158,5 @@ public class Robot extends IterativeRobot {
 		// teleop programs (names are pretty self-explanatory)
 		drive.joystickDrive(joyR.getRawAxis(1), joyL.getRawAxis(1), joyR.getRawAxis(2));
 		climber.checkClimbInput(joyR.getRawButton(2), joyL.getRawButton(2));
-		// shoot.checkShootInput(joyR.getRawButton(1), joyL.getRawButton(1));
 	}
 }
