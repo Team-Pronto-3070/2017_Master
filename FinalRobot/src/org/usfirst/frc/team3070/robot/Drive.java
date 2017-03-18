@@ -11,7 +11,7 @@ public class Drive {
 	//defines the gyro
 	private ProntoGyro gyro;
 	
-	public static final double MAX_DEGREES_FULL_SPEED = 10.0;
+	public static final double MAX_DEGREES_FULL_SPEED = 5.0;
 	public static final double MIN_TURN_SPEED = 0.18;
 
 	public Drive() {
@@ -43,6 +43,7 @@ public class Drive {
 		// makes the joystick control the talons
 		// defines the variables for the speed of left and right sides of the robot
 		double speedR, speedL;
+		
 		// checks if the right joystick is in the deadzone
 		if (Math.abs(joyR) > Pronstants.DEAD_ZONE) {
 			// If it isn't, set the speed of the right side to the joystick
@@ -72,10 +73,24 @@ public class Drive {
 		// (all speed values are between 0 and 1)
 		// z is the z axis input on the right joyStick, it is used to switch the direction the robot drives
 		if (z > .5) {
-		drive(-Math.copySign(Math.sqrt(Math.abs(speedR)), speedR), -Math.copySign(Math.sqrt(Math.abs(speedL)), speedL));
-		} else {
-			drive(speedL, speedR);
+		drive(-balanceSpeed(speedR), -balanceSpeed(speedL));
 		}
+		
+		// a = 1.104, b = -0.221, c = 0.14
+		
+		else {
+			drive(-(balanceSpeed(speedL)), -(balanceSpeed(speedR)));
+		}
+	}
+	
+	public double balanceSpeed(double joy) {
+		double a = 1.104;
+		double b = -0.221;
+		double c = 0.14;
+		
+		double sign = joy/Math.abs(joy);
+		
+		return sign*(a*(Math.pow(joy, 2)) + b*joy + c);
 	}
 
 	public void drive(double right, double left) {

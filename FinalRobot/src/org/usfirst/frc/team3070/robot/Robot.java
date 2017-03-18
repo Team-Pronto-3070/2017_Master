@@ -76,22 +76,22 @@ public class Robot extends IterativeRobot {
 		autoChooser.addObject("Left -> Left", Pronstants.AutoMode.AUTO_MODE_LEFT_LEFT);
 		autoChooser.addObject("Right -> Right", Pronstants.AutoMode.AUTO_MODE_RIGHT_RIGHT);
 		SmartDashboard.putData("DB/Auto Selector", autoChooser);
-		// puts sensor values on the dashboard while disabled
-		checkSensors = new Thread(() -> {
-			while (!Thread.interrupted()) {
-				SmartDashboard.putString("EncPos/FR", "" + drive.talFR.getEncPosition());
-				SmartDashboard.putString("EncPos/BL", "" + drive.talBL.getEncPosition());
-				SmartDashboard.putString("I/FR", "FR I: " + drive.talFR.getOutputCurrent());
-				SmartDashboard.putString("I/FL", "FL I: " + drive.talFL.getOutputCurrent());
-				SmartDashboard.putString("I/BR", "BR I: " + drive.talBR.getOutputCurrent());
-				SmartDashboard.putString("I/BL", "BL I: " + drive.talBL.getOutputCurrent());
-				SmartDashboard.putNumber("Gyro/gyro", gyro.getOffsetHeading());
-				Timer.delay(.1);
-			}
-
-		});
-		checkSensors.setDaemon(true);
-		checkSensors.start();
+//		// puts sensor values on the dashboard while disabled
+//		checkSensors = new Thread(() -> {
+//			while (!Thread.interrupted()) {
+//			//	SmartDashboard.putString("EncPos/FR", "" + drive.getDistanceTraveled()[1]);
+//				//SmartDashboard.putString("EncPos/BL", "" + drive.getDistanceTraveled()[0]);
+////				SmartDashboard.putString("I/FR", "FR I: " + drive.talFR.getOutputCurrent());
+////				SmartDashboard.putString("I/FL", "FL I: " + drive.talFL.getOutputCurrent());
+////				SmartDashboard.putString("I/BR", "BR I: " + drive.talBR.getOutputCurrent());
+////				SmartDashboard.putString("I/BL", "BL I: " + drive.talBL.getOutputCurrent());
+//			//	SmartDashboard.putNumber("Gyro/gyro", gyro.getOffsetHeading());
+//				Timer.delay(.1);
+//			}
+//
+//		});
+//		checkSensors.setDaemon(true);
+//		checkSensors.start();
 		// grip = new vision();
 		// vision code
 		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
@@ -126,8 +126,8 @@ public class Robot extends IterativeRobot {
 		// what happens during autonomous (stays during autonomous)
 		// tells the code which autonomous program to run based on buttons from
 		// the SmartDash
-
-		switch (mode) {
+/*
+	switch (mode) {
 		case Pronstants.AUTO_MODE_NONE:
 			drive.drive(0, 0);
 			break;
@@ -141,6 +141,10 @@ public class Robot extends IterativeRobot {
 			auto.autoOutsideLeft();
 			break;
 		}
+		checkSensors(); 
+	} */
+		auto.autoC();
+		//auto.autoC();
 	}
 
 	public void teleopInit() {
@@ -157,6 +161,17 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		// teleop programs (names are pretty self-explanatory)
 		drive.joystickDrive(joyR.getRawAxis(1), joyL.getRawAxis(1), joyR.getRawAxis(2));
-		climber.checkClimbInput(joyR.getRawButton(2), joyL.getRawButton(2));
+		climber.checkClimbInput(joyR.getRawButton(2), joyL.getRawButton(8));
+		checkSensors();
+	}
+	
+	private void checkSensors() {
+		SmartDashboard.putString("EncPos/FR", "" + drive.talFR.getEncPosition());
+		SmartDashboard.putString("EncPos/BL", "" + drive.talBL.getEncPosition());
+		SmartDashboard.putString("I/FR", "FR I: " + drive.talFR.getOutputCurrent());
+		SmartDashboard.putString("I/FL", "FL I: " + drive.talFL.getOutputCurrent());
+		SmartDashboard.putString("I/BR", "BR I: " + drive.talBR.getOutputCurrent());
+		SmartDashboard.putString("I/BL", "BL I: " + drive.talBL.getOutputCurrent());
+		SmartDashboard.putNumber("Gyro/gyro", gyro.getOffsetHeading());
 	}
 }

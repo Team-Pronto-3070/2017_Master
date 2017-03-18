@@ -1,5 +1,7 @@
 package org.usfirst.frc.team3070.robot;
 
+import edu.wpi.first.wpilibj.Timer;
+
 /* methods: 
  * public void autoC() - drive center
  * public void autoOutside(int side) - drive from outer start position to outer lift
@@ -69,31 +71,46 @@ public class Auto {
 		// difference in angle
 		// double diffAngle = gyro.getHeading()- initHeading;
 		firstTurn = -60;
-
-		switch(state) {
+		System.out.print(gyro.getOffsetHeading() + " " + gyro.getRawHeading());
+		switch (state) {
 		case 1:
 			if (diffDist < 6.68) {
 				drive.driveRobotStraight();
 			} else {
+
+				drive.drive(0,0);
+				drive.resetGyro();
+				drive.resetDistanceTraveled();
+				Timer.delay(1);
+
 				state = 2;
 			}
+			System.out.print("state 1");
 			break;
 		case 2:
-			if(!drive.turn(-60, Pronstants.AUTO_TURN_SPEED)){
-				break;
-			}
-			else {
-				state = 3;
+			if(drive.turn(-60, Pronstants.AUTO_TURN_SPEED)){
 				drive.resetDistanceTraveled();
+				drive.resetGyro();
+				drive.drive(0,0);
+				Timer.delay(1);
+
+				state = 3;
+
+
 			}
+			System.out.print("state 2");
+
 			break;
 		case 3:
 			if(diffDist < 3.21) {
 				drive.driveRobotStraight();
 			} else {
 				drive.drive(0, 0);
-				
+				Timer.delay(1);
+
 			}
+			System.out.print("state 3");
+
 			break;
 		}
 	}
@@ -116,6 +133,7 @@ public class Auto {
 			else {
 				state = 3;
 				drive.resetDistanceTraveled();
+				drive.resetGyro();
 			}
 			break;
 		case 3:
