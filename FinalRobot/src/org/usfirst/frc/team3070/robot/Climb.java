@@ -14,8 +14,6 @@ public void printClimblimValue()
 public class Climb {
 	// Defines the climber talons
 	static CANTalon talC1, talC2;
-	// Defines the limit switches
-	AnalogInput climbLim1, climbLim2;
 
 	//Constructs the class
 	public Climb() {
@@ -30,17 +28,12 @@ public class Climb {
 		// Sets a current amperage limit on the talons
 		talC1.setCurrentLimit(Pronstants.CLIMB_CURRENT_LIMIT);
 		talC2.setCurrentLimit(Pronstants.CLIMB_CURRENT_LIMIT);
-		
-		// Initializes limit switches
-		climbLim1 = new AnalogInput(Pronstants.LIMIT_SWITCH_1_PORT);
-		climbLim2 = new AnalogInput(Pronstants.LIMIT_SWITCH_2_PORT);
 	}
 
 	// Handles the climber buttons on the joysticks
 	public void checkClimbInput(boolean button1, boolean button2) {		
 		
 		// Checks if the limit switches are not pressed
-	
 			if (button1 && !button2) {
 				// If so, climb up
 				talC1.set(-Pronstants.AUTO_CLIMB_SPEED);

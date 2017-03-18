@@ -11,7 +11,7 @@ public class Drive {
 	//defines the gyro
 	private ProntoGyro gyro;
 	
-	public static final double MAX_DEGREES_FULL_SPEED = 10.0;
+	public static final double MAX_DEGREES_FULL_SPEED = 5.0;
 	public static final double MIN_TURN_SPEED = 0.18;
 
 	public Drive() {
@@ -23,11 +23,6 @@ public class Drive {
 		talFL = new CANTalon(Pronstants.TALON_FRONT_LEFT_PORT);
 		talBR = new CANTalon(Pronstants.TALON_BACK_RIGHT_PORT);
 		talBL = new CANTalon(Pronstants.TALON_BACK_LEFT_PORT);
-		// sets a voltage ramp rate on the talons
-		talFR.setVoltageRampRate(Pronstants.RAMP_RATE);
-		talFL.setVoltageRampRate(Pronstants.RAMP_RATE);
-		talBR.setVoltageRampRate(Pronstants.RAMP_RATE);
-		talBL.setVoltageRampRate(Pronstants.RAMP_RATE);
 		// sets a current amperage limit on the talons
 		talFR.setCurrentLimit(Pronstants.DRIVE_CURRENT_LIMIT);
 		talFL.setCurrentLimit(Pronstants.DRIVE_CURRENT_LIMIT);
@@ -36,7 +31,6 @@ public class Drive {
 		// sets feedback device on the talons to encoders
 		talFR.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
 		talBL.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-		
 		resetDistanceTraveled();
 	}
 	
@@ -49,6 +43,7 @@ public class Drive {
 		// makes the joystick control the talons
 		// defines the variables for the speed of left and right sides of the robot
 		double speedR, speedL;
+		
 		// checks if the right joystick is in the deadzone
 		if (Math.abs(joyR) > Pronstants.DEAD_ZONE) {
 			// If it isn't, set the speed of the right side to the joystick
@@ -78,10 +73,24 @@ public class Drive {
 		// (all speed values are between 0 and 1)
 		// z is the z axis input on the right joyStick, it is used to switch the direction the robot drives
 		if (z > .5) {
-		drive(-Math.copySign(Math.sqrt(Math.abs(speedR)), speedR), -Math.copySign(Math.sqrt(Math.abs(speedL)), speedL));
-		} else {
-			drive(speedL,speedR);
+		drive(-balanceSpeed(speedR), -balanceSpeed(speedL));
 		}
+		
+		// a = 1.104, b = -0.221, c = 0.14
+		
+		else {
+			drive(-(balanceSpeed(speedL)), -(balanceSpeed(speedR)));
+		}
+	}
+	
+	public double balanceSpeed(double joy) {
+		double a = 1.104;
+		double b = -0.221;
+		double c = 0.14;
+		
+		double sign = joy/Math.abs(joy);
+		
+		return sign*(a*(Math.pow(joy, 2)) + b*joy + c);
 	}
 
 	public void drive(double right, double left) {
@@ -182,5 +191,19 @@ public class Drive {
 			
 		drive(speed + adjSpeed, speed - adjSpeed);
 
+	}
+	
+	public void toggleDriveTrain(boolean brake) {
+		talFR.enableBrakeMode(brake);
+		talFL.enableBrakeMode(brake);
+		talBR.enableBrakeMode(brake);
+		talBL.enableBrakeMode(brake);
+	}
+	
+	public void setDriveRampRate(double rate) {
+		talFR.setVoltageRampRate(rate);
+		talFL.setVoltageRampRate(rate);
+		talBR.setVoltageRampRate(rate);
+		talBL.setVoltageRampRate(rate);
 	}
 }
