@@ -1,11 +1,8 @@
 package org.usfirst.frc.team3070.robot;
 
-import edu.wpi.first.wpilibj.Timer;
-
 /* methods: 
- * public void autoC() - drive center
- * public void autoOutside(int side) - drive from outer start position to outer lift
- * public void autoOutsideCenter(int side) - drive from outer start position to center
+public void run(int program) - Runs the autonomous code according to an inputted program
+public int chooseAuto(boolean button1, boolean button2) - Returns an integer representing an autonomous program based on 2 buttons
 */
 
 public class Auto {
@@ -72,7 +69,9 @@ public class Auto {
 			
 		// Checks if the robot is on step 2
 		case 2:
-			
+			step++;
+			break;
+		case 3:
 			// Start turning the robot, then check if the robot is done turning
 			if (drive.turn(firstTurn[program], Pronstants.AUTO_TURN_SPEED)) {
 				
@@ -87,8 +86,10 @@ public class Auto {
 			}
 		
 		// Checks if the robot is on step 3
-		case 3:
-			
+		case 4:
+			step++;
+			break;
+		case 5:
 			// Checks if the robot is in the center position,
 			// or if the robot has traveled the second distance or further
 			if (program == Pronstants.AUTO_CENTER || distanceTraveled >= secondDist) {
@@ -107,7 +108,7 @@ public class Auto {
 			drive.driveRobotStraight(Pronstants.AUTO_DRIVE_SPEED);
 		
 		// Checks if the robot is on step 4
-		case 4:
+		case 6:
 			// If so, don't do anything
 			break;
 		}

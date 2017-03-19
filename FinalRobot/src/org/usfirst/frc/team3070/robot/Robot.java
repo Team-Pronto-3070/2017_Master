@@ -101,17 +101,19 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		// Tells the code which autonomous program to run
-	switch (mode) {
-		case Pronstants.AUTO_RIGHT:
-			auto.run(Pronstants.AUTO_RIGHT);
-			break;
-		case Pronstants.AUTO_LEFT:
-			auto.run(Pronstants.AUTO_LEFT);
-			break;
-		case Pronstants.AUTO_CENTER:
-			auto.run(Pronstants.AUTO_CENTER);
-			break;
-		} 
+		
+		auto.run(mode);
+//	switch (mode) {
+//		case Pronstants.AUTO_RIGHT:
+//			auto.run(Pronstants.AUTO_RIGHT);
+//			break;
+//		case Pronstants.AUTO_LEFT:
+//			auto.run(Pronstants.AUTO_LEFT);
+//			break;
+//		case Pronstants.AUTO_CENTER:
+//			auto.run(Pronstants.AUTO_CENTER);
+//			break;
+//		} 
 	}
 	
 	// Runs when robot is enabled for teleop before the iterative teleop program

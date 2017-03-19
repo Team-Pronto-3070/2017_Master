@@ -4,9 +4,10 @@ import com.ctre.CANTalon;
 
 /*
 methods:
-public void checkShootInput()
-public void stopShooter()
-public void shoot()
+public Shooter() - Constructs the class
+public void checkShootInput() - Maps the shooter to joystick buttons
+public void stopShooter() - stops the shooter
+public void shoot() - runs the shooter
  */
 
 public class Shooter { 
