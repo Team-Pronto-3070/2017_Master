@@ -4,11 +4,12 @@ import org.usfirst.frc.team3070.robot.BNO055;
 
 /*
 methods:
-public double getOffsetHeading()
-public void reset()
-public double getRawHeading()
-public double getOffset()
-public double normalizeHeadingVal(double heading)
+public ProntoGyro() - Constructs the class
+public double getOffsetHeading() - Gets the heading in relation to the offset
+public void reset() - resets the angle offset
+public double getRawHeading() - Gets the raw heading
+public double getOffset() - Gets the offset
+public double normalizeHeadingVal(double heading) - Normalizes the heading value for program and readability purposes
  */
 
 public class ProntoGyro {
@@ -19,56 +20,49 @@ public class ProntoGyro {
 	// Leave as a class variable so that each instance can have it's own angleOffset
 	private double angleOffset;
 	
-	public ProntoGyro()
-	{
-		// ProntoGyro constructor
-		// runs the reset function (see below)
-	
+	// Constructs the class
+	public ProntoGyro() {
+		// Resets the gyro
 		reset();
 	}
 	
+	// Gets the heading in relation to the offset
 	public double getOffsetHeading() {	
-		// calculates the heading of the gyro
-		// puts the value of imu.getHeading on the SmartDash string 6 (see BNO055 class)
-		//SmartDashboard.putString("DB/String 6", " "+ imu.getVector()[0]);
-		
-		// defines a variable for angle
+		// Defines a double for angle
 		double angle;
 
-		// set the angle to the remainder of the current
-		// angle divided by 180
+		// Normalizes the heading of the Raw Value minus the angle offset
 		angle = normalizeHeadingVal(getRawHeading() - angleOffset);
-		
-		// print the angle offset and the current heading in the dashboard
-	//	SmartDashboard.putString("DB/String 4", String.format("Offset = %f", angleOffset));
-	//	SmartDashboard.putString("DB/String 3", String.format("Heading = %f", angle));
-		
-		// return the angle
+				
+		// Return the angle
 		return angle;
 	}
 	
+	// Resets the angle offset
 	public void reset() {
-		// resets the angleOffset to the current heading
+		// Resets the angleOffset to the current heading
 		angleOffset = getRawHeading();
-		//to account for a problem we saw on the field
+		// Checks if the angle offset is 360 degrees
 		if (angleOffset == 360.0) {
+			// If so, set the angle offset to zero
+			// This accounts for a problem we saw on the field
 			angleOffset = 0;
 		}
 	}
 	
+	// Gets the raw heading of the gyro
 	public double getRawHeading() {
-		//SmartDashboard.putString("DB/String 0", ""+normalizeHeadingVal(imu.getVector()[0]));
-
 		return normalizeHeadingVal(imu.getVector()[0]);
 	
 	}
 	
+	// Gets the angle offset
 	public double getOffset() {
 		return angleOffset;
 	}
 	
-	private double normalizeHeadingVal( double heading )
-	{
+	// Normalizes the heading value for the rest of the code/reads easier
+	private double normalizeHeadingVal(double heading) {
 		// Normalize a heading value to the range of (-180, 180]
 		if( heading % 360 >  180.0 )
 		{

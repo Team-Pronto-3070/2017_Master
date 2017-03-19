@@ -5,8 +5,7 @@ import com.ctre.CANTalon;
 /*
 methods:
 public Climb() - constructs the class
-public void checkClimbInput()
-public void printClimblimValue()
+public void checkClimbInput(boolean button1, boolean button2) - Handles the climber buttons on the joysticks
  */
 
 public class Climb {
@@ -31,19 +30,17 @@ public class Climb {
 	// Handles the climber buttons on the joysticks
 	public void checkClimbInput(boolean button1, boolean button2) {		
 		
-		// Checks if the limit switches are not pressed
-			if (button1 && !button2) {
-				// If so, climb up
-				talC1.set(-Pronstants.AUTO_CLIMB_SPEED);
-				talC2.set(-Pronstants.AUTO_CLIMB_SPEED);
-			}
+		// Checks if button1 is pressed
+		if (button1) {
+			// If so, climb up
+			talC1.set(-Pronstants.AUTO_CLIMB_SPEED);
+			talC2.set(-Pronstants.AUTO_CLIMB_SPEED);
+		}
 		
-		
-		// Checks if the second button and not the first button are pressed
-		else if (button2 && !button1) {
+		// If button1 is not pressed, checks if button2 is pressed
+		else if (button2) {
 			// If so, climb down
-			// This method is for after the round so we can undo the rope,
-			// or if there is a potential error when we climb up
+			// This method is so we can get out of the rope if there is an issue or if we get stuck
 			talC1.set(Pronstants.AUTO_CLIMB_SPEED);
 			talC2.set(Pronstants.AUTO_CLIMB_SPEED);
 		}
