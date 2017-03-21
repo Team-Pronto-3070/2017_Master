@@ -2,6 +2,7 @@ package org.usfirst.frc.team3070.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.vision.VisionThread;
 import gripvis.vision;
@@ -30,12 +31,8 @@ public class Robot extends IterativeRobot {
 	Auto auto;
 	Climb climber;
 	Joystick joyL, joyR;
-//	Shooter shoot;
+	Shooter shoot;
 	ProntoGyro gyro;
-//	SendableChooser<Pronstants.AutoMode> autoChooser;
-	Pronstants.AutoMode startMode;
-	Thread checkSensors;
-
 	// vision variables
 	// public VisionThread visionThread;
 	// public static vision grip;
@@ -43,12 +40,12 @@ public class Robot extends IterativeRobot {
 	public static int startEnc1;
 	public static int startEnc2;
 	// defines a double for adjusting the speed of the motors
-	public static double adjSpeed;
 	// public double[] distanceTraveled = drive.getDistanceTraveled();
 	// creates a boolean for the control switcher button
+	boolean button0 = false;
 	boolean button1 = false;
-	boolean checkSwitch = false;
-	String mode;
+	boolean button2 = false;
+	boolean button3 = false;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -64,33 +61,11 @@ public class Robot extends IterativeRobot {
 		drive = new Drive();
 		auto = new Auto();
 		climber = new Climb();
-//		shoot = new Shooter();
+		shoot = new Shooter();
 		gyro = new ProntoGyro();
 		// puts the auto program chooser on the dashboard
 
 		/* disabled 3.18.17 2:51
-		autoChooser = new SendableChooser<Pronstants.AutoMode>();
-		autoChooser.addDefault("None", Pronstants.AutoMode.AUTO_MODE_NONE);
-		autoChooser.addObject("Center -> Center", Pronstants.AutoMode.AUTO_MODE_CENTER_CENTER);
-		autoChooser.addObject("Left -> Left", Pronstants.AutoMode.AUTO_MODE_LEFT_LEFT);
-		autoChooser.addObject("Right -> Right", Pronstants.AutoMode.AUTO_MODE_RIGHT_RIGHT);
-		SmartDashboard.putData("DB/Auto Selector", autoChooser);
-//		// puts sensor values on the dashboard while disabled
-//		checkSensors = new Thread(() -> {
-//			while (!Thread.interrupted()) {
-//			//	SmartDashboard.putString("EncPos/FR", "" + drive.getDistanceTraveled()[1]);
-//				//SmartDashboard.putString("EncPos/BL", "" + drive.getDistanceTraveled()[0]);
-////				SmartDashboard.putString("I/FR", "FR I: " + drive.talFR.getOutputCurrent());
-////				SmartDashboard.putString("I/FL", "FL I: " + drive.talFL.getOutputCurrent());
-////				SmartDashboard.putString("I/BR", "BR I: " + drive.talBR.getOutputCurrent());
-////				SmartDashboard.putString("I/BL", "BL I: " + drive.talBL.getOutputCurrent());
-//			//	SmartDashboard.putNumber("Gyro/gyro", gyro.getOffsetHeading());
-//				Timer.delay(.1);
-//			}
-//
-//		});
-//		checkSensors.setDaemon(true);
-//		checkSensors.start();
 		// grip = new vision();
 		// vision code
 		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
@@ -100,6 +75,8 @@ public class Robot extends IterativeRobot {
 		// });
 		// visionThread.start();
 */
+		
+
 	}
 	@Override
 	public void autonomousInit() {
@@ -111,8 +88,10 @@ public class Robot extends IterativeRobot {
 		drive.resetGyro();
 		drive.resetDistanceTraveled();
 		// gets the start mode from the dashboard
-		//mode = autoChooser.getSelected().toString();
-
+		button0 = SmartDashboard.getBoolean("DB/Button 0", false);
+		button1 = SmartDashboard.getBoolean("DB/Button 1", false);
+		button2 = SmartDashboard.getBoolean("DB/Button 2", false);
+		button3 = SmartDashboard.getBoolean("DB/Button 3", false);
 	}
 
 	// practice comment
@@ -124,25 +103,19 @@ public class Robot extends IterativeRobot {
 		// what happens during autonomous (stays during autonomous)
 		// tells the code which autonomous program to run based on buttons from
 		// the SmartDash
-/*
-	switch (mode) {
-		case Pronstants.AUTO_MODE_NONE:
-			drive.drive(0, 0);
-			break;
-		case Pronstants.AUTO_MODE_CENTER_CENTER:
+		if (button0) {
 			auto.autoC();
-			break;
-		case Pronstants.AUTO_MODE_RIGHT_RIGHT:
-			auto.autoOutsideRight();
-			break;
-		case Pronstants.AUTO_MODE_LEFT_LEFT:
-			auto.autoOutsideLeft();
-			break;
 		}
-		checkSensors(); 
-	} */
-		auto.autoC();
-		//auto.autoC();
+		if (button1) {
+			auto.autoOutsideLeft();
+		}
+		if (button2) {
+			auto.autoOutsideRight();
+		}
+		if (button3) {
+		shoot.shoot();
+		}
+		
 	}
 
 	public void teleopInit() {

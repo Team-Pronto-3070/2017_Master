@@ -4,12 +4,12 @@ import com.ctre.CANTalon;
 import org.usfirst.frc.team3070.robot.Pronstants;
 
 public class Drive {
-	//defines the talons
+	// defines the talons
 	public CANTalon talFR, talFL, talBR, talBL;
-//	double startHeading;
-	//defines the gyro
+	// double startHeading;
+	// defines the gyro
 	private ProntoGyro gyro;
-	
+
 	public static final double MAX_DEGREES_FULL_SPEED = 5.0;
 	public static final double MIN_TURN_SPEED = 0.18;
 
@@ -32,78 +32,94 @@ public class Drive {
 		talBL.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
 		resetDistanceTraveled();
 	}
-	
-	public void resetGyro()
-	{
+
+	public void resetGyro() {
 		gyro.reset();
 	}
-	
+
 	public void joystickDrive(double joyR, double joyL, boolean trig) {
 		// makes the joystick control the talons
-		// defines the variables for the speed of left and right sides of the robot
+		// defines the variables for the speed of left and right sides of the
+		// robot
 		double speedR, speedL;
-		
+
 		// checks if the right joystick is in the deadzone
 		if (Math.abs(joyR) > Pronstants.DEAD_ZONE) {
 			// If it isn't, set the speed of the right side to the joystick
 			// value
 			speedR = joyR;
-		}
-		else {
+		} else {
 			// If the joystick is in the deadzone, set the speed of the right
 			// side to 0
 			speedR = 0;
 		}
-		
+
 		// checks if the left joystick is in the deadzone
 		if (Math.abs(joyL) > Pronstants.DEAD_ZONE) {
 			// If it isn't, set the speed of the right side to the joystick
 			// value
 			speedL = joyL;
-		}
-		else {
+		} else {
 			// If the joystick is in the deadzone, set the speed of the right
 			// side to 0
 			speedL = 0;
 		}
-		
+
 		// drives the robot forward at the speeds set earlier for left and right
 		// this speed is cubed so that the controls are less sensitives
 		// (all speed values are between 0 and 1)
-		//finds the average of the left and right joysticks
-		double avg = (speedL + speedR)/2;
-		if ( trig) {
-			//if the trigger is held use the drivestraight code
-			driveRobotStraightSpeed(avg);
-		}else {
-				//else drive normally
-				drive(-balanceSpeed(speedR), -balanceSpeed(speedL));
-				//resets the gyro until we hold the trigger so that the drive
-				//straight has an initial heading
-				gyro.reset();
+		// finds the average of the left and right joysticks
+		double avg = (speedL + speedR) / 2;
+		if (trig) {
+			// if the trigger is pulled, drive straigh
+			if (Math.signum(speedL) == Math.signum(speedR)) {
+				driveRobotStraightSpeed(-avg);
+			} else {
+				// if the left joystick is greater than the right, then she
+				// turns to left on a point
+				if (speedL > speedR) {
+					drive(balanceSpeed(speedR), -balanceSpeed(speedR));
+					gyro.reset();
 
-		}	}
-	
+				}
+				// otherwise turn on to the left
+				else {
+					drive(-balanceSpeed(speedL), balanceSpeed(speedL));
+					gyro.reset();
+
+				}
+			}
+		} else {
+			// else drive normally
+			drive(-balanceSpeed(speedR), -balanceSpeed(speedL));
+			// resets the gyro until we hold the trigger so that the drive
+			// straight has an initial heading
+			gyro.reset();
+
+		}
+	}
+
 	public double balanceSpeed(double joy) {
 		double a = 1.104;
 		double b = -0.221;
 		double c = 0.14;
-		
-		double sign = joy/Math.abs(joy);
-		
-		return sign*(a*(Math.pow(joy, 2)) + b*joy + c);
+
+		double sign = joy / Math.abs(joy);
+
+		return sign * (a * (Math.pow(joy, 2)) + b * joy + c);
 	}
 
 	public void drive(double right, double left) {
-		// drives the robot based on two different input values for left and right
-		if(left > 0.9) {
+		// drives the robot based on two different input values for left and
+		// right
+		if (left > 0.9) {
 			left = 0.9;
-		} else if(left < -0.9) {
+		} else if (left < -0.9) {
 			left = -0.9;
 		}
-		if(right > 0.9) {
+		if (right > 0.9) {
 			right = 0.9;
-		} else if(right < -0.9) {
+		} else if (right < -0.9) {
 			right = -0.9;
 		}
 		talFR.set(-right);
@@ -111,26 +127,26 @@ public class Drive {
 		talFL.set(left);
 		talBL.set(left);
 	}
-	
-
 
 	public double[] getDistanceTraveled() {
 		// gets the distance traveled from the encoders
 		// creates an array with 3 doubles
 		double ar[] = new double[3];
-		
+
 		// creates a double for each encoder value converted into feet
 		ar[0] = talFR.getEncPosition() / Pronstants.TICK_COEFFICIENT;
 		ar[1] = -talBL.getEncPosition() / Pronstants.TICK_COEFFICIENT;
-		
+
 		// creates a double for the average of the two encoder values (in feet)
 		ar[2] = (ar[1] + ar[0]) / 2;
-		
-		//prints the left and right encoder values in the SmartDash
-//		SmartDashboard.putString("DB/String 0", String.format("RightDist = %f", ar[0]));
-//		SmartDashboard.putString("DB/String 1", String.format("LeftDist = %f", ar[1]));
 
-		//returns the array
+		// prints the left and right encoder values in the SmartDash
+		// SmartDashboard.putString("DB/String 0", String.format("RightDist =
+		// %f", ar[0]));
+		// SmartDashboard.putString("DB/String 1", String.format("LeftDist =
+		// %f", ar[1]));
+
+		// returns the array
 		return ar;
 	}
 
@@ -146,71 +162,71 @@ public class Drive {
 		double currentHeading = gyro.getOffsetHeading();
 		// Default to maximum speed
 		double speed = maxSpeed;
-		
+
 		// adjust speed linearly when within 10 degrees of expected value
-		double delta =  Math.abs(currentHeading - angle);
+		double delta = Math.abs(currentHeading - angle);
 		System.out.println(gyro.getOffsetHeading());
 
-		if(delta <= MAX_DEGREES_FULL_SPEED )
-		{
+		if (delta <= MAX_DEGREES_FULL_SPEED) {
 			// Simple linear regression
-			//     m =         (Y2      -     Y1)           /             ( X2        -          X1 )
-			double m = ( ( maxSpeed - MIN_TURN_SPEED )  / ( MAX_DEGREES_FULL_SPEED - Pronstants.TURN_OFFSET ) );
-			// y = m*x + b => b = y - m*x. Choosing Y1 and X1: 
-			double b = MIN_TURN_SPEED - ( m * Pronstants.TURN_OFFSET );
-			
-			// Substitute in the angle delta for x and 
+			// m = (Y2 - Y1) / ( X2 - X1 )
+			double m = ((maxSpeed - MIN_TURN_SPEED) / (MAX_DEGREES_FULL_SPEED - Pronstants.TURN_OFFSET));
+			// y = m*x + b => b = y - m*x. Choosing Y1 and X1:
+			double b = MIN_TURN_SPEED - (m * Pronstants.TURN_OFFSET);
+
+			// Substitute in the angle delta for x and
 			speed = m * delta + b;
 
 		}
-		
+
 		// checks if the gyro angle is less than the desired angle
-		 if(currentHeading < angle - Pronstants.TURN_OFFSET) {
+		if (currentHeading < angle - Pronstants.TURN_OFFSET) {
 			// If it is, turn left
 			drive(-speed, speed);
 
 		}
-		
+
 		// checks if the gyro angle is greater than the desired angle
 		else if (currentHeading > angle + Pronstants.TURN_OFFSET) {
 			// if it is, turn right
 			drive(speed, -speed);
 
 		}
-		
+
 		else {
 			// if the gyro angle is aligned with the desired angle, tell the
 			// source that called the method that turning is done
-			drive(0,0);
+			drive(0, 0);
 
 			return true;
 		}
-		
-		// otherwise, tell the source that called the function that turning is not done
+
+		// otherwise, tell the source that called the function that turning is
+		// not done
 		return false;
 	}
 
-	public void driveRobotStraight(){
+	public void driveRobotStraight() {
 		driveRobotStraightSpeed(Pronstants.AUTO_DRIVE_SPEED);
 	}
-	
-	public void driveRobotStraightSpeed( double speed ) {
-		
+
+	public void driveRobotStraightSpeed(double speed) {
+
 		double adjSpeed = 0.0;
-		
+
 		adjSpeed = gyro.getOffsetHeading() * Pronstants.ADJUSTING_CONSTANT;
-			
+
 		drive(speed + adjSpeed, speed - adjSpeed);
 
 	}
-	
+
 	public void toggleDriveTrain(boolean brake) {
 		talFR.enableBrakeMode(brake);
 		talFL.enableBrakeMode(brake);
 		talBR.enableBrakeMode(brake);
 		talBL.enableBrakeMode(brake);
 	}
-	
+
 	public void setDriveRampRate(double rate) {
 		talFR.setVoltageRampRate(rate);
 		talFL.setVoltageRampRate(rate);
