@@ -38,7 +38,7 @@ public class Drive {
 		gyro.reset();
 	}
 	
-	public void joystickDrive(double joyR, double joyL, double z) {
+	public void joystickDrive(double joyR, double joyL, boolean trig) {
 		// makes the joystick control the talons
 		// defines the variables for the speed of left and right sides of the robot
 		double speedR, speedL;
@@ -70,9 +70,19 @@ public class Drive {
 		// drives the robot forward at the speeds set earlier for left and right
 		// this speed is cubed so that the controls are less sensitives
 		// (all speed values are between 0 and 1)
-		// z is the z axis input on the right joyStick, it is used to switch the direction the robot drives
-		drive(-(balanceSpeed(speedR)), -(balanceSpeed(speedL)));
-	}
+		//finds the average of the left and right joysticks
+		double avg = (speedL + speedR)/2;
+		if ( trig) {
+			//if the trigger is held use the drivestraight code
+			driveRobotStraightSpeed(avg);
+		}else {
+				//else drive normally
+				drive(-balanceSpeed(speedR), -balanceSpeed(speedL));
+				//resets the gyro until we hold the trigger so that the drive
+				//straight has an initial heading
+				gyro.reset();
+
+		}	}
 	
 	public double balanceSpeed(double joy) {
 		double a = 1.104;

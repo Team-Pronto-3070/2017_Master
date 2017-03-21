@@ -158,18 +158,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		// teleop programs (names are pretty self-explanatory)
-		drive.joystickDrive(joyR.getRawAxis(1), joyL.getRawAxis(1), joyR.getRawAxis(2));
+		drive.joystickDrive(joyR.getRawAxis(1), joyL.getRawAxis(1), joyR.getTrigger());
 		climber.checkClimbInput(joyR.getRawButton(2), joyL.getRawButton(8));
-//		checkSensors();
 	}
-	
-//	private void checkSensors() {
-//		SmartDashboard.putString("EncPos/FR", "" + drive.talFR.getEncPosition());
-//		SmartDashboard.putString("EncPos/BL", "" + drive.talBL.getEncPosition());
-//		SmartDashboard.putString("I/FR", "FR I: " + drive.talFR.getOutputCurrent());
-//		SmartDashboard.putString("I/FL", "FL I: " + drive.talFL.getOutputCurrent());
-//		SmartDashboard.putString("I/BR", "BR I: " + drive.talBR.getOutputCurrent());
-//		SmartDashboard.putString("I/BL", "BL I: " + drive.talBL.getOutputCurrent());
-//		SmartDashboard.putNumber("Gyro/gyro", gyro.getOffsetHeading());
-//	}
 }
