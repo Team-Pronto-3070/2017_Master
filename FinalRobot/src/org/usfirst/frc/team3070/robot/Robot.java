@@ -1,12 +1,12 @@
 package org.usfirst.frc.team3070.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.IterativeRobot;
+
+/* Vision Imports
 import edu.wpi.first.wpilibj.vision.VisionThread;
 import gripvis.vision;
-
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 
@@ -18,6 +18,7 @@ public void autonomousPeriodic()
 public void teleopInit()
 public void teleopPeriodic()
  */
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -31,41 +32,40 @@ public class Robot extends IterativeRobot {
 	Auto auto;
 	Climb climber;
 	Joystick joyL, joyR;
-	Shooter shoot;
+	Shooter shooter;
 	ProntoGyro gyro;
-	// vision variables
+	
+	// Vision variables
 	// public VisionThread visionThread;
 	// public static vision grip;
-	// defines the encoder starting variables
-	public static int startEnc1;
-	public static int startEnc2;
-	// defines a double for adjusting the speed of the motors
-	// public double[] distanceTraveled = drive.getDistanceTraveled();
-	// creates a boolean for the control switcher button
-	boolean button0 = false;
+
+	// Defines booleans for the smartDash buttons for the autonomous selector and sets them to false
 	boolean button1 = false;
 	boolean button2 = false;
 	boolean button3 = false;
+	
+	// Creates an integer representing the autonomous mode
+	int mode;
+	
+	// Creates a boolean of whether we are shooting during autonomous or not
+	boolean shoot = false;
 
-	/**
-	 * This function is run when the robot is first started up and should be
-	 * used for any initialization code.
-	 */
+	// Runs when robot is initially turned on
 	@Override
 	public void robotInit() {
-		// Initializes robot
 		// Initializes FRC WPILIB Classes
 		joyL = new Joystick(Pronstants.LEFT_JOYSTICK_PORT);
 		joyR = new Joystick(Pronstants.RIGHT_JOYSTICK_PORT);
+		
 		// Initializes Pronto Classes
-		drive = new Drive();
-		auto = new Auto();
-		climber = new Climb();
-		shoot = new Shooter();
+		shooter = new Shooter();
 		gyro = new ProntoGyro();
-		// puts the auto program chooser on the dashboard
+		drive = new Drive(gyro);
+		auto = new Auto(drive, shooter);
+		climber = new Climb();
 
 		/* disabled 3.18.17 2:51
+		 * Extra vision code
 		// grip = new vision();
 		// vision code
 		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
@@ -74,64 +74,67 @@ public class Robot extends IterativeRobot {
 		// System.out.println(grip.findBlobsOutput().size());
 		// });
 		// visionThread.start();
-*/
+		 */
 		
 
 	}
+	
+	// Runs when the robot is enabled before the iterative autonomous program
 	@Override
 	public void autonomousInit() {
-		// resets the distance traveled
+		// Resets the distance traveled
 		drive.resetDistanceTraveled();
-		// resets the gyro
-		drive.toggleDriveTrain(true);
-		drive.setDriveRampRate(Pronstants.AUTO_RAMP_RATE);
-		drive.resetGyro();
-		drive.resetDistanceTraveled();
-		// gets the start mode from the dashboard
-		button0 = SmartDashboard.getBoolean("DB/Button 0", false);
-		button1 = SmartDashboard.getBoolean("DB/Button 1", false);
-		button2 = SmartDashboard.getBoolean("DB/Button 2", false);
-		button3 = SmartDashboard.getBoolean("DB/Button 3", false);
-	}
 
-	// practice comment
-	/**
-	 * This function is called periodically during autonomous
-	 */
-	@Override
-	public void autonomousPeriodic() {
-		// what happens during autonomous (stays during autonomous)
-		// tells the code which autonomous program to run based on buttons from
-		// the SmartDash
-		if (button0) {
-			auto.autoC();
-		}
-		if (button1) {
-			auto.autoOutsideLeft();
-		}
-		if (button2) {
-			auto.autoOutsideRight();
-		}
-		if (button3) {
-		shoot.shoot();
-		}
+		// Puts the drive talons in brake mode
+		drive.toggleDriveTrain(true);
+		
+		// Sets the voltage ramp rate of the talons to the autonomous ramp rate
+		drive.setDriveRampRate(Pronstants.AUTO_RAMP_RATE);
+		
+		// Resets the gyro
+		drive.resetGyro();
+
+		// Gets the value of the smartDash buttons for the autonomous selector
+		button1 = SmartDashboard.getBoolean("DB/Button 0", false);
+		button2 = SmartDashboard.getBoolean("DB/Button 1", false);
+		button3 = SmartDashboard.getBoolean("DB/Button 2", false);
+		shoot = SmartDashboard.getBoolean("DB/Button 3", false);
+		
+		// Selects the autonomous based on those buttons
+		auto.getSelected(button1, button2, button3);
+		
 		
 	}
 
+	// Iterative autonomous program
+	@Override
+	public void autonomousPeriodic() {
+		// Tells the code which autonomous program to run based on buttons from the smartDash
+		auto.run(mode, shoot);
+	}
+
+	// Runs before the iterative teleop program
 	public void teleopInit() {
+		// Resets the distance traveled
 		drive.resetDistanceTraveled();
+		
+		// Resets the gyro
 		drive.resetGyro();
+		
+		// Sets the voltage ramp rate to the teleop/regular ramp rate
 		drive.setDriveRampRate(Pronstants.RAMP_RATE);
+		
+		// Sets the drive talons to coast mode
 		drive.toggleDriveTrain(false);
 	}
 
-	/**
-	 * This function is called periodically during operator control
-	 */
+	// Iterative teleop program
 	@Override
 	public void teleopPeriodic() {
-		// teleop programs (names are pretty self-explanatory)
+		// Drives the robot according to the joystick inputs
 		drive.joystickDrive(joyR.getRawAxis(1), joyL.getRawAxis(1), joyR.getTrigger());
+		
+		// Makes the robot climb up or down according to the joystick inputs
 		climber.checkClimbInput(joyR.getRawButton(2), joyL.getRawButton(8));
 	}
 }

@@ -6,58 +6,72 @@ import edu.wpi.first.wpilibj.Timer;
 
 /*
 methods:
-public void checkShootInput()
-public void stopShooter()
-public void shoot()
+public Shooter() - Constructs the class
+public void checkShootInput() - Runs the shooter based off joystick values
+public void stopShooter() - Stops the shooter
+public void shoot() - Starts the shooter
  */
 
 public class Shooter { 
-//Defines talons for the shooter 
- CANTalon talHopper = new CANTalon(Pronstants.TALON_SHOOTER_2_PORT);
- CANTalon talShooter = new CANTalon(Pronstants.TALON_SHOOTER_1_PORT);
-	//shooter constructor
-	public Shooter()
-	{
-		//defines the talon variables
+	// Defines talons for the shooter 
+	CANTalon talHopper = new CANTalon(Pronstants.TALON_SHOOTER_2_PORT);
+	CANTalon talShooter = new CANTalon(Pronstants.TALON_SHOOTER_1_PORT);
+
+	// Constructs the class
+	public Shooter() {
+		// Defines the talon variables
 		talHopper = new CANTalon(Pronstants.TALON_SHOOTER_1_PORT);
 		talShooter = new CANTalon(Pronstants.TALON_SHOOTER_2_PORT);
-// 		//sets a voltage ramp rate on the talons
+ 		// Sets a voltage ramp rate on the talons
 		talHopper.setVoltageRampRate(Pronstants.RAMP_RATE);
 		talShooter.setVoltageRampRate(Pronstants.RAMP_RATE);
-// 		//sets a current limit on the talons
+ 		// Sets a current limit on the talons
 		talHopper.setCurrentLimit(Pronstants.SHOOT_CURRENT_LIMIT);
 		talShooter.setCurrentLimit(Pronstants.SHOOT_CURRENT_LIMIT);
 	}
-
+	// Runs the shooter based off joystick values
 	public void checkShootInput(boolean button1, boolean button2) {
- 		//maps shooter to joystick buttons
- 		//checks if button1 is pressed and button2 is not
+ 		// Checks if button1 is pressed
 		if (button1) {
+			// If so, run the hopper
 			talHopper.set(-Pronstants.AUTO_SHOOT_SPEED);
-		} else {
-			talHopper.set(0);
-	
 		}
+		
+		else {
+			// Otherwise, don't run the hopper
+			talHopper.set(0);
+		}
+		
+		// Checks if button2 is pressed
 		if (button2) {
+			// If so, run the shooter
 			talShooter.set(Pronstants.AUTO_HOPPER_SPEED);
-		} else {
+		}
+		
+		else {
+			// Otherwise, don't run the shooter
 			talShooter.set(0);
-
 		}
 	}
 
+	// Stops the shooter
 	public void stopShooter(){
 		talShooter.set(0);
 		talHopper.set(0);
 	}
 
+	// Runs the shooter autonomously
 	public void shoot(){
-		talHopper.set(Pronstants.AUTO_HOPPER_SPEED);
-		Timer.delay(2);
+		// Starts the shooter
 		talShooter.set(Pronstants.AUTO_SHOOT_SPEED);
-		System.out.println("waiting");
+		// Waits 1.5 seconds
+		// This lets the shooter warm up first
+		Timer.delay(1.5);
+		// Runs the hopper
+		talHopper.set(Pronstants.AUTO_HOPPER_SPEED);
+		// Waits 5 seconds for the balls to empty
 		Timer.delay(5);
-		System.out.println("done");
+		// Stops the shooter
 		stopShooter();
 	}
 }
