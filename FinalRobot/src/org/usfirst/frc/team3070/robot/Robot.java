@@ -136,5 +136,8 @@ public class Robot extends IterativeRobot {
 		
 		// Makes the robot climb up or down according to the joystick inputs
 		climber.checkClimbInput(joyR.getRawButton(2), joyL.getRawButton(8));
+		
+		// Makes the robot shoot according to joystick input
+		shooter.checkShootInput(joyR.getRawButton(4), joyL.getRawButton(4));
 	}
 }
