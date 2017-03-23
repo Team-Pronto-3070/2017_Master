@@ -35,6 +35,7 @@ public class Robot extends IterativeRobot {
 //	SendableChooser<Pronstants.AutoMode> autoChooser;
 	Pronstants.AutoMode startMode;
 	Thread checkSensors;
+	Vision frcVision;
 
 	// vision variables
 	// public VisionThread visionThread;
@@ -62,10 +63,15 @@ public class Robot extends IterativeRobot {
 		joyR = new Joystick(Pronstants.RIGHT_JOYSTICK_PORT);
 		// Initializes Pronto Classes
 		drive = new Drive();
-		auto = new Auto();
+		
 		climber = new Climb();
 //		shoot = new Shooter();
 		gyro = new ProntoGyro();
+		frcVision = new Vision();
+		frcVision.setDaemon(true);
+		frcVision.start();
+		auto = new Auto(frcVision, drive, gyro);
+		
 		// puts the auto program chooser on the dashboard
 
 		/* disabled 3.18.17 2:51
