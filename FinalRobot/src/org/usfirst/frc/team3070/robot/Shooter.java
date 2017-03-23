@@ -16,9 +16,10 @@ public class Shooter {
 	// Defines talons for the shooter 
 	CANTalon talHopper = new CANTalon(Pronstants.TALON_SHOOTER_2_PORT);
 	CANTalon talShooter = new CANTalon(Pronstants.TALON_SHOOTER_1_PORT);
-
+	private Timer timer;
 	// Constructs the class
 	public Shooter() {
+		timer = new Timer();
 		// Defines the talon variables
 		talHopper = new CANTalon(Pronstants.TALON_SHOOTER_1_PORT);
 		talShooter = new CANTalon(Pronstants.TALON_SHOOTER_2_PORT);
@@ -60,13 +61,22 @@ public class Shooter {
 		talHopper.set(0);
 	}
 
+	public void runHopper() {
+		talHopper.set(Pronstants.AUTO_HOPPER_SPEED);
+	}
+	
+	public void runShooter() {
+		talShooter.set(Pronstants.AUTO_SHOOT_SPEED);
+	}
+	
+	
 	// Runs the shooter autonomously
 	public void shoot(){
 		// Starts the shooter
 		talShooter.set(Pronstants.AUTO_SHOOT_SPEED);
 		// Waits 1.5 seconds
 		// This lets the shooter warm up first
-		Timer.delay(1.5);
+		
 		// Runs the hopper
 		talHopper.set(Pronstants.AUTO_HOPPER_SPEED);
 		// Waits 5 seconds for the balls to empty
