@@ -76,4 +76,6 @@ public interface Pronstants {
 	//auto field values 
 	static final double AUTO_CENTER_DIST = 5.755;
 	
+	static final double VISION_DEADBAND = 0.02;
+	
 }

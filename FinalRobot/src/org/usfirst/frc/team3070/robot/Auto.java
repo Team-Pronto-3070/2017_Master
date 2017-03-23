@@ -10,10 +10,14 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class Auto {
 	// initializes classes
-	private Drive drive = new Drive();
-	private ProntoGyro gyro = new ProntoGyro();
+	private Drive drive;
+	private ProntoGyro gyro;
+	Vision frcVision;
 
-	public Auto() {
+	public Auto(Vision frcVision, Drive drive, ProntoGyro gyro) {
+		this.drive = drive;
+		this.gyro = gyro;
+		this.frcVision = frcVision;
 	}
 
 	// initial distance
@@ -57,7 +61,19 @@ public class Auto {
 			drive.drive(0, 0);
 		}
 	}
-
+	public boolean visionCenterOnPeg() {
+		double lineLocation = frcVision.getLineLocationX();
+		if(lineLocation > 0.50 + Pronstants.VISION_DEADBAND){
+			drive.drive(0.3, -0.3);
+			return false;
+		}else if(lineLocation < 0.50 - Pronstants.VISION_DEADBAND){
+			drive.drive(-0.3, 0.3);
+			return false;
+		}else{
+			drive.drive(0, 0);
+			return true;
+		}
+	}
 	static boolean turnStarted = false;
 
 	public void autoOutsideRight() {
