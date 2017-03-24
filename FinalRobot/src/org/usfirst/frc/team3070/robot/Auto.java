@@ -12,11 +12,13 @@ public class Auto {
 	private Drive drive;
 	private Shooter shooter;
 	private Timer timer;
+	private Vision frcVision;
 	
 	// Constructs the class
-	public Auto(Drive drive, Shooter shooter) {
+	public Auto(Vision frcVision, Drive drive, Shooter shooter) {
 		this.drive = drive;
 		this.shooter = shooter;
+		this.frcVision = frcVision;
 		timer = new Timer();
 	}
 
@@ -36,7 +38,7 @@ public class Auto {
 	double shootTurn[] = {-13, 13};
 
 	// Runs the autonomous based on a path and if we want to shoot or not
-	public void run(int mode, boolean shoot) {
+	public void run(int mode, boolean shoot, boolean vision) {
 		// Sets distTraveled to the distance traveled by the robot in feet
 		distTraveled = drive.getDistanceTraveled()[2];
 		// Creates a state engine for the value of step
@@ -119,7 +121,12 @@ public class Auto {
 		// Checks if the robot is on step 7
 		case VISION:
 			// TODO: Put vision here
-			step = AutoState.FOURTH_BREAK;
+			if (vision) {
+				visionCenterOnPeg();
+			}
+			else {
+				step = AutoState.FOURTH_BREAK;
+			}
 			break;
 		
 		// Checks if the robot is on step 8
@@ -240,6 +247,29 @@ public class Auto {
 		}
 		else {
 			return false;
+		}
+	}
+	
+	public boolean visionCenterOnPeg() {
+		double lineLocation = frcVision.getLineLocationX();
+		System.out.println("Vision loop");
+		double val = 0.1;
+		if(lineLocation == 0 )
+		{
+			drive.drive(0, 0);
+			return false;
+		}
+		else if(lineLocation > 0.50 + Pronstants.VISION_DEADBAND){
+			drive.drive(-val, 2*val);
+			return false;
+		}
+		else if(lineLocation < 0.50 - Pronstants.VISION_DEADBAND){
+			drive.drive(val, -2*val);
+			return false;
+		}
+		else{
+			drive.drive(0, 0);
+			return true;
 		}
 	}
 }

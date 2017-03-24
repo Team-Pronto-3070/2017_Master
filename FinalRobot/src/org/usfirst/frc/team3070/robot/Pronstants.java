@@ -48,10 +48,8 @@ public interface Pronstants {
 	// Conversion from encoder values to feet, which is 638 ticks per foot.
 	static final double TICK_COEFFICIENT = 638;
 	
-	// Vision variables
-	// TODO: Ask Ari if we need these or not
-	static final int IMG_WIDTH = 320;
-	static final int IMG_HEIGHT = 240;
+	// Deadband for vision turning
+	static final double VISION_DEADBAND = 0.01;
 	
 	// ProntoGyro variables
 	static final double ADJUSTING_CONSTANT = .012;

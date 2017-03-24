@@ -34,21 +34,25 @@ public class Robot extends IterativeRobot {
 	Joystick joyL, joyR;
 	Shooter shooter;
 	ProntoGyro gyro;
+	Vision frcVision;
 	
 	// Vision variables
 	// public VisionThread visionThread;
 	// public static vision grip;
 
 	// Defines booleans for the smartDash buttons for the autonomous selector and sets them to false
-	boolean autoC = false;
-	boolean autoR = false;
-	boolean autoL = false;
+	boolean autoC = false,
+	autoR = false,
+	autoL = false,
+	// Creates a boolean of whether we are shooting during autonomous or not
+	shoot = false,
+	// Creates a boolean for if we use vision or not
+	vision = false;
 	
 	// Creates an integer representing the autonomous mode
 	int mode;
 	
-	// Creates a boolean of whether we are shooting during autonomous or not
-	boolean shoot = false;
+
 
 	// Runs when robot is initially turned on
 	@Override
@@ -58,10 +62,15 @@ public class Robot extends IterativeRobot {
 		joyR = new Joystick(Pronstants.RIGHT_JOYSTICK_PORT);
 		
 		// Initializes Pronto Classes
+		frcVision = new Vision();
+		// Sets the daemon boolean of vision to true
+		frcVision.setDaemon(true);
+		// Starts vision
+		frcVision.start();
 		shooter = new Shooter();
 		gyro = new ProntoGyro();
 		drive = new Drive(gyro);
-		auto = new Auto(drive, shooter);
+		auto = new Auto(frcVision, drive, shooter);
 		climber = new Climb();
 
 		/* disabled 3.18.17 2:51
@@ -115,7 +124,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		// Tells the code which autonomous program to run based on buttons from the smartDash
-		auto.run(mode, shoot);
+		auto.run(mode, shoot, vision);
 
 	}
 
