@@ -78,13 +78,14 @@ public class Drive {
 				// if the left joystick is greater than the right, then she
 				// turns to left on a point
 				if (speedL > speedR) {
-					drive(balanceSpeed(speedR), -balanceSpeed(speedR));
+					drive(-balanceSpeed(speedR), balanceSpeed(speedR));
 					gyro.reset();
+					
 
 				}
 				// otherwise turn on to the left
 				else {
-					drive(-balanceSpeed(speedL), balanceSpeed(speedL));
+					drive(balanceSpeed(speedL), -balanceSpeed(speedL));
 					gyro.reset();
 
 				}
@@ -100,9 +101,10 @@ public class Drive {
 	}
 
 	public double balanceSpeed(double joy) {
-		double a = 1.104;
-		double b = -0.221;
-		double c = 0.14;
+		double a = .926;
+		double b = -0.185;
+		double c = 0.159
+				;
 
 		double sign = joy / Math.abs(joy);
 
@@ -165,7 +167,6 @@ public class Drive {
 
 		// adjust speed linearly when within 10 degrees of expected value
 		double delta = Math.abs(currentHeading - angle);
-		System.out.println(gyro.getOffsetHeading());
 
 		if (delta <= MAX_DEGREES_FULL_SPEED) {
 			// Simple linear regression
@@ -213,7 +214,7 @@ public class Drive {
 	public void driveRobotStraightSpeed(double speed) {
 
 		double adjSpeed = 0.0;
-
+		System.out.println(gyro.getOffsetHeading());
 		adjSpeed = gyro.getOffsetHeading() * Pronstants.ADJUSTING_CONSTANT;
 
 		drive(speed + adjSpeed, speed - adjSpeed);

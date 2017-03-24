@@ -63,14 +63,15 @@ public class Robot extends IterativeRobot {
 		climber = new Climb();
 		shoot = new Shooter();
 		gyro = new ProntoGyro();
+		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+		camera.setResolution(Pronstants.IMG_WIDTH, Pronstants.IMG_HEIGHT);
+
 		// puts the auto program chooser on the dashboard
 
 		/* disabled 3.18.17 2:51
 		// grip = new vision();
 		// vision code
-		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-		camera.setResolution(Pronstants.IMG_WIDTH, Pronstants.IMG_HEIGHT);
-		// visionThread = new VisionThread (camera, grip,pipline ->{
+				// visionThread = new VisionThread (camera, grip,pipline ->{
 		// System.out.println(grip.findBlobsOutput().size());
 		// });
 		// visionThread.start();
@@ -81,7 +82,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		// resets the distance traveled
-		drive.resetDistanceTraveled();
 		// resets the gyro
 		drive.toggleDriveTrain(true);
 		drive.setDriveRampRate(Pronstants.AUTO_RAMP_RATE);
@@ -92,6 +92,7 @@ public class Robot extends IterativeRobot {
 		button1 = SmartDashboard.getBoolean("DB/Button 1", false);
 		button2 = SmartDashboard.getBoolean("DB/Button 2", false);
 		button3 = SmartDashboard.getBoolean("DB/Button 3", false);
+		auto.state= 1;
 	}
 
 	// practice comment
@@ -111,9 +112,6 @@ public class Robot extends IterativeRobot {
 		}
 		if (button2) {
 			auto.autoOutsideRight();
-		}
-		if (button3) {
-		shoot.shoot();
 		}
 		
 	}

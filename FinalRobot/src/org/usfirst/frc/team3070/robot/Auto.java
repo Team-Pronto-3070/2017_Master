@@ -63,91 +63,71 @@ public class Auto {
 	public void autoOutsideRight() {
 		// autonomous code for going to an outside gearloader
 		// from the same side starting position
-		initHeading = gyro.getOffset();
-		// updates distance
 		rotations = drive.getDistanceTraveled();
-		// difference in distance
 		diffDist = rotations[2] - initDist;
-		// difference in angle
-		// double diffAngle = gyro.getHeading()- initHeading;
-		firstTurn = -60;
-		System.out.print(gyro.getOffsetHeading() + " " + gyro.getRawHeading());
+		initHeading = gyro.getOffset();
 		switch (state) {
 		case 1:
-			if (diffDist < 6.68) {
+			if (diffDist < 7.7) {
 				drive.driveRobotStraight();
 			} else {
-
-				drive.drive(0,0);
-				drive.resetGyro();
-				drive.resetDistanceTraveled();
-				Timer.delay(1);
-
 				state = 2;
 			}
-			System.out.print("state 1");
 			break;
 		case 2:
-			if(drive.turn(-60, Pronstants.AUTO_TURN_SPEED)){
+			if (!drive.turn(-60, .15)) {
+				break;
+			} else {
+				state = 3;
 				drive.resetDistanceTraveled();
 				drive.resetGyro();
-				drive.drive(0,0);
-				Timer.delay(1);
-
-				state = 3;
-
-
 			}
-			System.out.print("state 2");
-
 			break;
 		case 3:
-			if(diffDist < 3.21) {
+			if (diffDist < .5) {
 				drive.driveRobotStraight();
+
 			} else {
 				drive.drive(0, 0);
-				Timer.delay(1);
 
 			}
-			System.out.print("state 3");
-
 			break;
 		}
+
 	}
+
 	public void autoOutsideLeft() {
 		rotations = drive.getDistanceTraveled();
 		diffDist = rotations[2] - initDist;
 		initHeading = gyro.getOffset();
-		switch(state) {
+		switch (state) {
 		case 1:
-			if (diffDist < 5) {
+			if (diffDist < 7.8) {
 				drive.driveRobotStraight();
 			} else {
 				state = 2;
 			}
 			break;
 		case 2:
-			if(!drive.turn(-60, Pronstants.AUTO_TURN_SPEED)){
+			if (!drive.turn(60, .15)) {
 				break;
-			}
-			else {
+			} else {
 				state = 3;
 				drive.resetDistanceTraveled();
 				drive.resetGyro();
 			}
 			break;
 		case 3:
-			if(diffDist < 2) {
+			if (diffDist < .5) {
 				drive.driveRobotStraight();
+
 			} else {
 				drive.drive(0, 0);
-				
+
 			}
 			break;
 		}
 
 	}
-	
-	
-	
+
 }

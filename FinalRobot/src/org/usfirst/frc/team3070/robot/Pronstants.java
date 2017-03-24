@@ -5,7 +5,7 @@ public interface Pronstants {
 	static final double AUTO_RAMP_RATE = .25;
 	static final double RAMP_RATE = .5;
 	//The speed at which the robot turns
-	static final double AUTO_TURN_SPEED = 0.3;
+	static final double AUTO_TURN_SPEED = 0.15;
 	//The speed at which the robot drives straight
 	static final double AUTO_DRIVE_SPEED = 0.3;
 	//The speed at which the robot climbs the rope.
@@ -36,21 +36,8 @@ public interface Pronstants {
 	static final int LEFT_JOYSTICK_PORT = 0;
 	static final int RIGHT_JOYSTICK_PORT = 1;
 	
-	static enum AutoMode {  AUTO_MODE_NONE,
-							AUTO_MODE_CENTER_CENTER,
-							AUTO_MODE_CENTER_RIGHT,
-							AUTO_MODE_CENTER_LEFT,
-							AUTO_MODE_LEFT_LEFT,
-							AUTO_MODE_RIGHT_RIGHT };
-	
 	//Conversion from encoder values to feet, which is 162.97 ticks per foot.
 	static final double TICK_COEFFICIENT = 638;
-	public static String AUTO_MODE_NONE = "AUTO_MODE_NONE";
-	public static String AUTO_MODE_CENTER_CENTER = "AUTO_MODE_CENTER_CENTER";
-	public static String AUTO_MODE_CENTER_RIGHT = "AUTO_MODE_CENTER_RIGHT";
-	public static String AUTO_MODE_CENTER_LEFT = "AUTO_MODE_CENTER_LEFT";
-	public static String AUTO_MODE_LEFT_LEFT = "AUTO_MODE_LEFT_LEFT";
-	public static String AUTO_MODE_RIGHT_RIGHT = "AUTO_MODE_RIGHT_RIGHT";
 	
 	// sensors variables
 	static final int IMG_WIDTH = 320;
