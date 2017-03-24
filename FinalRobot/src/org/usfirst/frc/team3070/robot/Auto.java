@@ -24,8 +24,8 @@ public class Auto {
 	double firstTurn[] = {0, -60, 60};
 	
 	// Driving distances for the different autonomous programs
-	double firstDist[] = {5.755, 6.68, 6.68};
-	double secondDist[] = {0, 3.21, 3.21};
+	double firstDist[] = {5.755, 7.7, 6.30};
+	double secondDist[] = {0, 0.5, 4.76};
 
 	// Keeps track of what part of the autonomous code the robot is on
 	AutoState step = AutoState.FIRST_DISTANCE;
@@ -74,7 +74,7 @@ public class Auto {
 			// Starts turning the robot, then checks if the robot is done turning
 			if (drive.turn(firstTurn[mode], Pronstants.AUTO_TURN_SPEED)) {
 				// If so, prepare the robot for the next step
-				nextStep(AutoState.FIRST_TURN);
+				step = AutoState.SECOND_BREAK;
 			}
 			
 			// Skip other cases
@@ -84,7 +84,7 @@ public class Auto {
 		case SECOND_BREAK:
 			// If so, wait one tenth of second, go to the next step
 			if (timerWait(0.1)) {
-				step = AutoState.SECOND_DISTANCE;
+				nextStep(AutoState.SECOND_DISTANCE);
 			}
 			
 			// Skip other cases
@@ -191,6 +191,9 @@ public class Auto {
 	public void nextStep(AutoState next) {
 		// Tells the robot to go to the next step
 		step = next;
+		
+		// Stop the robot
+		drive.drive(0, 0);
 		
 		// Resets the gyro
 		drive.resetGyro();

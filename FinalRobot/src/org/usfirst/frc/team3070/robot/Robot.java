@@ -40,9 +40,9 @@ public class Robot extends IterativeRobot {
 	// public static vision grip;
 
 	// Defines booleans for the smartDash buttons for the autonomous selector and sets them to false
-	boolean button1 = false;
-	boolean button2 = false;
-	boolean button3 = false;
+	boolean autoC = false;
+	boolean autoR = false;
+	boolean autoL = false;
 	
 	// Creates an integer representing the autonomous mode
 	int mode;
@@ -79,6 +79,11 @@ public class Robot extends IterativeRobot {
 
 	}
 	
+	public void autonomousDisabled()
+	{
+		drive.toggleDriveTrain(false);
+	}
+	
 	// Runs when the robot is enabled before the iterative autonomous program
 	@Override
 	public void autonomousInit() {
@@ -95,13 +100,13 @@ public class Robot extends IterativeRobot {
 		drive.resetGyro();
 
 		// Gets the value of the smartDash buttons for the autonomous selector
-		button1 = SmartDashboard.getBoolean("DB/Button 0", false);
-		button2 = SmartDashboard.getBoolean("DB/Button 1", false);
-		button3 = SmartDashboard.getBoolean("DB/Button 2", false);
+		autoC = SmartDashboard.getBoolean("DB/Button 0", false);
+		autoR = SmartDashboard.getBoolean("DB/Button 1", false);
+		autoL = SmartDashboard.getBoolean("DB/Button 2", false);
 		shoot = SmartDashboard.getBoolean("DB/Button 3", false);
 		
 		// Selects the autonomous based on those buttons
-		auto.getSelected(button1, button2, button3);
+		mode = auto.getSelected(autoC, autoR, autoL);
 		
 		
 	}
@@ -111,6 +116,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		// Tells the code which autonomous program to run based on buttons from the smartDash
 		auto.run(mode, shoot);
+
 	}
 
 	// Runs before the iterative teleop program
@@ -138,6 +144,6 @@ public class Robot extends IterativeRobot {
 		climber.checkClimbInput(joyR.getRawButton(2), joyL.getRawButton(8));
 		
 		// Makes the robot shoot according to joystick input
-		shooter.checkShootInput(joyR.getRawButton(4), joyL.getRawButton(4));
+//		shooter.checkShootInput(joyR.getRawButton(4), joyL.getRawButton(4));
 	}
 }

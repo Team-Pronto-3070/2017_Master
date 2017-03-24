@@ -119,9 +119,9 @@ public class Drive {
 	// Balances the speed of the robot using a quadratic equation
 	public double balanceSpeed(double joy) {
 		// Sets the a, b, and c values of the function
-		double a = 1.104;
-		double b = -0.221;
-		double c = 0.14;
+		double a = 0.928;
+		double b = -0.185;
+		double c = 0.159;
 
 		// Checks if the joystick value is positive or negative
 		double sign = joy / Math.abs(joy);
@@ -190,14 +190,10 @@ public class Drive {
 
 	// Starts turning the robot until it reaches a given angle and returns a boolean saying whether it's done or not
 	public boolean turn(double angle, double maxSpeed) {
-		// Gets the heading and makes it the value of a variable
-		double currentHeading = gyro.getOffsetHeading();
-		
 		// Defaults the speed to the maximum speed
 		double speed = maxSpeed;
-
 		// Adjusts speed linearly when within 10 degrees of expected value
-		double delta = Math.abs(currentHeading - angle);
+		double delta = Math.abs(gyro.getOffsetHeading() - angle);
 
 		if (delta <= Pronstants.MAX_DEGREES_FULL_SPEED) {
 			// Simple linear regression
@@ -212,27 +208,28 @@ public class Drive {
 		}
 
 		// Checks if the gyro angle is less than the desired angle
-		if (currentHeading < angle - Pronstants.TURN_OFFSET) {
+		if (gyro.getOffsetHeading() < angle - Pronstants.TURN_OFFSET) {
 			// If it is, turn left
 			drive(-speed, speed);
+			// and tell the source that turning is not done
+			return false;
 
 		}
 
 		// Otherwise, checks if the gyro angle is greater than the desired angle
-		else if (currentHeading > angle + Pronstants.TURN_OFFSET) {
+		else if (gyro.getOffsetHeading() > angle + Pronstants.TURN_OFFSET) {
 			// If it is, turn right
 			drive(speed, -speed);
+			// and tell the source that turning is not done
+			return false;
 		}
 
 		else {
-			// If the gyro angle is aligned with the desired angle, tell the
-			// source that called the method that turning is done
+			// If the gyro angle is aligned with the desired angle,
+			// tell the source that the robot has turned the desired amount
 			drive(0, 0);
 			return true;
 		}
-
-		// Otherwise, tell the source that called the function that turning is not done
-		return false;
 	}
 
 	// Drives the robot straight at a given speed

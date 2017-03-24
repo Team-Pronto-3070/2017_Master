@@ -6,7 +6,7 @@ public interface Pronstants {
 	static final double RAMP_RATE = .5;
 	
 	// The speed at which the robot turns
-	static final double AUTO_TURN_SPEED = 0.3;
+	static final double AUTO_TURN_SPEED = 0.15;
 	
 	// The speed at which the robot drives straight
 	static final double AUTO_DRIVE_SPEED = 0.3;
