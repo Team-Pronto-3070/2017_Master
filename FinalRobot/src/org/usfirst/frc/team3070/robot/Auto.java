@@ -27,8 +27,8 @@ public class Auto {
 	
 	// Driving distances for the different autonomous programs
 						//center,right,left
-	double firstDist[] = {5.755, 7.07, 7.07, 5, 5};
-	double secondDist[] = {0, 4.0, 4.76, 5, 5};
+	double firstDist[] = {5.755, 7.17, 7.17, 5, 5};
+	double secondDist[] = {0, 3.2, 3.2, 5, 5};
 	
 
 	// Keeps track of what part of the autonomous code the robot is on
@@ -299,5 +299,9 @@ public class Auto {
 			drive.drive(0, 0);
 			return true;
 		}
+	}
+	
+	public void resetState() {
+		step = AutoState.FIRST_DISTANCE;
 	}
 }

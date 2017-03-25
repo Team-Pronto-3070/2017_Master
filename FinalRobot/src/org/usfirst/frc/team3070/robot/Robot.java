@@ -58,7 +58,7 @@ public class Robot extends IterativeRobot {
 		// Initializes Pronto Classes
 		frcVision = new Vision();
 		// Sets the daemon boolean of vision to true
-		frcVision.setDaemon(true);
+		frcVision.setDaemon(false);
 		// Starts vision
 		frcVision.start();
 		shooter = new Shooter();
@@ -91,6 +91,7 @@ public class Robot extends IterativeRobot {
 		
 		// Selects the autonomous based on those buttons
 		mode = auto.getSelected(autoC, autoR, autoL, vision);
+		auto.resetState();
 		
 		
 	}
@@ -137,8 +138,9 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void testPeriodic() {
-		System.out.println("rightEnc " + drive.getDistanceTraveled()[0] + ", leftEnc" + drive.getDistanceTraveled()[1]);
-		System.out.println("avgEnc " + drive.getDistanceTraveled()[2]);
-		System.out.println("gyroHeading " + gyro.getOffsetHeading());
+		SmartDashboard.putString("DB/String 0", new Double(drive.getDistanceTraveled()[0]).toString());
+		SmartDashboard.putString("DB/String 1", new Double(drive.getDistanceTraveled()[1]).toString());
+		SmartDashboard.putString("DB/String 2", new Double(drive.getDistanceTraveled()[2]).toString());
+		SmartDashboard.putString("DB/String 3", new Double(gyro.getOffsetHeading()).toString());
 	}
 }

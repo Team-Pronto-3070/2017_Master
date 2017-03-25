@@ -56,7 +56,7 @@ public class Vision extends Thread{
 				// Send the output the error.
 				outputStream.notifyError(cvSink.getError());
 				// skip the rest of the current iteration
-				System.out.println("Skipping this frame");
+				//System.out.println("Skipping this frame");
 				continue;
 			}
 			//System.out.println(mat);
@@ -101,7 +101,7 @@ public class Vision extends Thread{
 				}
 				int place = Math.abs((smaller + right)/2);
 				setLineLocationX(place);
-				System.out.println("Line location: " + place);
+				//System.out.println("Line location: " + place);
 				Imgproc.rectangle(mat, new Point(place, 100), new Point(place, 140), new Scalar(255, 255, 255), 5);
 			}
 			else
