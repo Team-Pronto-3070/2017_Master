@@ -90,7 +90,7 @@ public class Robot extends IterativeRobot {
 		vision = SmartDashboard.getBoolean("DB/Button 3", false);
 		
 		// Selects the autonomous based on those buttons
-		mode = auto.getSelected(autoC, autoR, autoL);
+		mode = auto.getSelected(autoC, autoR, autoL, vision);
 		
 		
 	}
