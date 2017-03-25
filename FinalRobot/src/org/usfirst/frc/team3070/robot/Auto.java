@@ -23,12 +23,12 @@ public class Auto {
 	}
 
 	// Turning distances for the different autonomous programs
-	double firstTurn[] = {0, -60, 60};
+	double firstTurn[] = {0, -60, 60, -57.44, 57.44};
 	
 	// Driving distances for the different autonomous programs
 						//center,right,left
-	double firstDist[] = {5.755, 7.07, 7.07, 5, 5};
-	double secondDist[] = {0, 4.0, 4.76, 5, 5};
+	double firstDist[] = {5.755, 7.07, 7.07, 6.39, 6.39};
+	double secondDist[] = {0, 4.0, 4.76, 2.24, 2.24};
 	
 
 	// Keeps track of what part of the autonomous code the robot is on
@@ -107,7 +107,7 @@ public class Auto {
 		
 		case VISION:
 			// Checks if the vision centering is done
-			if (!timerWait(3)) {
+			if (!timerWait(1)) {
 				if (visionCenterOnPeg()) {
 					// If so, go to the next step
 					step = AutoState.THIRD_BREAK;
@@ -138,7 +138,7 @@ public class Auto {
 			
 			else {
 			// Otherwise, drive the robot straight
-			drive.driveRobotStraight(Pronstants.AUTO_DRIVE_SPEED - .15);
+			drive.driveRobotStraight(Pronstants.AUTO_DRIVE_SPEED);
 			}
 			
 			// Skip other cases

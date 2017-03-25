@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3070.robot;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -30,6 +31,11 @@ public class Vision extends Thread{
 		pipeline = new GripPipeline();
 	}
 	
+	private boolean compareRect(Rect a, Rect b)
+	{
+		return a.area() > b.area();
+	}
+	
 	public void run()
 	{
 		// Get the UsbCamera from CameraServer
@@ -56,25 +62,28 @@ public class Vision extends Thread{
 				// Send the output the error.
 				outputStream.notifyError(cvSink.getError());
 				// skip the rest of the current iteration
-				System.out.println("Skipping this frame");
+//				System.out.println("Skipping this frame");
 				continue;
 			}
 			//System.out.println(mat);
 			pipeline.process(mat);
 			// Put a rectangle on the image
 			ArrayList<MatOfPoint> test = pipeline.filterContoursOutput();
-			//System.out.println("Size: " + test.size());
-			if(test.size() == 2){
+			System.out.println("Size: " + test.size());
+			if(test.size() >= 2){
 				int x1 = 0;
 				int x2 = 0;
 				int width1 = 0;
 				int width2 = 0;
+				ArrayList<Rect> rects = new ArrayList<Rect>();
 				for(int i = 0; i < test.size(); i++)
 				{
 					Rect rec = Imgproc.boundingRect(test.get(i));
 					
+					rects.add(rec);
 					
 					Imgproc.rectangle(mat, rec.br(), rec.tl(), new Scalar(255, 255, 255), 5);
+					
 					if(i == 0){
 						x2 = rec.x;
 						width2 = rec.width;
@@ -84,6 +93,7 @@ public class Vision extends Thread{
 					//System.out.println("Rectangle height:" + rec.height);
 					//System.out.println("Rectangle width:" + rec.width);
 				}
+				rects.sort(arg0);
 				int smaller = 0;
 				boolean isRight = true;
 				int right = 0;
@@ -100,8 +110,9 @@ public class Vision extends Thread{
 					right = x1;
 				}
 				int place = Math.abs((smaller + right)/2);
+				System.out.println("Vision Place = " + place);
 				setLineLocationX(place);
-				System.out.println("Line location: " + place);
+//				System.out.println("Line location: " + place);
 				Imgproc.rectangle(mat, new Point(place, 100), new Point(place, 140), new Scalar(255, 255, 255), 5);
 			}
 			else
