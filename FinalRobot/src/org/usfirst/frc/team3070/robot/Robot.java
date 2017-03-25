@@ -4,12 +4,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
-/* Vision Imports
-import edu.wpi.first.wpilibj.vision.VisionThread;
-import gripvis.vision;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.CameraServer;
-
 /*
 methods:
 public void robotInit()
@@ -72,25 +66,6 @@ public class Robot extends IterativeRobot {
 		drive = new Drive(gyro);
 		auto = new Auto(frcVision, drive, shooter);
 		climber = new Climb();
-
-		/* disabled 3.18.17 2:51
-		 * Extra vision code
-		// grip = new vision();
-		// vision code
-		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-		camera.setResolution(Pronstants.IMG_WIDTH, Pronstants.IMG_HEIGHT);
-		// visionThread = new VisionThread (camera, grip,pipline ->{
-		// System.out.println(grip.findBlobsOutput().size());
-		// });
-		// visionThread.start();
-		 */
-		
-
-	}
-	
-	public void autonomousDisabled()
-	{
-		drive.toggleDriveTrain(false);
 	}
 	
 	// Runs when the robot is enabled before the iterative autonomous program
@@ -112,7 +87,7 @@ public class Robot extends IterativeRobot {
 		autoC = SmartDashboard.getBoolean("DB/Button 0", false);
 		autoR = SmartDashboard.getBoolean("DB/Button 1", false);
 		autoL = SmartDashboard.getBoolean("DB/Button 2", false);
-		shoot = SmartDashboard.getBoolean("DB/Button 3", false);
+		vision = SmartDashboard.getBoolean("DB/Button 3", false);
 		
 		// Selects the autonomous based on those buttons
 		mode = auto.getSelected(autoC, autoR, autoL);
@@ -154,5 +129,16 @@ public class Robot extends IterativeRobot {
 		
 		// Makes the robot shoot according to joystick input
 //		shooter.checkShootInput(joyR.getRawButton(4), joyL.getRawButton(4));
+	}
+	
+	public void testInit() {
+		gyro.reset();
+		drive.resetDistanceTraveled();
+	}
+	
+	public void testPeriodic() {
+		System.out.println("rightEnc " + drive.getDistanceTraveled()[0] + ", leftEnc" + drive.getDistanceTraveled()[1]);
+		System.out.println("avgEnc " + drive.getDistanceTraveled()[2]);
+		System.out.println("gyroHeading " + gyro.getOffsetHeading());
 	}
 }
