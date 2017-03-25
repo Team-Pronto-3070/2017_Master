@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3070.robot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 
 import org.opencv.core.Mat;
@@ -29,11 +30,6 @@ public class Vision extends Thread{
 
 	public Vision(){
 		pipeline = new GripPipeline();
-	}
-	
-	private boolean compareRect(Rect a, Rect b)
-	{
-		return a.area() > b.area();
 	}
 	
 	public void run()
@@ -84,19 +80,41 @@ public class Vision extends Thread{
 					
 					Imgproc.rectangle(mat, rec.br(), rec.tl(), new Scalar(255, 255, 255), 5);
 					
-					if(i == 0){
-						x2 = rec.x;
-						width2 = rec.width;
-					}
-					x1 = rec.x;
-					width1 = rec.width;
+//					if(i == 0){
+//						x2 = rec.x;
+//						width2 = rec.width;
+//					}
+//					x1 = rec.x;
+//					width1 = rec.width;
 					//System.out.println("Rectangle height:" + rec.height);
 					//System.out.println("Rectangle width:" + rec.width);
 				}
-				rects.sort(arg0);
+				Collections.sort(rects, new Comparator<Rect>() {
+					@Override
+					public int compare(Rect a, Rect b)
+					{
+						if(a.area() < b.area())
+						{
+							return 1;
+						}
+						else if(a.area() == b.area())
+						{
+							return 0;
+						}else
+						{
+							return -1;
+						}
+					}
+				});
 				int smaller = 0;
 				boolean isRight = true;
 				int right = 0;
+				
+				x1 = rects.get(0).x;
+				x2 = rects.get(1).x;
+				width1 = rects.get(0).width;
+				width2 = rects.get(1).width;
+				
 				if(x1 < x2){
 					isRight = true;
 					smaller = (x1 + width1);
@@ -110,7 +128,7 @@ public class Vision extends Thread{
 					right = x1;
 				}
 				int place = Math.abs((smaller + right)/2);
-				System.out.println("Vision Place = " + place);
+				//System.out.println("Vision Place = " + place);
 				setLineLocationX(place);
 //				System.out.println("Line location: " + place);
 				Imgproc.rectangle(mat, new Point(place, 100), new Point(place, 140), new Scalar(255, 255, 255), 5);

@@ -140,5 +140,6 @@ public class Robot extends IterativeRobot {
 		System.out.println("rightEnc " + drive.getDistanceTraveled()[0] + ", leftEnc" + drive.getDistanceTraveled()[1]);
 		System.out.println("avgEnc " + drive.getDistanceTraveled()[2]);
 		System.out.println("gyroHeading " + gyro.getOffsetHeading());
+		System.out.println("Vision Percent: " + frcVision.getLineLocationX());
 	}
 }
