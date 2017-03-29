@@ -27,7 +27,7 @@ public class Auto {
 	
 	// Driving distances for the different autonomous programs
 						//center,right,left
-	double firstDist[] = {5.755, 7.17, 7.17, 5, 5};
+	double firstDist[] = {5.755, 7.27, 7.27, 5, 5};
 	double secondDist[] = {0, 3.2, 3.2, 5, 5};
 	
 
