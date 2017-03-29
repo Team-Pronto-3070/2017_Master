@@ -94,14 +94,14 @@ public class Drive {
 					drive(balanceSpeed(speedR), -balanceSpeed(speedR));
 					// TODO: Alex, why is the gyro reset here? Wouldn't this prevent the robot from driving straight
 					// since it won't ever have to adjust?
-//					gyro.reset();
+					gyro.reset();
 				}
 				
 				// Otherwise, turn right on a point
 				else {
 					drive(-balanceSpeed(speedL), balanceSpeed(speedL));
 					// TODO: See above
-//					gyro.reset();
+					gyro.reset();
 				}
 			}
 		}
