@@ -52,7 +52,7 @@ public class Drive {
 	}
 
 	// Drives the robot according to joystick values
-	public void joystickDrive(double joyR, double joyL, boolean trig) {
+	public void joystickDrive(double joyR, double joyL, boolean trigR, boolean trigL) {
 		// Defines the variables for the speed of left and right sides of the robot
 		double speedR, speedL;
 		
@@ -80,7 +80,7 @@ public class Drive {
 		double avg = (speedL + speedR) / 2;
 		
 		// Checks if the trigger is pulled
-		if (trig) {
+		if (trigR) {
 			// If so and the joystick values are equal, drive straight
 			// TODO: This should have an offset range
 			if (Math.signum(speedL) == Math.signum(speedR)) {
@@ -104,6 +104,10 @@ public class Drive {
 					gyro.reset();
 				}
 			}
+		} else if (trigL) {
+			speedL = speedL/2;
+			speedR = speedR/2;
+			drive(-balanceSpeed(speedR), -balanceSpeed(speedL));
 		}
 		
 		else {
@@ -133,32 +137,32 @@ public class Drive {
 	// Drives the robot based on an input for the right and left sides
 	public void drive(double right, double left) {
 		// Checks if the speed on the left is greater than 0.9
-		if (left > 0.9) {
-			// If so, set the speed to 0.9
-			// This stops us from accidentally overheating the motors
-			left = 0.9;
-		}
-		
-		// Otherwise, check if the speed on the left is less than -0.9
-		else if (left < -0.9) {
-			// If so, set the speed to -0.9
-			// This stops us from accidentally overheating the motors
-			left = -0.9;
-		}
-		
-		// Checks if the speed on the right is greater than 0.9
-		if (right > 0.9) {
-			// If so, set the speed to 0.9
-			// This stops us from accidentally overheatng the motors
-			right = 0.9;
-		}
-		
-		// Otherwise, check if the speed on the left is less than -0.9
-		else if (right < -0.9) {
-			// If so, set the speed to -0.9
-			// This stops us from accidentally overheating the motors
-			right = -0.9;
-		}
+//		if (left > 0.9) {
+//			// If so, set the speed to 0.9
+//			// This stops us from accidentally overheating the motors
+//			left = 0.9;
+//		}
+//		
+//		// Otherwise, check if the speed on the left is less than -0.9
+//		else if (left < -0.9) {
+//			// If so, set the speed to -0.9
+//			// This stops us from accidentally overheating the motors
+//			left = -0.9;
+//		}
+//		
+//		// Checks if the speed on the right is greater than 0.9
+//		if (right > 0.9) {
+//			// If so, set the speed to 0.9
+//			// This stops us from accidentally overheatng the motors
+//			right = 0.9;
+//		}
+//		
+//		// Otherwise, check if the speed on the left is less than -0.9
+//		else if (right < -0.9) {
+//			// If so, set the speed to -0.9
+//			// This stops us from accidentally overheating the motors
+//			right = -0.9;
+//		}
 		
 		// Sets the talons according to the correct speed values
 		talFR.set(-right);

@@ -19,7 +19,7 @@ public interface Pronstants {
 	static final double AUTO_HOPPER_SPEED = 1;
 	
 	// The value which the robot doesn't move if the controller value is under.
-	static final double DEAD_ZONE = 0.1;
+	static final double DEAD_ZONE = 0.05;
 	
 	// The value which limits the amp usage of the drive talons.
 	static final int DRIVE_CURRENT_LIMIT = 35;
@@ -42,8 +42,7 @@ public interface Pronstants {
 	static final int TALON_SHOOTER_2_PORT = 9;
 	static final int LIMIT_SWITCH_1_PORT = 0;
 	static final int LIMIT_SWITCH_2_PORT = 1;
-	static final int LEFT_JOYSTICK_PORT = 0;
-	static final int RIGHT_JOYSTICK_PORT = 1;
+	static final int JOYSTICK_PORT = 0;
 
 	// Conversion from encoder values to feet, which is 638 ticks per foot.
 	static final double TICK_COEFFICIENT = 638;
